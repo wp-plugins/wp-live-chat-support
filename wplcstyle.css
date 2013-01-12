@@ -1,0 +1,10 @@
+#wp-live-chat input[type="button"] { width:100px !important; }
+#wp-live-chat input[type="text"] { width:150px !important; }
+#wplc_chatbox { border: 1px solid #CCC; overflow: auto; padding-top:5px; }
+#wp-live-chat-close { position:absolute; right:5px; top:5px; width:10px; height:10px; cursor: pointer; }
+#wp-live-chat table { border: 0 !important; }
+#wp-live-chat table td { border: 0 !important; }
+#wp-live-chat h4 { font-size:20px; margin:3px; }
+#wp-live-chat p { font-size:14px; margin:3px; }
+#wp-live-chat #wplc-sb { font-size:14px; font-weight:bold; }
+#wp-live-chat-4 { padding-top:8px; }
