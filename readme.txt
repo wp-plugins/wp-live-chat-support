@@ -10,7 +10,7 @@ The easiest to use Live Chat plugin. Chat with your visitors!
 
 == Description ==
 
-The easiest to use Live Chat plugin. Chat with your visitors! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay monthly subscriptions in order to better understand your visitors. This is a fully functional chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
+The easiest to use Live Chat plugin. Chat with your visitors! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free version =
 * Chat with your visitors
@@ -21,8 +21,8 @@ The easiest to use Live Chat plugin. Chat with your visitors! Perfect for small 
 
 
 = Pro add-on =
+* Initiate chats with online visitors
 * Chat to more than one visitor at a time
-* Initiate chat's with online visitors
 * Access historical chat records
 * Set up your user profile
 * Add your company logo to the chat window
@@ -59,6 +59,13 @@ Once installed and activated, a link should appear in your left navigation panel
 
 
 == Changelog ==
+
+= 2.0 =
+* Bug fixes
+* Better front-end UI (Basic + Pro)
+* You can now get an email notification when a visitor wants to chat (Pro)
+* Allow your visitors to leave messages when you are offline (Pro)
+* More text fields can be customized
 
 = 1.0 =
 * Launch!

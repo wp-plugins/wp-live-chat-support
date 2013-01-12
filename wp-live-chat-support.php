@@ -2,8 +2,8 @@
 /*
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
-Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat. No third party connection required!
-Version: 1.0
+Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
+Version: 2.0
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "1.0";
+$wplc_version = "2.0";
 
 
 add_action('wp_footer', 'wplc_display_box');
@@ -76,7 +76,225 @@ function wplc_draw_user_box() {
 
         var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
         var wplc_nonce = '<?php echo $ajax_nonce; ?>';
-        function wplc_relay_user_stage(e,t){if(t.length){var n={action:"wplc_relay_stage",security:wplc_nonce,stage:e,cid:t}}else{var n={action:"wplc_relay_stage",security:wplc_nonce,stage:e}}jQuery.post(ajaxurl,n,function(e){})}function wplc_user_await_session(e){var t={action:"wplc_user_awaiting_chat",security:wplc_nonce,id:e};jQuery.post(ajaxurl,t,function(t){if(t=="3"){clearInterval(wplc_user_waiting);var n=jQuery("#wplc_name").val();jQuery("#wplc_cid").val(e);jQuery("#wp-live-chat-3").hide();jQuery("#wp-live-chat-4").show();jQuery.cookie("wplc_cid",e,{expires:1,path:"/"});jQuery.cookie("wplc_name",n,{expires:1,path:"/"});jQuery.cookie("wplc_stage",3,{expires:1,path:"/"});wplc_user_auto_refresh=setInterval(function(){wpcl_user_auto_update_chat_box(e)},3500)}});return}function wpcl_user_auto_update_chat_box(e){var t={action:"wplc_update_user_chat_boxes",cid:e,security:wplc_nonce};jQuery.post(ajaxurl,t,function(e){jQuery("#wplc_chatbox").append(e);var t=jQuery("#wplc_chatbox")[0].scrollHeight;jQuery("#wplc_chatbox").scrollTop(t)})}var wplc_check_cookie_id;var wplc_check_cookie_stage;var wplc_check_hide_cookie;wplc_check_cookie_id=jQuery.cookie("wplc_cid");wplc_check_cookie_stage=jQuery.cookie("wplc_stage");wplc_check_hide_cookie=jQuery.cookie("wplc_hide");jQuery("#wp-live-chat-close").live("click",function(){jQuery("#wp-live-chat").hide();jQuery.cookie("wplc_hide","yes",{expires:1,path:"/"});clearInterval(wplc_user_auto_refresh);var e={action:"wplc_user_close_chat",security:wplc_nonce,cid:wplc_check_cookie_id};jQuery.post(ajaxurl,e,function(e){})});jQuery("#wplc-sb").live("click",function(){jQuery("#wp-live-chat-1").hide();jQuery("#wp-live-chat-2").show()});var wplc_user_waiting=null;jQuery("#wplc_start_chat_btn").live("click",function(){var e=jQuery("#wplc_name").val();var t=jQuery("#wplc_email").val();if(e.length<=0){alert("Please enter your name");return false}if(t.length<=0){alert("Please enter your email address");return false}jQuery("#wp-live-chat-2").hide();jQuery("#wp-live-chat-3").show();wplc_check_cookie_id=jQuery.cookie("wplc_cid");var n;var r={action:"wplc_start_chat",security:wplc_nonce,name:e,email:t};jQuery.post(ajaxurl,r,function(e){n=e;wplc_check_cookie_id=e;wplc_user_waiting=setInterval(function(){wplc_user_await_session(n)},5e3)})});jQuery("#wplc_chatmsg").keyup(function(e){if(e.keyCode==13){jQuery("#wplc_send_msg").click()}});jQuery("#wplc_send_msg").live("click",function(){var e=jQuery("#wplc_cid").val();var t=jQuery("#wplc_chatmsg").val();var n=jQuery("#wplc_name").val();if(typeof n=="undefined"||n==null||n==""){n=jQuery.cookie("wplc_name")}jQuery("#wplc_chatmsg").val("");jQuery("#wplc_chatbox").append("<strong>"+n+"</strong>: "+t+"<br />");var r=jQuery("#wplc_chatbox")[0].scrollHeight;jQuery("#wplc_chatbox").scrollTop(r);var i={action:"wplc_user_send_msg",security:wplc_nonce,cid:e,msg:t};jQuery.post(ajaxurl,i,function(e){})});if(wplc_check_hide_cookie=="yes"){jQuery("#wp-live-chat").hide()}else{if(typeof wplc_check_cookie_id=="undefined"||wplc_check_cookie_id==null){wplc_dc=setTimeout(function(){jQuery("#wp-live-chat").css({display:"block"})},1e4)}else{jQuery("#wplc_cid").val(wplc_check_cookie_id);jQuery("#wp-live-chat-1").hide();jQuery("#wp-live-chat-2").hide();jQuery("#wp-live-chat-3").hide();jQuery("#wp-live-chat-4").hide();jQuery("#wp-live-chat-react").show();jQuery("#wp-live-chat").css({display:"block"});var data={action:"wplc_user_reactivate_chat",security:wplc_nonce,cid:wplc_check_cookie_id};jQuery.post(ajaxurl,data,function(e){jQuery("#wp-live-chat-react").hide();jQuery("#wp-live-chat-4").show();wplc_user_auto_refresh=setInterval(function(){wpcl_user_auto_update_chat_box(wplc_check_cookie_id)},3500)})}}
+        var wplc_check_cookie_id;
+        var wplc_check_cookie_stage;
+        var wplc_check_hide_cookie;
+
+        wplc_check_cookie_id = jQuery.cookie('wplc_cid');
+        wplc_check_cookie_stage = jQuery.cookie('wplc_stage');
+        wplc_check_hide_cookie = jQuery.cookie('wplc_hide');
+
+
+        function wplc_relay_user_stage(stage,cid) {
+            if (cid.length) {
+                var data = {
+                        action: 'wplc_relay_stage',
+                        security: wplc_nonce,
+                        stage: stage,
+                        cid: cid
+                };
+            } else {
+                var data = {
+                        action: 'wplc_relay_stage',
+                        security: wplc_nonce,
+                        stage: stage
+                };
+            }
+            jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_relay_stage");
+            });
+        }
+        
+        /* close chat window */
+        jQuery("#wp-live-chat-close").live("click", function() {
+            jQuery("#wp-live-chat-1").show();
+            jQuery("#wp-live-chat-1").css('cursor', 'pointer');
+
+            jQuery("#wp-live-chat-2").hide();
+            jQuery("#wp-live-chat-3").hide();
+            jQuery("#wp-live-chat-4").hide();
+            jQuery("#wp-live-chat-close").hide();
+            jQuery.cookie('wplc_hide', "yes", { expires: 1, path: '/' });
+            var data = {
+                action: 'wplc_user_close_chat',
+                security: wplc_nonce,
+                cid: wplc_check_cookie_id
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_user_close_chat");
+            });            
+        });
+        
+        
+        
+        jQuery("#wp-live-chat-1").live("click", function() {
+            ///jQuery("#wp-live-chat-1").hide();
+            jQuery("#wp-live-chat-1").css('cursor', 'default');
+            jQuery.cookie('wplc_hide', "");
+            jQuery("#wp-live-chat-close").show();
+            jQuery("#wp-live-chat-2").show();
+            wplc_check_cookie_stage = jQuery.cookie('wplc_stage');
+            if (wplc_check_cookie_stage == "3") {
+                jQuery("#wp-live-chat-4").show();
+                 jQuery("#wplc_chatmsg").focus();
+                jQuery("#wp-live-chat-2").hide();
+            }
+            else {
+                jQuery("#wp-live-chat-2").show();
+            }            
+            
+        });
+
+        var wplc_user_waiting = null;
+
+        jQuery("#wplc_start_chat_btn").live("click", function() {
+            var wplc_name = jQuery("#wplc_name").val();
+            var wplc_email = jQuery("#wplc_email").val();
+            if (wplc_name.length <= 0) { alert("Please enter your name"); return false; }
+            if (wplc_email.length <= 0) { alert("Please enter your email address"); return false; }
+
+            jQuery("#wp-live-chat-2").hide();
+            jQuery("#wp-live-chat-3").show();
+
+            wplc_check_cookie_id = jQuery.cookie('wplc_cid');
+            var wplc_chat_session_id;
+            
+            var data = {
+                    action: 'wplc_start_chat',
+                    security: wplc_nonce,
+                    name: wplc_name,
+                    email: wplc_email 
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_start_chat");
+                    wplc_chat_session_id = response;
+                    wplc_check_cookie_id = response;
+                    wplc_user_waiting = setInterval(function (){wplc_user_await_session(wplc_chat_session_id);}, 5000);
+
+            });
+        });
+
+        function wplc_user_await_session(cid) {
+            var data = {
+                    action: 'wplc_user_awaiting_chat',
+                    security: wplc_nonce,
+                    id: cid
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                //console.log("wplc_user_awaiting_chat");
+                //alert("chat status"+response);
+                if (response == "3") {
+                    clearInterval(wplc_user_waiting);
+                    var wplc_name = jQuery("#wplc_name").val();
+                    jQuery("#wplc_cid").val(cid)
+                    jQuery("#wp-live-chat-3").hide();
+                    jQuery("#wp-live-chat-4").show();
+                     jQuery("#wplc_chatmsg").focus();
+
+                    // chat is now active
+                    jQuery.cookie('wplc_cid', cid, { expires: 1, path: '/' });
+                    jQuery.cookie('wplc_name', wplc_name, { expires: 1, path: '/' });
+                    jQuery.cookie('wplc_stage', 3, { expires: 1, path: '/' });
+                    wplc_user_auto_refresh = setInterval(function (){wpcl_user_auto_update_chat_box(cid);}, 3500);
+
+                };
+            });
+            return;
+        }
+        jQuery("#wplc_chatmsg").keyup(function(event){
+            if(event.keyCode == 13){
+                jQuery("#wplc_send_msg").click();
+            }
+        });
+
+        jQuery("#wplc_send_msg").live("click", function() {
+            var wplc_cid = jQuery("#wplc_cid").val();
+            var wplc_chat = jQuery("#wplc_chatmsg").val();
+            var wplc_name = jQuery("#wplc_name").val();
+            if (typeof wplc_name == "undefined" || wplc_name == null || wplc_name == "") {
+                wplc_name = jQuery.cookie('wplc_name');
+            }
+            jQuery("#wplc_chatmsg").val('');
+            jQuery("#wplc_chatbox").append("<strong>"+wplc_name+"</strong>: "+wplc_chat+"<br />");
+            var height = jQuery('#wplc_chatbox')[0].scrollHeight;
+            jQuery('#wplc_chatbox').scrollTop(height);
+
+            var data = {
+                    action: 'wplc_user_send_msg',
+                    security: wplc_nonce,
+                    cid: wplc_cid,
+                    msg: wplc_chat
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_user_send_msg");
+            });
+
+        });
+        
+        function wpcl_user_auto_update_chat_box(cid) {
+            var data = {
+                    action: 'wplc_update_user_chat_boxes',
+                    cid: cid,
+                    security: wplc_nonce
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                //console.log("wplc_update_user_chat_boxes");
+                jQuery("#wplc_chatbox").append(response);
+                var height = jQuery('#wplc_chatbox')[0].scrollHeight;
+                jQuery('#wplc_chatbox').scrollTop(height);
+
+            });
+
+        }                
+
+        
+        if (wplc_check_hide_cookie == "yes") {
+            jQuery("#wp-live-chat-1").show();
+            jQuery("#wp-live-chat-2").hide();
+            jQuery("#wp-live-chat-3").hide();
+            jQuery("#wp-live-chat-4").hide();
+        } else {
+            if (typeof wplc_check_cookie_id == "undefined" || wplc_check_cookie_id == null) {
+                wplc_dc = setTimeout(function (){jQuery("#wp-live-chat").css({ "display" : "block" }); }, 10000);
+            }
+            else { 
+            
+                jQuery("#wplc_cid").val(wplc_check_cookie_id);
+                
+                
+                    
+                    jQuery("#wp-live-chat-1").show();
+                    jQuery("#wp-live-chat-2").hide();
+                    jQuery("#wp-live-chat-3").hide();
+                    jQuery("#wp-live-chat-4").hide();
+                    jQuery("#wp-live-chat-react").show();
+
+
+
+                    jQuery("#wp-live-chat").css({ "display" : "block" });
+
+
+
+                        var data = {
+                                action: 'wplc_user_reactivate_chat',
+                                security: wplc_nonce,
+                                cid: wplc_check_cookie_id
+                        };
+                        jQuery.post(ajaxurl, data, function(response) {
+                            //console.log("wplc_user_reactivate_chat");
+                            jQuery("#wp-live-chat-react").hide();
+                            jQuery("#wp-live-chat-4").show();
+                            jQuery("#wplc_chatmsg").focus();
+                            jQuery("#wp-live-chat-close").show();
+
+                            jQuery("#wplc_chatbox").append(response);
+                            var height = jQuery('#wplc_chatbox')[0].scrollHeight;
+                            jQuery('#wplc_chatbox').scrollTop(height);
+
+                            wplc_user_auto_refresh = setInterval(function (){wpcl_user_auto_update_chat_box(wplc_check_cookie_id);}, 3500);
+                        });
+                    }
+        }
 
     });
     </script>
@@ -92,7 +310,7 @@ function wplc_output_box() {
     
     
 ?>    
-<div id="wp-live-chat" style="position:fixed;bottom:0px; <?php echo $wplc_box_align; ?> ;z-index:105;display:none; background-color:#FFF; border:1px solid #CCC; padding:15px;">
+<div id="wp-live-chat" style="<?php echo $wplc_box_align; ?>;">
 
     
     <?php if (function_exists("wplc_register_pro_version")) {
@@ -100,15 +318,16 @@ function wplc_output_box() {
     } else {
     ?>
 
-        <div id="wp-live-chat-close">X</div>
+        <div id="wp-live-chat-close" style="display:none;"></div>
         <div id="wp-live-chat-1">
-            <h4>Need Help?</h4>
-            <p>Click the link below for assistance</p>
-            <a href="javascript:void(0);" id="wplc-sb">Start live chat</a>
+            <strong>Questions?</strong> Chat with us
         </div>
         <div id="wp-live-chat-2" style="display:none;">
-            <h4>Start Live Chat</h4>
             <table>
+            <tr>
+                <td></td>
+                <td><strong>Start Live Chat</strong></td>
+            </tr>
             <tr>
                 <td><?php _e("Name","wplivechat"); ?></td>
                 <td><input type="text" name="wplc_name" id="wplc_name" value="" /></td>
@@ -130,11 +349,12 @@ function wplc_output_box() {
             <p>Reactivating your previous chat...</p>
         </div>
         <div id="wp-live-chat-4" style="display:none;">
-            <div id="wplc_chatbox" style="height:200px; overflow:auto; width:100%;"></div>
+            <div id="wplc_chatbox"></div>
+            <p style="text-align:center; font-size:11px;">Press ENTER to send your message</p>
             <p>
                 <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
                 <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
-                <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplc"); ?>" /></p>
+                <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplc"); ?>" style="display:none;" /></p>
         </div>
             
     </div>    
@@ -144,17 +364,8 @@ function wplc_output_box() {
 
 function wplc_display_box() {
     $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
-    
-    if ($wplc_is_admin_logged_in == 1) {
-        if (function_exists("wplc_register_pro_version")) { 
-            wplc_pro_draw_user_box();
-        } else {
-            wplc_draw_user_box();
-        }
-    }
-    else {
-        if (function_exists("wplc_register_pro_version")) { wplc_pro_draw_not_available_box(); }
-    }
+    if ($wplc_is_admin_logged_in != 1) { echo "<!-- wplc a-n-c -->"; }
+    if (function_exists("wplc_register_pro_version")) { wplc_pro_draw_user_box(); } else { wplc_draw_user_box(); }
 }
 
 
@@ -216,7 +427,7 @@ function wplc_action_callback() {
                 }
             }
             if ($_POST['action'] == "wplc_admin_set_transient") {
-                set_transient("wplc_is_admin_logged_in", "1", 350 );
+                set_transient("wplc_is_admin_logged_in", "1", 70 );
                 
             }
 
@@ -254,6 +465,7 @@ function wplc_action_callback() {
             }
             if ($_POST['action'] == "wplc_user_reactivate_chat") {
                 wplc_change_chat_status($_POST['cid'],3);
+                echo wplc_return_chat_messages($_POST['cid']);
                 
             }
 
@@ -288,7 +500,7 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     $rows_affected = $wpdb->insert( $wplc_tblname_msgs, $ins_array );
     
     wplc_update_active_timestamp($cid);
-
+    wplc_change_chat_status($cid,3);
     return true;
 
     
@@ -511,6 +723,10 @@ function wplc_user_initiate_chat($name,$email,$cid = null) {
     global $wpdb;
     global $wplc_tblname_chats;
 
+    if (function_exists("wplc_register_pro_version")) { 
+        wplc_pro_notify_via_email(); 
+    }
+    
     if ($cid != null) { // change from a visitor to a chat
         $query = 
         "
@@ -689,7 +905,7 @@ function wplc_superadmin_javascript() {
 
             var wplc_set_transient = null;
             
-            wplc_set_transient = setInterval(function (){wpcl_admin_set_transient();}, 300000);
+            wplc_set_transient = setInterval(function (){wpcl_admin_set_transient();}, 60000);
             wpcl_admin_set_transient();
             function wpcl_admin_set_transient() {
                 var data = {
@@ -719,7 +935,6 @@ function wplc_admin_javascript() {
             var wplc_refresh_chat_area = null;
             var wplc_refresh_status = null;
 
-            var wplc_nonce = '<?php echo $ajax_nonce; ?>';
             
 
 
@@ -727,7 +942,7 @@ function wplc_admin_javascript() {
             function wpcl_admin_update_chats(cid) {
                 var data = {
                         action: 'wplc_update_admin_chat',
-                        security: wplc_nonce
+                        security: '<?php echo $ajax_nonce; ?>'
                 };
                 jQuery.post(ajaxurl, data, function(response) {
                         //console.log("wplc_update_admin_chat");
@@ -744,7 +959,7 @@ function wplc_admin_javascript() {
             function wplc_update_statuses() {
                 var data = {
                         action: 'wplc_update_admin_status',
-                        security: wplc_nonce
+                        security: '<?php echo $ajax_nonce; ?>'
                 };
                 jQuery.post(ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_status");
@@ -857,7 +1072,7 @@ function wplc_admin_menu_layout_display() {
 
         if ($_GET['action'] == 'ac') {
             wplc_change_chat_status($_GET['cid'],3);
-            wplc_draw_chat_area($_GET['cid']);
+            if (function_exists("wplc_register_pro_version")) { wplc_pro_draw_chat_area($_GET['cid']); } else { wplc_draw_chat_area($_GET['cid']); }
         }
     }
 }
@@ -899,9 +1114,10 @@ function wplc_draw_chat_area($cid) {
         ";
         if ($result->status != 1) {
         echo "
-                <input type='text' name='wplc_admin_chatmsg' id='wplc_admin_chatmsg' value='' />
+                <p style=\"text-align:left; font-size:11px;\">Press ENTER to send your message</p>
+                <input type='text' name='wplc_admin_chatmsg' id='wplc_admin_chatmsg' value='' style=\"border:1px solid #666; width:290px;\" />
                 <input id='wplc_admin_cid' type='hidden' value='".$_GET['cid']."' />
-                <input id='wplc_admin_send_msg' type='button' value='".__("Send","wplc")."' />
+                <input id='wplc_admin_send_msg' type='button' value='".__("Send","wplc")."' style=\"display:none;\" />
                     </p>
             </div>
             ";
@@ -920,9 +1136,111 @@ function wplc_return_admin_chat_javascript($cid) {
     <script type="text/javascript">
         jQuery(document).ready(function() {
             
+            
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
             var wplc_gcid = '<?php echo $cid; ?>';
-            function wpcl_admin_auto_update_chat_box(e){var t={action:"wplc_update_admin_chat_boxes",cid:e,security:wplc_nonce};jQuery.post(ajaxurl,t,function(t){jQuery("#admin_chat_box_area_"+e).append(t);var n=jQuery("#admin_chat_box_area_"+e)[0].scrollHeight;jQuery("#admin_chat_box_area_"+e).scrollTop(n)})}function wpcl_admin_auto_check_status_of_chat(e){var t={action:"wplc_update_admin_return_chat_status",cid:e,security:wplc_nonce};jQuery.post(ajaxurl,t,function(t){var n=t;if(n=="1"){clearInterval(wplc_auto_check_status_of_chat);clearInterval(wplc_auto_refresh);jQuery("#admin_chat_box_area_"+e).append("<em>User has left the chat</em>");var r=jQuery("#admin_chat_box_area_"+e)[0].scrollHeight;jQuery("#admin_chat_box_area_"+e).scrollTop(r);jQuery("#wplc_admin_send_msg").attr("disabled","disabled")}})}if(jQuery("#wplc_admin_cid").length){var wplc_cid=jQuery("#wplc_admin_cid").val();var height=jQuery("#admin_chat_box_area_"+wplc_cid)[0].scrollHeight;jQuery("#admin_chat_box_area_"+wplc_cid).scrollTop(height)}jQuery(".wplc_admin_accept").live("click",function(){var e=jQuery(this).attr("cid");var t={action:"wplc_admin_accept_chat",cid:e,security:wplc_nonce};jQuery.post(ajaxurl,t,function(t){wplc_refresh_chat_boxes[e]=setInterval(function(){wpcl_admin_update_chat_box(e)},3e3);jQuery("#admin_chat_box_"+e).show()})});jQuery("#wplc_admin_chatmsg").keyup(function(e){if(e.keyCode==13){jQuery("#wplc_admin_send_msg").click()}});jQuery("#wplc_admin_send_msg").live("click",function(){var e=jQuery("#wplc_admin_cid").val();var t=jQuery("#wplc_admin_chatmsg").val();var n="a"+"d"+"m"+"i"+"n";jQuery("#wplc_admin_chatmsg").val("");jQuery("#admin_chat_box_area_"+e).append("<strong>"+n+"</strong>: "+t+"<br />");var r=jQuery("#admin_chat_box_area_"+e)[0].scrollHeight;jQuery("#admin_chat_box_area_"+e).scrollTop(r);var i={action:"wplc_admin_send_msg",security:wplc_nonce,cid:e,msg:t};jQuery.post(ajaxurl,i,function(e){})});wplc_auto_refresh=setInterval(function(){wpcl_admin_auto_update_chat_box(wplc_gcid)},3500);wplc_auto_check_status_of_chat=setInterval(function(){wpcl_admin_auto_check_status_of_chat(wplc_gcid)},5e3)
+            
+            if (jQuery('#wplc_admin_cid').length){
+                var wplc_cid = jQuery("#wplc_admin_cid").val();
+                var height = jQuery('#admin_chat_box_area_'+wplc_cid)[0].scrollHeight;
+                jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
+            }
+
+            jQuery(".wplc_admin_accept").live("click", function() {
+                var cid = jQuery(this).attr("cid");
+                
+                var data = {
+                        action: 'wplc_admin_accept_chat',
+                        cid: cid,
+                        security: wplc_nonce
+                };
+                jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_admin_accept_chat");
+                    wplc_refresh_chat_boxes[cid] = setInterval(function (){wpcl_admin_update_chat_box(cid);}, 3000);
+                    jQuery("#admin_chat_box_"+cid).show();
+                });
+            });
+
+            jQuery("#wplc_admin_chatmsg").keyup(function(event){
+                if(event.keyCode == 13){
+                    jQuery("#wplc_admin_send_msg").click();
+                }
+            });
+
+            jQuery("#wplc_admin_send_msg").live("click", function() {
+                var wplc_cid = jQuery("#wplc_admin_cid").val();
+                var wplc_chat = jQuery("#wplc_admin_chatmsg").val();
+                var wplc_name = "a"+"d"+"m"+"i"+"n";
+                jQuery("#wplc_admin_chatmsg").val('');
+                
+                
+                jQuery("#admin_chat_box_area_"+wplc_cid).append("<strong>"+wplc_name+"</strong>: "+wplc_chat+"<br />");
+                var height = jQuery('#admin_chat_box_area_'+wplc_cid)[0].scrollHeight;
+                jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
+                
+
+                var data = {
+                        action: 'wplc_admin_send_msg',
+                        security: wplc_nonce,
+                        cid: wplc_cid,
+                        msg: wplc_chat
+                };
+                jQuery.post(ajaxurl, data, function(response) {
+                        //console.log("wplc_admin_send_msg");
+                        
+                });
+
+
+            });            
+            
+            
+            wplc_auto_refresh = setInterval(function (){wpcl_admin_auto_update_chat_box(wplc_gcid);}, 3500);
+            function wpcl_admin_auto_update_chat_box(cid) {
+                
+                var data = {
+                        action: 'wplc_update_admin_chat_boxes',
+                        cid: cid,
+                        security: wplc_nonce
+                };
+                jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_update_admin_chat_boxes");
+                    //alert(response);
+                    //jQuery("#admin_chat_box_area_"+cid).html(response);
+                    jQuery("#admin_chat_box_area_"+cid).append(response);
+                    var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
+                    jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
+                });
+
+            }
+
+             
+            
+            wplc_auto_check_status_of_chat = setInterval(function (){wpcl_admin_auto_check_status_of_chat(<?php echo $cid; ?>);}, 5000);
+            var chat_status = 3;
+            function wpcl_admin_auto_check_status_of_chat(cid) {
+                
+                var data = {
+                        action: 'wplc_update_admin_return_chat_status',
+                        cid: <?php echo $cid; ?>,
+                        security: '<?php echo $ajax_nonce; ?>'
+                };
+                jQuery.post(ajaxurl, data, function(response) {
+                    //console.log("wplc_update_admin_return_chat_status");
+                    if (chat_status != response) {
+                    chat_status = response;
+                        if (chat_status == "1") { 
+                            //clearInterval(wplc_auto_check_status_of_chat);
+                            //clearInterval(wplc_auto_refresh);
+                            jQuery("#admin_chat_box_area_"+cid).append("<em><?php _e("User has minimized the chat window","wplivechat"); ?></em><br />");
+                            var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
+                            jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
+                            
+                        }
+                    }
+                    
+                });
+
+            }
             
             
            
@@ -1002,10 +1320,10 @@ function wplc_admin_history_layout() {
 }
 
 function wplc_settings_page_basic() {
-    echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Settings","wplivechat")."</h2>";
+    echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Support Settings","wplivechat")."</h2>";
 
     $wplc_settings = get_option("WPLC_SETTINGS");
-
+    
     
     if ($wplc_settings["wplc_settings_align"]) { $wplc_settings_align[intval($wplc_settings["wplc_settings_align"])] = "SELECTED"; }
     
@@ -1019,6 +1337,7 @@ function wplc_settings_page_basic() {
         $wplc_pro_chat_logo = wplc_settings_page_pro('chat_logo');
         $wplc_pro_chat_delay = wplc_settings_page_pro('chat_delay');
         $wplc_pro_chat_fs = wplc_settings_page_pro('wplc_chat_window_text1');
+        $wplc_pro_chat_emailme = wplc_settings_page_pro('chat_email_on_chat');
     } else {
         $wplc_pro_chat_name = "
             <tr>
@@ -1052,14 +1371,23 @@ function wplc_settings_page_basic() {
                 </td>
             </tr>
         ";
+        $wplc_pro_chat_emailme = "
+            <tr>
+                <td width='200' valign='top'>".__("Chat notifications","wplivechat").":</td>
+                <td>
+                    <input id='wplc_pro_chat_notification' name='wplc_pro_chat_notification' type='checkbox' value='yes' disabled=\"disabled\" readonly/>
+                        ".__("Alert me via email as soon as someone wants to chat","wplivechat")."
+                            <small><i> ".__("available in the","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=alert\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a> ".__("only","wplivechat").".   </i></small>
+                </td>
+            </tr>
+        ";
         $wplc_pro_chat_fs = "
             <tr style='height:30px;'><td></td><td></td></tr>
             <tr>
                 <td width='200' valign='top'>".__("First Section Text","wplivechat").":</td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Need help?' /> <br />
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Click the link below for assistance' /> <br />
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Start live chat' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Questions?' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat with us' /> <br />
                 </td>
             </tr>
             <tr>
@@ -1072,9 +1400,17 @@ function wplc_settings_page_basic() {
                 </td>
             </tr>
             <tr>
-                <td width='200' valign='top'>".__("Reactive Chat Section Text","wplivechat").":</td>
+                <td width='200' valign='top'>".__("Reactivate Chat Section Text","wplivechat").":</td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Reactivating your previous chat...' /><small><i> ".__("Edit these text fields using the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Reactivating your previous chat...' /><small><i> ".__("Edit these text fields using the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields3\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
+
+
+                </td>
+            </tr>
+            <tr>
+                <td width='200' valign='top'>".__("Offline Text","wplivechat").":</td>
+                <td>
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat offline. Leave a message' /><small><i> ".__("Edit these text fields using the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields4\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
 
 
                 </td>
@@ -1087,11 +1423,12 @@ function wplc_settings_page_basic() {
     echo "
 
                 <h3>".__("Chat Window Settings",'wplivechat')."</h3>
-                <table class='form-table'>
+                <table class='form-table' width='700'>
                     $wplc_pro_chat_name
                     $wplc_pro_chat_pic
                     $wplc_pro_chat_logo
                     $wplc_pro_chat_delay
+                    $wplc_pro_chat_emailme
                     <tr>
                         <td width='200' valign='top'>".__("Chat Box Alignment","wplivechat").":</td>
                         <td>
