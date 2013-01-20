@@ -60,6 +60,9 @@ Once installed and activated, a link should appear in your left navigation panel
 
 == Changelog ==
 
+= 2.2 =
+* Fixed a small bug
+
 = 2.1 =
 * More precise functionality to handle if you are online or offline
 * Fixed a bug that recorded visitors when offline
