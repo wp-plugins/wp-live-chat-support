@@ -13,6 +13,7 @@ jQuery(document).ready(function() {
 
 
         function wplc_relay_user_stage(stage,cid) {
+            
             if (cid.length) {
                 var data = {
                         action: 'wplc_relay_stage',
@@ -109,7 +110,7 @@ jQuery(document).ready(function() {
             };
             jQuery.post(ajaxurl, data, function(response) {
                 //console.log("wplc_user_awaiting_chat");
-                //alert("chat status"+response);
+                
                 if (response == "3") {
                     clearInterval(wplc_user_waiting);
                     var wplc_name = jQuery("#wplc_name").val();

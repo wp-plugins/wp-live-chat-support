@@ -50,8 +50,9 @@ Once installed and activated, a link should appear in your left navigation panel
 
 == Screenshots ==
 
-1. Front-end Live Chat Window
-2. Back-end Live Chat Window
+1. Front-end
+2. Back-end
+3. Settings page
 
 
 == Upgrade Notice ==
@@ -59,6 +60,9 @@ Once installed and activated, a link should appear in your left navigation panel
 
 
 == Changelog ==
+
+= 2.3 =
+*Fixed another small bug
 
 = 2.2 =
 * Fixed a small bug
