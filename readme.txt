@@ -6,16 +6,16 @@ Requires at least: 3.4
 Tested up to: 3.5
 Stable tag: trunk
 
-The easiest to use Live Chat plugin. Chat with your visitors!
+The most cost effective Live Chat plugin. Chat with your visitors for free!
 
 == Description ==
 
-The easiest to use Live Chat plugin. Chat with your visitors! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
+The most cost effective Live Chat plugin. Chat with your visitors for free! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free version =
+* Fully functional free live chat
 * Chat with your visitors
 * Easy to use interface for both the admin and the visitor
-* Fully functional free version
 * No advertising or links
 * No monthly subscriptions needed
 
@@ -50,8 +50,8 @@ Once installed and activated, a link should appear in your left navigation panel
 
 == Screenshots ==
 
-1. Front-end Chat Window
-2. Back-end Chat Window
+1. Front-end Live Chat Window
+2. Back-end Live Chat Window
 
 
 == Upgrade Notice ==
@@ -59,6 +59,12 @@ Once installed and activated, a link should appear in your left navigation panel
 
 
 == Changelog ==
+
+= 2.1 =
+* More precise functionality to handle if you are online or offline
+* Fixed a bug that recorded visitors when offline
+* Neatened up some code
+* Fixed some small bugs
 
 = 2.0 =
 * Bug fixes
