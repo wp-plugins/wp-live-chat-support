@@ -496,7 +496,7 @@ function wplc_update_chat_statuses() {
                 wplc_change_chat_status($id,7); // 7 - timedout
             }
         }
-        echo time()." ".$timestamp;
+        //echo time()." ".$timestamp;
     }
 }
 
