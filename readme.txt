@@ -10,14 +10,14 @@ The most cost effective Live Chat plugin. Chat with your visitors for free!
 
 == Description ==
 
-The most cost effective Live Chat plugin. Chat with your visitors for free! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
+The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free version =
-* Fully functional free live chat
-* Chat with your visitors
+* The free version of WP Live Chat Support is fully a functional live chat plugin
+* Initiate live chats with your visitors
 * Easy to use interface for both the admin and the visitor
 * No advertising or links
-* No monthly subscriptions needed
+* No monthly live chat subscriptions needed
 
 
 = Pro add-on =
@@ -25,11 +25,11 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! Perf
 * Chat to more than one visitor at a time
 * Access historical chat records
 * Set up your user profile
-* Add your company logo to the chat window
-* Add your photo to the chat window
+* Add your company logo to the live chat window
+* Add your photo to the live chat window
 * Edit all text fields
 * World-class support
-* Fully customizable chat experience
+* Fully customizable live chat experience
 * Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $14.95 once off!
 
 
@@ -50,9 +50,9 @@ Once installed and activated, a link should appear in your left navigation panel
 
 == Screenshots ==
 
-1. Front-end
-2. Back-end
-3. Settings page
+1. Front-end of WP Live Chat Support
+2. Back-end of WP Live Chat Support
+3. Settings page of WP Live Chat Support
 
 
 == Upgrade Notice ==
