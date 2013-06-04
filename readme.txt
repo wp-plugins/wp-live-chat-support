@@ -13,7 +13,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free!
 The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free version =
-* The free version of WP Live Chat Support is fully a functional live chat plugin
+* The free version of WP Live Chat Support is a fully functional live chat plugin
 * Initiate live chats with your visitors
 * Easy to use interface for both the admin and the visitor
 * No advertising or links
