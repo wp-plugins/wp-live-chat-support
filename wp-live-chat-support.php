@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 2.3
+Version: 2.4
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "2.3";
+$wplc_version = "2.4";
 
 
 add_action('wp_footer', 'wplc_display_box');
@@ -61,6 +61,9 @@ function wplc_admin_menu() {
 }
 add_action('wp_head','wplc_user_top_js');
 function wplc_user_top_js() {
+    echo "<!-- DEFINING DO NOT CACHE -->";
+    define('DONOTCACHEPAGE', true);
+    define('DONOTCACHEDB', true);
     $ajax_nonce = wp_create_nonce("wplc");
     wp_register_script( 'wplc-user-jquery-cookie', plugins_url('/js/jquery-cookie.js', __FILE__) );
     wp_enqueue_script( 'wplc-user-jquery-cookie' );
@@ -74,16 +77,24 @@ function wplc_user_top_js() {
 }
 
 function wplc_draw_user_box() {
+    $wplc_settings = get_option("WPLC_SETTINGS");
+    if ($wplc_settings["wplc_settings_enabled"] == 2) { return; }
+
     wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
     wp_enqueue_script( 'wplc-user-script' );
     wplc_output_box();
 
 }
 function wplc_output_box() {
+    
+
     $wplc_settings = get_option("WPLC_SETTINGS");
-    
+    if ($wplc_settings["wplc_settings_enabled"] == 2) { return; }
+
     if ($wplc_settings["wplc_settings_align"] == 1) { $wplc_box_align = "left:100px;"; } else { $wplc_box_align = "right:100px;"; }
-    
+    if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = "#".$wplc_settings["wplc_settings_fill"]; } else {  $wplc_settings_fill = "#73BE28"; }
+    if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = "#".$wplc_settings["wplc_settings_font"]; } else {  $wplc_settings_font = "#FFFFFF"; }
+
     $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
     if (!function_exists("wplc_register_pro_version") && $wplc_is_admin_logged_in != 1) {
         return "";
@@ -99,7 +110,7 @@ function wplc_output_box() {
     ?>
 
         <div id="wp-live-chat-close" style="display:none;"></div>
-        <div id="wp-live-chat-1">
+        <div id="wp-live-chat-1" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
             <strong>Questions?</strong> Chat with us
         </div>
         <div id="wp-live-chat-2" style="display:none;">
@@ -700,6 +711,9 @@ function wplc_superadmin_javascript() {
             }
 
 
+
+
+
         });
 
 
@@ -730,7 +744,14 @@ function wplc_admin_javascript() {
                         //console.log("wplc_update_admin_chat");
                         jQuery("#wplc_admin_chat_area").html(response);
                         if (response.indexOf("pending") >= 0) {
-                            document.getElementById("wplc_sound").innerHTML="<embed src='<?php echo plugins_url('/beep-2.mp3', __FILE__); ?>' hidden=true autostart=true loop=false>";
+                            var orig_title = document.getElementsByTagName("title")[0].innerHTML;
+                            document.title = "** CHAT REQUEST **";
+                            wplc_title_alerts1 = setTimeout(function (){ document.title = "__ CHAT Request __"; }, 1000);
+                            wplc_title_alerts2 = setTimeout(function (){ document.title = "** CHAT REQUEST **"; }, 1500);
+                            wplc_title_alerts3 = setTimeout(function (){ document.title = "__ CHAT Request __"; }, 2000);
+                            wplc_title_alerts4 = setTimeout(function (){ document.title = orig_title; }, 2500);
+
+                            document.getElementById("wplc_sound").innerHTML="<embed src='<?php echo plugins_url('/ring.wav', __FILE__); ?>' hidden=true autostart=true loop=false>";
                         }
                             
                         
@@ -847,7 +868,7 @@ function wplc_admin_menu_layout_display() {
         <?php wplc_list_chats(); ?>
         </div>
         <h1>Online Visitors</h1>    
-        <p><?php _e("With the Pro add-on of WP Live Chat Support, you can","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro-2/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats","wplivechat"); ?>" target=\"_BLANK\"><?php _e("see who's online and initiate chats","wplivechat"); ?></a> <?php _e("with your online visitors with the click of a button.","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro-2/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $9.95 once off","wplivechat"); ?>" target=\"_BLANK\"><?php _e("Buy the Pro add-on now for only $9.95 once off","wplivechat"); ?></a></p>
+        <p><?php _e("With the Pro add-on of WP Live Chat Support, you can","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats","wplivechat"); ?>" target=\"_BLANK\"><?php _e("see who's online and initiate chats","wplivechat"); ?></a> <?php _e("with your online visitors with the click of a button.","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $14.95 once off. Updates free forever.","wplivechat"); ?>" target=\"_BLANK\"><strong><?php _e("Buy the Pro add-on now for only $14.95 once off. Updates free forever.","wplivechat"); ?></strong></a></p>
     <?php
     }
     else {
@@ -1032,7 +1053,7 @@ function wplc_return_admin_chat_javascript($cid) {
 function wplc_activate() {
     wplc_handle_db();
     if (!get_option("WPLC_SETTINGS")) {
-        add_option('WPLC_SETTINGS',array("wplc_settings_align" => "2", "other" => "other"));
+        add_option('WPLC_SETTINGS',array("wplc_settings_align" => "2", "wplc_settings_enabled" => "1", "wplc_settings_fill" => "73BE2", "wplc_settings_font" => "FFFFFF"));
     }
 }
 
@@ -1087,6 +1108,17 @@ function wplc_add_user_stylesheet() {
     wp_enqueue_style( 'wplc-style' );
 }
 
+if (isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu-settings') {
+    add_action('admin_print_scripts', 'wplc_admin_scripts_basic');
+}
+function wplc_admin_scripts_basic() {
+    if ($_GET['page'] == "wplivechat-menu-settings") {
+        wp_register_script('my-wplc-color', plugins_url('js/jscolor.js',__FILE__), false, '1.4.1', false);
+        wp_enqueue_script('my-wplc-color');
+    }
+}
+
+
 function wplc_admin_settings_layout() {
     wplc_settings_page_basic();
 }
@@ -1096,7 +1128,7 @@ function wplc_admin_history_layout() {
         wplc_pro_admin_display_history();
     }
     else {
-        echo "<br /><br >This option is only available in the <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Pro Add-on</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Get it now for only $9.95 once off!</a>";
+        echo "<br /><br >This option is only available in the <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Pro Add-on</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Get it now for only $14.95 once off!</a>";
     }
 }
 
@@ -1104,10 +1136,13 @@ function wplc_settings_page_basic() {
     echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Support Settings","wplivechat")."</h2>";
 
     $wplc_settings = get_option("WPLC_SETTINGS");
-    
-    
+
+
     if ($wplc_settings["wplc_settings_align"]) { $wplc_settings_align[intval($wplc_settings["wplc_settings_align"])] = "SELECTED"; }
-    
+    if ($wplc_settings["wplc_settings_enabled"]) { $wplc_settings_enabled[intval($wplc_settings["wplc_settings_enabled"])] = "SELECTED"; }
+    if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = $wplc_settings["wplc_settings_fill"]; } else { $wplc_settings_fill = "73BE28"; }
+    if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = $wplc_settings["wplc_settings_font"]; } else { $wplc_settings_font = "FFFFFF"; }
+
 
 
     echo "<form action='' name='wplc_settings' method='post' id='wplc_settings'>";
@@ -1146,7 +1181,7 @@ function wplc_settings_page_basic() {
         ";
         $wplc_pro_chat_delay = "
             <tr>
-                <td width='200' valign='top'>".__("Chat Delay (seconds)","wplivechat").":</td>
+                <td width='200' valign='top'>".__("Chat delay (seconds)","wplivechat").":</td>
                 <td>
                     <input type='text' size='50' maxlength='50' disabled readonly value='10' /> <small><i> ".__("available in the","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=delay\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a> ".__("only","wplivechat").".   </i></small>
                 </td>
@@ -1165,14 +1200,14 @@ function wplc_settings_page_basic() {
         $wplc_pro_chat_fs = "
             <tr style='height:30px;'><td></td><td></td></tr>
             <tr>
-                <td width='200' valign='top'>".__("First Section Text","wplivechat").":</td>
+                <td width='200' valign='top'>".__("First section text","wplivechat").":</td>
                 <td>
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Questions?' /> <br />
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat with us' /> <br />
                 </td>
             </tr>
             <tr>
-                <td width='200' valign='top'>".__("Second Section Text","wplivechat").":</td>
+                <td width='200' valign='top'>".__("Second section text","wplivechat").":</td>
                 <td>
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Start Chat' /> <br />
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Connecting you to a sales person. Please be patient.' /> <br />
@@ -1181,7 +1216,7 @@ function wplc_settings_page_basic() {
                 </td>
             </tr>
             <tr>
-                <td width='200' valign='top'>".__("Reactivate Chat Section Text","wplivechat").":</td>
+                <td width='200' valign='top'>".__("Reactivate chat section text","wplivechat").":</td>
                 <td>
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Reactivating your previous chat...' /><small><i> ".__("Edit these text fields using the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields3\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
 
@@ -1189,7 +1224,7 @@ function wplc_settings_page_basic() {
                 </td>
             </tr>
             <tr>
-                <td width='200' valign='top'>".__("Offline Text","wplivechat").":</td>
+                <td width='200' valign='top'>".__("Offline text","wplivechat").":</td>
                 <td>
                     <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat offline. Leave a message' /><small><i> ".__("Edit these text fields using the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields4\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
 
@@ -1202,6 +1237,20 @@ function wplc_settings_page_basic() {
     
     
     echo "
+                <h3>".__("Main Settings",'wplivechat')."</h3>
+                <table class='form-table' width='700'>
+                    <tr>
+                        <td width='200' valign='top'>".__("Chat enabled","wplivechat").":</td>
+                        <td>
+                            <select id='wplc_settings_enabled' name='wplc_settings_enabled'>
+                                <option value=\"1\" ".$wplc_settings_enabled[1].">".__("Yes","wplivechat")."</option>
+                                <option value=\"2\" ".$wplc_settings_enabled[2].">".__("No","wplivechat")."</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                </table>
+
 
                 <h3>".__("Chat Window Settings",'wplivechat')."</h3>
                 <table class='form-table' width='700'>
@@ -1211,7 +1260,7 @@ function wplc_settings_page_basic() {
                     $wplc_pro_chat_delay
                     $wplc_pro_chat_emailme
                     <tr>
-                        <td width='200' valign='top'>".__("Chat Box Alignment","wplivechat").":</td>
+                        <td width='200' valign='top'>".__("Chat box alignment","wplivechat").":</td>
                         <td>
                             <select id='wplc_settings_align' name='wplc_settings_align'>
                                 <option value=\"1\" ".$wplc_settings_align[1].">".__("Bottom left","wplivechat")."</option>
@@ -1219,6 +1268,19 @@ function wplc_settings_page_basic() {
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td width='200' valign='top'>".__("Chat box fill color","wplivechat").":</td>
+                        <td>
+                            <input id=\"wplc_settings_fill\" name=\"wplc_settings_fill\" type=\"text\" class=\"color\" value=\"".$wplc_settings_fill."\" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width='200' valign='top'>".__("Chat box font color","wplivechat").":</td>
+                        <td>
+                            <input id=\"wplc_settings_font\" name=\"wplc_settings_font\" type=\"text\" class=\"color\" value=\"".$wplc_settings_font."\" />
+                        </td>
+                    </tr>
+
                     $wplc_pro_chat_fs
                     
                 </table>
@@ -1239,16 +1301,19 @@ function wplc_head() {
 
     if (isset($_POST['wplc_save_settings'])){
 
-            $wplc_data['wplc_settings_align'] = attribute_escape($_POST['wplc_settings_align']);
-            update_option('WPLC_SETTINGS', $wplc_data);
+        $wplc_data['wplc_settings_align'] = attribute_escape($_POST['wplc_settings_align']);
+        $wplc_data['wplc_settings_fill'] = attribute_escape($_POST['wplc_settings_fill']);
+        $wplc_data['wplc_settings_font'] = attribute_escape($_POST['wplc_settings_font']);
+        $wplc_data['wplc_settings_enabled'] = attribute_escape($_POST['wplc_settings_enabled']);
+        update_option('WPLC_SETTINGS', $wplc_data);
 
-            if (function_exists("wplc_register_pro_version")) { 
-                wplc_pro_save_settings();
-            } 
+        if (function_exists("wplc_register_pro_version")) {
+            wplc_pro_save_settings();
+        }
 
-            echo "<div class='updated'>";
-            _e("Your settings have been saved.","wplivechat");
-            echo "</div>";
+        echo "<div class='updated'>";
+        _e("Your settings have been saved.","wplivechat");
+        echo "</div>";
 
     
    }

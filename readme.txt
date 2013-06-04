@@ -1,16 +1,16 @@
 === WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
-Tags: live chat, live support, live help, plugin, widget, wordpress chat, customer support, chat
+Tags: live chat, live support, live help, plugin, widget, wordpress chat, customer support, chat, live chat plugin
 Requires at least: 3.4
-Tested up to: 3.5
+Tested up to: 3.5.1
 Stable tag: trunk
 
 The most cost effective Live Chat plugin. Chat with your visitors for free!
 
 == Description ==
 
-The most cost effective Live Chat plugin. Chat with your visitors for free! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
+The most cost effective Live Chat plugin. Chat with your visitors for free! Perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free version =
 * Fully functional free live chat
@@ -21,7 +21,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! Perf
 
 
 = Pro add-on =
-* Initiate chats with online visitors
+* Initiate live chats with online visitors
 * Chat to more than one visitor at a time
 * Access historical chat records
 * Set up your user profile
@@ -30,7 +30,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! Perf
 * Edit all text fields
 * World-class support
 * Fully customizable chat experience
-* Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $9.95 once off!
+* Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $14.95 once off!
 
 
 
@@ -43,7 +43,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! Perf
 
 == Frequently Asked Questions ==
 
-= I've installed the plugin, now what? =
+= I've installed the live chat plugin, now what? =
 
 Once installed and activated, a link should appear in your left navigation panel within your WP-ADMIN section. Click on the "Live Chat" link and follow the on screen instructions.
 
@@ -61,8 +61,15 @@ Once installed and activated, a link should appear in your left navigation panel
 
 == Changelog ==
 
+= 2.4 =
+* You now have full control of the fill and font color of your live chat box
+* Added the ability to turn live chat on and off
+* Better notification of incoming live chats.
+* Added more localization support
+* Plugin should now be compatible with caching plugins.
+
 = 2.3 =
-*Fixed another small bug
+* Fixed another small bug
 
 = 2.2 =
 * Fixed a small bug
