@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
                         stage: stage
                 };
             }
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_relay_stage");
             });
         }
@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
                 security: wplc_nonce,
                 cid: wplc_check_cookie_id
             };
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_user_close_chat");
             });            
         });
@@ -93,7 +93,7 @@ jQuery(document).ready(function() {
                     name: wplc_name,
                     email: wplc_email 
             };
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_start_chat");
                     wplc_chat_session_id = response;
                     wplc_check_cookie_id = response;
@@ -108,7 +108,7 @@ jQuery(document).ready(function() {
                     security: wplc_nonce,
                     id: cid
             };
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                 //console.log("wplc_user_awaiting_chat");
                 
                 if (response == "3") {
@@ -153,7 +153,7 @@ jQuery(document).ready(function() {
                     cid: wplc_cid,
                     msg: wplc_chat
             };
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_user_send_msg");
             });
 
@@ -165,7 +165,7 @@ jQuery(document).ready(function() {
                     cid: cid,
                     security: wplc_nonce
             };
-            jQuery.post(ajaxurl, data, function(response) {
+            jQuery.post(wplc_ajaxurl, data, function(response) {
                 //console.log("wplc_update_user_chat_boxes");
                 jQuery("#wplc_chatbox").append(response);
                 var height = jQuery('#wplc_chatbox')[0].scrollHeight;
@@ -208,7 +208,7 @@ jQuery(document).ready(function() {
                                 security: wplc_nonce,
                                 cid: wplc_check_cookie_id
                         };
-                        jQuery.post(ajaxurl, data, function(response) {
+                        jQuery.post(wplc_ajaxurl, data, function(response) {
                             //console.log("wplc_user_reactivate_chat");
                             jQuery("#wp-live-chat-react").hide();
                             jQuery("#wp-live-chat-4").show();

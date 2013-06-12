@@ -23,7 +23,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 = Pro add-on =
 * Initiate live chats with online visitors
 * Chat to more than one visitor at a time
-* Access historical chat records
+* Access historical live chat records
 * Set up your user profile
 * Add your company logo to the live chat window
 * Add your photo to the live chat window
@@ -32,6 +32,10 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Fully customizable live chat experience
 * Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $14.95 once off!
 
+= Coming Soon =
+* Multiple live chat operators
+* Better control of chat history
+* More advanced customization
 
 
 == Installation ==
@@ -60,6 +64,10 @@ Once installed and activated, a link should appear in your left navigation panel
 
 
 == Changelog ==
+
+= 2.5 =
+* Major performance improvements
+* Small UI improvements
 
 = 2.4 =
 * You now have full control of the fill and font color of your live chat box

@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 2.4
+Version: 2.5
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,40 +17,40 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "2.4";
+$wplc_version = "2.5";
 
+require_once ("functions.php");
+
+add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
 
 add_action('wp_footer', 'wplc_display_box');
-add_action('wp_ajax_wplc_start_chat', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_start_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_relay_stage', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_relay_stage', 'wplc_action_callback');
-add_action('wp_ajax_wplc_update_admin_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_update_admin_status', 'wplc_action_callback');
-add_action('wp_ajax_wplc_user_awaiting_chat', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_user_awaiting_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_user_send_msg', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_user_send_msg', 'wplc_action_callback');
-add_action('wp_ajax_wplc_user_close_chat', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_user_close_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_user_reactivate_chat', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_user_reactivate_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_admin_accept_chat', 'wplc_action_callback');
-add_action('wp_ajax_wplc_update_admin_chat_boxes', 'wplc_action_callback');
-add_action('wp_ajax_wplc_update_user_chat_boxes', 'wplc_action_callback');
-add_action('wp_ajax_nopriv_wplc_update_user_chat_boxes', 'wplc_action_callback');
-add_action('wp_ajax_wplc_admin_send_msg', 'wplc_action_callback');
-add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
-add_action('wp_ajax_wplc_update_admin_return_chat_status', 'wplc_action_callback');
-
-
-
-
 add_action('admin_head', 'wplc_head');
 add_action( 'wp_enqueue_scripts', 'wplc_add_user_stylesheet' );
 add_action('admin_menu', 'wplc_admin_menu');
 add_action('admin_head', 'wplc_superadmin_javascript');
 register_activation_hook( __FILE__, 'wplc_activate' );
+
+
+
+
+function wplc_action_callback() {
+    global $wpdb;
+    global $wplc_tblname_chats;
+    $check = check_ajax_referer( 'wplc', 'security' );
+
+    if ($check == 1) {
+
+        if ($_POST['action'] == "wplc_admin_set_transient") {
+            set_transient("wplc_is_admin_logged_in", "1", 70 );
+
+        }
+    }
+
+    die(); // this is required to return a proper result
+
+}
+
+
 
 
 function wplc_admin_menu() {
@@ -70,9 +70,11 @@ function wplc_user_top_js() {
     $wplc_settings = get_option("WPLC_SETTINGS");
 ?>    
 <script type="text/javascript">
-   var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
+    <?php if (!function_exists("wplc_register_pro_version")) { ?>
+    var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+    <?php } ?>
    var wplc_nonce = '<?php echo $ajax_nonce; ?>';
-</script> 
+</script>
 <?php
 }
 
@@ -160,300 +162,7 @@ function wplc_display_box() {
 }
 
 
-function wplc_action_callback() {
-        global $wpdb;
-        global $wplc_tblname_chats;
-        $check = check_ajax_referer( 'wplc', 'security' );
 
-        if ($check == 1) {
-            if ($_POST['action'] == "wplc_start_chat") {
-                if ($_POST['cid']) {
-                    if ($_POST['name'] && $_POST['email']) {
-                        echo wplc_user_initiate_chat($_POST['name'],$_POST['email'],$_POST['cid']); // echo the chat session id
-                    } else {
-                        echo "error2";
-                    }
-                } else {
-                    if ($_POST['name'] && $_POST['email']) {
-                        echo wplc_user_initiate_chat($_POST['name'],$_POST['email']); // echo the chat session id
-                    } else {
-                        echo "error2";
-                    }
-                }
-            }
-            if ($_POST['action'] == "wplc_relay_stage") { 
-                
-                if ($_POST['stage'] == "1") {  // chat window is displayed to user
-                    echo wplc_log_user_on_page("user".time(),"no email set");
-                }
-                else if ($_POST['stage'] == "2") { // user still hasnt opened chat window but is now on another page
-                    echo wplc_update_user_on_page($_POST['cid']);
-                    
-                }
-            }
-            if ($_POST['action'] == "wplc_update_admin_chat") {
-                wplc_list_chats();
-            }
-            if ($_POST['action'] == "wplc_update_admin_status") {
-                wplc_update_chat_statuses();
-            }
-            if ($_POST['action'] == "wplc_admin_accept_chat") {
-                wplc_admin_accept_chat($_POST['cid']);
-            }
-            if ($_POST['action'] == "wplc_update_admin_chat_boxes") {
-                echo wplc_return_admin_chat_messages($_POST['cid']);
-                wplc_mark_as_read_admin_chat_messages($_POST['cid']);
-            }
-            if ($_POST['action'] == "wplc_update_admin_return_chat_status") {
-                echo wplc_return_chat_status($_POST['cid']);
-            }
-            
-            if ($_POST['action'] == "wplc_admin_send_msg") {
-                $chat_id = $_POST['cid'];
-                $chat_msg = $_POST['msg'];
-                $wplc_rec_msg = wplc_record_chat_msg("2",$chat_id,$chat_msg);
-                if ($wplc_rec_msg) {
-                    echo 'sent';
-                } else {
-                    echo "There was an error sending your chat message. Please contact support";
-                }
-            }
-            if ($_POST['action'] == "wplc_admin_set_transient") {
-                set_transient("wplc_is_admin_logged_in", "1", 70 );
-                
-            }
-
-
-            // user
-
-            if ($_POST['action'] == "wplc_user_awaiting_chat") {
-                $chat_id = $_POST['id'];
-                echo wplc_return_chat_status($chat_id);
-            }
-            if ($_POST['action'] == "wplc_user_close_chat") {
-                $chat_id = $_POST['cid'];
-                wplc_change_chat_status($_POST['cid'],1);
-            }
-            if ($_POST['action'] == "wplc_user_send_msg") {
-                $chat_id = $_POST['cid'];
-                $chat_msg = $_POST['msg'];
-                $wplc_rec_msg = wplc_record_chat_msg("1",$chat_id,$chat_msg);
-                if ($wplc_rec_msg) {
-                    echo 'sent';
-                } else {
-                    echo "There was an error sending your chat message. Please contact support";
-                }
-            }
-
-            
-           
-            
-            
-            
-            
-            if ($_POST['action'] == "wplc_update_user_chat_boxes") {
-                echo wplc_return_user_chat_messages($_POST['cid']);
-                wplc_mark_as_read_user_chat_messages($_POST['cid']);
-            }
-            if ($_POST['action'] == "wplc_user_reactivate_chat") {
-                wplc_change_chat_status($_POST['cid'],3);
-                echo wplc_return_chat_messages($_POST['cid']);
-                
-            }
-
-        }
-        
-	die(); // this is required to return a proper result
-
-}
-
-function wplc_record_chat_msg($from,$cid,$msg) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-
-    if ($from == "1") { 
-        $fromname = wplc_return_chat_name($cid);
-        $orig = '2';
-    }
-    else { 
-        if (function_exists("wplc_register_pro_version")) { $fromname = wplc_return_from_name(); }
-        else { $fromname = "admin"; }
-        $orig = '1';
-    }
-
-    $ins_array = array(
-      'chat_sess_id' => $cid,
-      'timestamp' => date("Y-m-d H:i:s"),
-      'from' => $fromname,
-      'msg' => $msg,
-      'status' => 0,
-      'originates' => $orig
-    );
-    $rows_affected = $wpdb->insert( $wplc_tblname_msgs, $ins_array );
-    
-    wplc_update_active_timestamp($cid);
-    wplc_change_chat_status($cid,3);
-    return true;
-
-    
-}
-
-function wplc_update_active_timestamp($cid) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        UPDATE $wplc_tblname_chats 
-        SET `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
-        WHERE `id` = '$cid'
-        LIMIT 1
-        "
-    );
-    wplc_change_chat_status($cid,3);
-    return true;
-    
-}
-
-function wplc_return_admin_chat_messages($cid) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
-        "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '2'
-            ORDER BY `timestamp` ASC
-            
-        "
-    );
-    $msg_hist = "";
-    foreach ($results as $result) {
-        $id = $result->id;
-        $from = $result->from;
-        
-        $msg = stripslashes($result->msg);
-        //$timestamp = strtotime($result->timestamp);
-        //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
-        
-    }
-    
-    return $msg_hist;
-
-
-}
-function wplc_return_user_chat_messages($cid) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
-        "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '1'
-            ORDER BY `timestamp` ASC
-            
-        "
-    );
-    $msg_hist = "";
-    foreach ($results as $result) {
-        $id = $result->id;
-        $from = $result->from;
-        
-        $msg = stripslashes($result->msg);
-        //$timestamp = strtotime($result->timestamp);
-        //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
-        
-    }
-    
-    return $msg_hist;
-
-
-}
-function wplc_return_chat_messages($cid) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
-        "
-        SELECT *
-        FROM $wplc_tblname_msgs
-        WHERE `chat_sess_id` = '$cid'
-        ORDER BY `timestamp` ASC
-        LIMIT 0, 100
-        "
-    );
-    foreach ($results as $result) {
-        $from = $result->from;
-        $msg = $result->msg;
-        $timestamp = strtotime($result->timestamp);
-        $timeshow = date("H:i:s",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
-
-    }
-    return $msg_hist;
-
-
-}
-function wplc_mark_as_read_admin_chat_messages($cid) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
-        "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '2' 
-            ORDER BY `timestamp` DESC
-            
-        "
-    );
-    
-    
-    foreach ($results as $result) {
-        $id = $result->id;
-        $check = $wpdb->query(
-	"
-            UPDATE $wplc_tblname_msgs
-            SET `status` = 1
-            WHERE `id` = '$id' 
-            LIMIT 1
-		
-	"
-        );
-    }
-    return "ok";
-
-
-}
-function wplc_mark_as_read_user_chat_messages($cid) {
-    global $wpdb;
-    global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
-        "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '1' 
-            ORDER BY `timestamp` DESC
-            
-        "
-    );
-    
-    
-    foreach ($results as $result) {
-        $id = $result->id;
-        $check = $wpdb->query(
-	"
-            UPDATE $wplc_tblname_msgs
-            SET `status` = 1
-            WHERE `id` = '$id' 
-            LIMIT 1
-		
-	"
-        );
-    }
-    return "ok";
-
-
-}
 function wplc_admin_display_chat($cid) {
     global $wpdb;
     global $wplc_tblname_msgs;
@@ -480,190 +189,7 @@ function wplc_admin_accept_chat($cid) {
 
 }
 add_action('admin_head','wplc_update_chat_statuses');
-function wplc_update_chat_statuses() {
-    
-    global $wpdb;
-    global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        SELECT *
-        FROM $wplc_tblname_chats
-        WHERE `status` = '2' OR `status` = '3' OR `status` = '5'
-        "
-    );
-    foreach ($results as $result) {
-        $id = $result->id;
-        $timestamp = strtotime($result->last_active_timestamp);
-        if ($result->status == 2) {
-            if ((time() -  $timestamp) >= 60) { // 1 minute max
-                wplc_change_chat_status($id,0);
-            }
-        }
-        else if ($result->status == 3) {
-            if ((time() -  $timestamp) >= 600) { // 10 minute max
-                wplc_change_chat_status($id,1);
-            }
-        }
-        else if ($result->status == 5) {
-            if ((time() -  $timestamp) >= 120) { // 2 minute timeout
-                wplc_change_chat_status($id,7); // 7 - timedout
-            }
-        }
-    }
-}
 
-function wplc_user_initiate_chat($name,$email,$cid = null) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-
-    if (function_exists("wplc_register_pro_version")) { 
-        wplc_pro_notify_via_email(); 
-    }
-    
-    if ($cid != null) { // change from a visitor to a chat
-        $query = 
-        "
-        UPDATE $wplc_tblname_chats 
-            SET 
-                `status` = '2',
-                `timestamp` = '".date("Y-m-d H:i:s")."',
-                `name` = '$name',
-                `email` = '$email',
-                `ip` = '".$_SERVER['REMOTE_ADDR']."',
-                `url` = '".$_SERVER['HTTP_REFERER']."',
-                `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
-
-            WHERE `id` = '$cid'
-            LIMIT 1
-        ";
-        $results = $wpdb->query($query);
-        return $cid;
-    }
-    else { // create new ID for the chat
-        $ins_array = array(
-          'status' => '2',
-          'timestamp' => date("Y-m-d H:i:s"),
-          'name' => $name,
-          'email' => $email,
-          'ip' => $_SERVER['REMOTE_ADDR'],
-          'url' => $_SERVER['HTTP_REFERER'],
-          'last_active_timestamp' => date("Y-m-d H:i:s")
-        );
-        $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
-        $lastid = $wpdb->insert_id;
-        return $lastid;
-    }
-
-}
-function wplc_log_user_on_page($name,$email) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-
-    $ins_array = array(
-      'status' => '5',
-      'timestamp' => date("Y-m-d H:i:s"),
-      'name' => $name,
-      'email' => $email,
-      'ip' => $_SERVER['REMOTE_ADDR'],
-      'url' => $_SERVER['HTTP_REFERER'],
-      'last_active_timestamp' => date("Y-m-d H:i:s")
-    );
-    
-    $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
-
-    $lastid = $wpdb->insert_id;
-
-
-    return $lastid;
-
-}
-function wplc_update_user_on_page($cid) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-
-    $query = 
-    "
-    UPDATE $wplc_tblname_chats 
-        SET 
-            `url` = '".$_SERVER['HTTP_REFERER']."',
-            `last_active_timestamp` = '".date("Y-m-d H:i:s")."',
-            `ip` = '".$_SERVER['REMOTE_ADDR']."',
-            `status` = '5'
-            
-        WHERE `id` = '$cid'
-        LIMIT 1
-    ";
-    $results = $wpdb->query($query);
-    return $query;
-    
-    
-
-}
-function wplc_change_chat_status($id,$status) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        UPDATE $wplc_tblname_chats 
-        SET `status` = '$status'
-        WHERE `id` = '$id'
-        LIMIT 1
-        "
-    );
-    return true;
-
-}
-function wplc_return_chat_name($cid) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        SELECT *
-        FROM $wplc_tblname_chats
-        WHERE `id` = '$cid'
-        "
-    );
-    foreach ($results as $result) {
-       return $result->name;
-    }
-
-}
-function wplc_return_chat_status($cid) {
-    global $wpdb;
-    global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        SELECT *
-        FROM $wplc_tblname_chats
-        WHERE `id` = '$cid'
-        "
-    );
-    foreach ($results as $result) {
-       return $result->status;
-    }
-}
-
-
-function wplc_return_status($status) {
-    if ($status == 1) {
-        return "complete";
-    }
-    if ($status == 2) {
-        return "pending";
-    }
-    if ($status == 3) {
-        return "active";
-    }
-    if ($status == 4) {
-        return "deleted";
-    }
-    if ($status == 5) {
-        return "browsing";
-    }
-    if ($status == 6) {
-        return "requesting chat";
-    }
-}
 
 function wplc_superadmin_javascript() {
     
@@ -726,7 +252,7 @@ function wplc_admin_javascript() {
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-
+            var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
             var wplc_autoLoad = null;
             var wplc_refresh_chat_area = null;
             var wplc_refresh_status = null;
@@ -740,7 +266,7 @@ function wplc_admin_javascript() {
                         action: 'wplc_update_admin_chat',
                         security: '<?php echo $ajax_nonce; ?>'
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                         //console.log("wplc_update_admin_chat");
                         jQuery("#wplc_admin_chat_area").html(response);
                         if (response.indexOf("pending") >= 0) {
@@ -764,7 +290,7 @@ function wplc_admin_javascript() {
                         action: 'wplc_update_admin_status',
                         security: '<?php echo $ajax_nonce; ?>'
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_status");
                     //alert(response);
                 });
@@ -780,75 +306,25 @@ function wplc_admin_javascript() {
 }
 
 
-function wplc_list_chats() {
-
-    global $wpdb;
-    global $wplc_tblname_chats;
-
-    $results = $wpdb->get_results(
-	"
-	SELECT *
-	FROM $wplc_tblname_chats
-        WHERE `status` = 3 OR `status` = 2
-        ORDER BY `timestamp` ASC
-        
-	"
-    );
-    echo "
-        
-
-      <table class=\"wp-list-table widefat fixed \" cellspacing=\"0\">
-	<thead>
-	<tr>
-		<th scope='col' id='wplc_id_colum' class='manage-column column-id sortable desc'  style=''><span>".__("IP","wplivechat")."</span></th>
-                <th scope='col' id='wplc_name_colum' class='manage-column column-name_title sortable desc'  style=''><span>".__("Name","wplivechat")."</span></th>
-                <th scope='col' id='wplc_email_colum' class='manage-column column-email' style=\"\">".__("Email","wplivechat")."</th>
-                <th scope='col' id='wplc_url_colum' class='manage-column column-url' style=\"\">".__("URL","wplivechat")."</th>
-                <th scope='col' id='wplc_status_colum' class='manage-column column-status'  style=\"\">".__("Status","wplivechat")."</th>
-                <th scope='col' id='wplc_action_colum' class='manage-column column-action sortable desc'  style=\"\"><span>".__("Action","wplivechat")."</span></th>
-        </tr>
-	</thead>
-        <tbody id=\"the-list\" class='list:wp_list_text_link'>
-        ";
-    
-    if (!$results) {
-        echo "<tr><td></td><td>".__("No chat sessions available at the moment","wplivechat")."</td></tr>";
-    }
-    else {
-        foreach ($results as $result) {
-             unset($trstyle);
-             unset($actions);
-             $wplc_c++;
-
-            if ($result->status == 2) {
-                $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"#\" onclick=\"window.open('$url', 'mywindow".$result->id."', 'location=no,status=1,scrollbars=1,width=500,height=650');return false;\">Accept Chat</a>";
-                $trstyle = "style='background-color:#FFFBE4; height:30px;'";
-            }
-            if ($result->status == 3) {
-                $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"#\" onclick=\"window.open('$url', 'mywindow".$result->id."', 'location=no,status=1,scrollbars=1,width=500,height=650');return false;\">Open Chat Window</a>";
-                $trstyle = "style='background-color:#F7FCFE; height:30px;'";
-            }
-
-
-            echo "<tr id=\"record_".$result->id."\" $trstyle>";
-            echo "<td class='chat_id column-chat_d'>".$result->ip."</td>";
-            echo "<td class='chat_name column_chat_name' id='chat_name_".$result->id."'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=40\" /> ".$result->name."</td>";
-            echo "<td class='chat_email column_chat_email' id='chat_email_".$result->id."'>".$result->email."</td>";
-            echo "<td class='chat_name column_chat_url' id='chat_url_".$result->id."'>".$result->url."</td>";
-            echo "<td class='chat_status column_chat_status' id='chat_status_".$result->id."'><strong>".wplc_return_status($result->status)."</strong></td>";if ($wplc_c>1 && !function_exists("wplc_register_pro_version")) { $actions = wplc_get_msg(); }
-            echo "<td class='chat_action column-chat_action' id='chat_action_".$result->id."'>$actions</td>";
-            echo "</tr>";
-
-        }
-    }
-    echo "</table><br /><br />";
-    
-
-}
 
 function wplc_admin_menu_layout() {
+   if (function_exists("wplc_register_pro_version")) {
+       global $wplc_pro_version;
+       if ($wplc_pro_version < 2.3) {
+           ?>
+           <div class='error below-h1'>
+
+               <p>Dear Pro User<br /></p>
+               <p>You are using an outdated version of WP Live Chat Support Pro. Please <a href="<?php echo get_option('siteurl'); ?>/wp-admin/update-core.php\" target=\"_BLANK\">update to at least version 2.3</a> to ensure all functionality is in working order.</p>
+               <p>&nbsp;</p>
+               <p>If you are having difficulty updating the plugin, please contact nick@wp-livechat.com</p>
+
+           </div>
+       <?php
+       }
+
+
+   }
     if (function_exists("wplc_register_pro_version")) {
         wplc_pro_admin_menu_layout_display();
     } else {
@@ -858,14 +334,18 @@ function wplc_admin_menu_layout() {
 }
 
 function wplc_admin_menu_layout_display() {
-    
    if (!isset($_GET['action'])) {
 
         ?>
         <h1>Live Chat</h1>
         <div id="wplc_sound"></div>
+
+
+
+
         <div id="wplc_admin_chat_area">
-        <?php wplc_list_chats(); ?>
+
+        <?php if (function_exists("wplc_register_pro_version")) { wplc_list_chats_pro(); } else { wplc_list_chats(); } ?>
         </div>
         <h1>Online Visitors</h1>    
         <p><?php _e("With the Pro add-on of WP Live Chat Support, you can","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats","wplivechat"); ?>" target=\"_BLANK\"><?php _e("see who's online and initiate chats","wplivechat"); ?></a> <?php _e("with your online visitors with the click of a button.","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $14.95 once off. Updates free forever.","wplivechat"); ?>" target=\"_BLANK\"><strong><?php _e("Buy the Pro add-on now for only $14.95 once off. Updates free forever.","wplivechat"); ?></strong></a></p>
@@ -898,8 +378,10 @@ function wplc_draw_chat_area($cid) {
         if ($result->status == 1) { $status = "Previous"; } else { $status = "Active"; }
         
         echo "<h2>$status Chat with ".$result->name."</h2>";
+        echo "<style>#adminmenuwrap { display:none; } #adminmenuback { display:none; } #wpadminbar { display:none; } #wpfooter { display:none; } .update-nag { display:none; }</style>";
         echo "<div style='display:block;'>";
             echo "<div style='float:left; width:100px;'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."\" /></div>";
+            echo "<div id=\"wplc_sound_update\"></div>";
             echo "<div style='float:left; width:350px;'>";
             echo "<table>";
             echo "<tr><td>Email address</td><td><a href='mailto:".$result->email."' title='".$result->email."'>".$result->email."</a></td></tr>";
@@ -929,17 +411,15 @@ function wplc_draw_chat_area($cid) {
         
     }
 }
-function wplc_get_msg() {
-    return "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=morechats\" title=\"".__("Get Pro Add-on to accept more chats","wplivechat")."\" target=\"_BLANK\">Get Pro Add-on to accept more chats</a>";
-}
 
 function wplc_return_admin_chat_javascript($cid) {
         $ajax_nonce = wp_create_nonce("wplc");
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            
-            
+
+
+            var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
             var wplc_gcid = '<?php echo $cid; ?>';
             
@@ -957,7 +437,7 @@ function wplc_return_admin_chat_javascript($cid) {
                         cid: cid,
                         security: wplc_nonce
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_admin_accept_chat");
                     wplc_refresh_chat_boxes[cid] = setInterval(function (){wpcl_admin_update_chat_box(cid);}, 3000);
                     jQuery("#admin_chat_box_"+cid).show();
@@ -988,7 +468,7 @@ function wplc_return_admin_chat_javascript($cid) {
                         cid: wplc_cid,
                         msg: wplc_chat
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                         //console.log("wplc_admin_send_msg");
                         
                 });
@@ -999,16 +479,23 @@ function wplc_return_admin_chat_javascript($cid) {
             
             wplc_auto_refresh = setInterval(function (){wpcl_admin_auto_update_chat_box(wplc_gcid);}, 3500);
             function wpcl_admin_auto_update_chat_box(cid) {
-                
+                current_len = jQuery("#admin_chat_box_area_"+cid).html().length;
+
+
                 var data = {
                         action: 'wplc_update_admin_chat_boxes',
                         cid: cid,
                         security: wplc_nonce
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_chat_boxes");
                     //jQuery("#admin_chat_box_area_"+cid).html(response);
                     jQuery("#admin_chat_box_area_"+cid).append(response);
+                    new_length = jQuery("#admin_chat_box_area_"+cid).html().length;
+                    if (current_len < new_length) {
+                        document.getElementById("wplc_sound_update").innerHTML="<embed src='<?php echo plugins_url('/ding.mp3', __FILE__); ?>' hidden=true autostart=true loop=false>";
+                    }
+
                     var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
                     jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
                 });
@@ -1026,7 +513,7 @@ function wplc_return_admin_chat_javascript($cid) {
                         cid: <?php echo $cid; ?>,
                         security: '<?php echo $ajax_nonce; ?>'
                 };
-                jQuery.post(ajaxurl, data, function(response) {
+                jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_return_chat_status");
                     if (chat_status != response) {
                     chat_status = response;
@@ -1324,3 +811,6 @@ function wplc_logout() {
     delete_transient('wplc_is_admin_logged_in');
 }
 add_action('wp_logout', 'wplc_logout');
+
+
+
