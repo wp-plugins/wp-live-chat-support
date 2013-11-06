@@ -38,7 +38,8 @@
     
     color:#FFF;
 }
-#wp-live-chat-close { position:absolute; right:5px; top:10px; width:10px; cursor: pointer; height:3px; background:#FFF; }
+#wp-live-chat-minimize { position:absolute; right:23px; top:15px; width:10px; cursor: pointer; height:3px; background:#FFF; }
+#wp-live-chat-close { position:absolute; right:5px; top:4px; width:10px; cursor: pointer; font-weight:bold; }
 #wp-live-chat-2-info {
     font-size:11px;
     display:block;

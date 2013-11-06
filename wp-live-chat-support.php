@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 2.5
+Version: 2.6
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,15 +17,25 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "2.5";
+$wplc_version = "2.6";
 
 require_once ("functions.php");
 
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
 
 add_action('wp_footer', 'wplc_display_box');
-add_action('admin_head', 'wplc_head');
-add_action( 'wp_enqueue_scripts', 'wplc_add_user_stylesheet' );
+
+
+if (function_exists('wplc_head_pro')) {
+    add_action('admin_head', 'wplc_head_pro');
+} else { 
+    add_action('admin_head', 'wplc_head_basic');
+}
+
+
+add_action('wp_enqueue_scripts', 'wplc_add_user_stylesheet' );
+add_action('admin_enqueue_scripts', 'wplc_add_admin_stylesheet');
+
 add_action('admin_menu', 'wplc_admin_menu');
 add_action('admin_head', 'wplc_superadmin_javascript');
 register_activation_hook( __FILE__, 'wplc_activate' );
@@ -103,7 +113,7 @@ function wplc_output_box() {
     }    
     
 ?>    
-<div id="wp-live-chat" style="<?php echo $wplc_box_align; ?>;">
+<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>;">
 
     
     <?php if (function_exists("wplc_register_pro_version")) {
@@ -111,7 +121,8 @@ function wplc_output_box() {
     } else {
     ?>
 
-        <div id="wp-live-chat-close" style="display:none;"></div>
+        <div id="wp-live-chat-minimize" style="display:none;"></div>
+        <div id="wp-live-chat-close" style="display:none; background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">X</div>
         <div id="wp-live-chat-1" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
             <strong>Questions?</strong> Chat with us
         </div>
@@ -393,6 +404,7 @@ function wplc_draw_chat_area($cid) {
         echo "</div>";
 
         echo "
+        <p style=\"display:block; width:290px; text-align:right; font-size:10px;\"><a href=\"javascript:void(0);\" class=\"wplc_admin_close_chat\" id=\"wplc_admin_close_chat\">".__("End chat","wplivechat")."</a></p>
         <div id='admin_chat_box'>
             <div id='admin_chat_box_area_".$result->id."' style='height:200px; width:290px; border:1px solid #ccc; overflow:auto;'>".wplc_return_chat_messages($cid)."</div>
             <p>
@@ -448,6 +460,21 @@ function wplc_return_admin_chat_javascript($cid) {
                 if(event.keyCode == 13){
                     jQuery("#wplc_admin_send_msg").click();
                 }
+            });
+            jQuery("#wplc_admin_close_chat").live("click", function() {
+                var wplc_cid = jQuery("#wplc_admin_cid").val();
+                var data = {
+                        action: 'wplc_admin_close_chat',
+                        security: '<?php echo $ajax_nonce; ?>',
+                        cid: wplc_cid
+                        
+                };
+                jQuery.post(wplc_ajaxurl, data, function(response) {
+                        //console.log("wplc_admin_close_chat");
+                        //console.log(response);
+                        window.close();
+                });
+                
             });
 
             jQuery("#wplc_admin_send_msg").live("click", function() {
@@ -515,15 +542,38 @@ function wplc_return_admin_chat_javascript($cid) {
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_return_chat_status");
-                    if (chat_status != response) {
-                    chat_status = response;
-                        if (chat_status == "1") { 
-                            //clearInterval(wplc_auto_check_status_of_chat);
-                            //clearInterval(wplc_auto_refresh);
-                            jQuery("#admin_chat_box_area_"+cid).append("<em><?php _e("User has minimized the chat window","wplivechat"); ?></em><br />");
-                            var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
-                            jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
-                            
+                    if (response == "0") { } else {
+                        if (chat_status != response) {
+                            previous_chat_status = chat_status;
+                            console.log("previous chat status: "+previous_chat_status)
+                            chat_status = response;
+                            //console.log("chat status: "+chat_status)
+                            if (chat_status == "2") { 
+                                //clearInterval(wplc_auto_check_status_of_chat);
+                                //clearInterval(wplc_auto_refresh);
+                                jQuery("#admin_chat_box_area_"+cid).append("<em><?php _e("User has minimized the chat window","wplivechat"); ?></em><br />");
+                                var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
+                                jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
+
+                            }
+                            else if (previous_chat_status == "2" && chat_status == "3") {
+                                jQuery("#admin_chat_box_area_"+cid).append("<em><?php _e("User has opened the chat window","wplivechat"); ?></em><br />");
+                                var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
+                                jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
+                            }
+                            else if (chat_status == "1") { 
+                                //clearInterval(wplc_auto_check_status_of_chat);
+                                //clearInterval(wplc_auto_refresh);
+                                jQuery("#admin_chat_box_area_"+cid).append("<em><?php _e("User has closed and ended the chat","wplivechat"); ?></em><br />");
+                                var height = jQuery('#admin_chat_box_area_'+cid)[0].scrollHeight;
+                                jQuery('#admin_chat_box_area_'+cid).scrollTop(height);
+                                clearInterval(wplc_auto_check_status_of_chat);
+                                clearInterval(wplc_auto_refresh);
+                                document.getElementById('wplc_admin_chatmsg').disabled = true;
+
+
+                            }
+
                         }
                     }
                     
@@ -593,15 +643,28 @@ function wplc_handle_db() {
 function wplc_add_user_stylesheet() {
     wp_register_style( 'wplc-style', plugins_url('/css/wplcstyle.css', __FILE__) );
     wp_enqueue_style( 'wplc-style' );
+    
+}
+function wplc_add_admin_stylesheet() {
+    wp_register_style( 'wplc-admin-style', 'http://code.jquery.com/ui/1.8.24/themes/smoothness/jquery-ui.css' );
+    wp_enqueue_style( 'wplc-admin-style' );
+    
 }
 
 if (isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu-settings') {
     add_action('admin_print_scripts', 'wplc_admin_scripts_basic');
 }
 function wplc_admin_scripts_basic() {
+    
     if ($_GET['page'] == "wplivechat-menu-settings") {
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script('jquery-ui-core');
+
         wp_register_script('my-wplc-color', plugins_url('js/jscolor.js',__FILE__), false, '1.4.1', false);
         wp_enqueue_script('my-wplc-color');
+        wp_enqueue_script( 'jquery-ui-tabs');
+        wp_register_script('my-wplc-tabs', plugins_url('js/wplc_tabs.js',__FILE__), array('jquery-ui-core'), '', true);
+        wp_enqueue_script('my-wplc-tabs');
     }
 }
 
@@ -619,6 +682,7 @@ function wplc_admin_history_layout() {
     }
 }
 
+
 function wplc_settings_page_basic() {
     echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Support Settings","wplivechat")."</h2>";
 
@@ -632,7 +696,10 @@ function wplc_settings_page_basic() {
 
 
 
-    echo "<form action='' name='wplc_settings' method='post' id='wplc_settings'>";
+    echo "<form action='' name='wplc_settings' method='POST' id='wplc_settings'>";
+    
+    
+   
     
     if (function_exists("wplc_register_pro_version")) {
         $wplc_pro_chat_name = wplc_settings_page_pro('chat_name');
@@ -640,7 +707,9 @@ function wplc_settings_page_basic() {
         $wplc_pro_chat_logo = wplc_settings_page_pro('chat_logo');
         $wplc_pro_chat_delay = wplc_settings_page_pro('chat_delay');
         $wplc_pro_chat_fs = wplc_settings_page_pro('wplc_chat_window_text1');
+        $wplc_pro_chat_fs2 = wplc_settings_page_pro('wplc_chat_window_text2');
         $wplc_pro_chat_emailme = wplc_settings_page_pro('chat_email_on_chat');
+        $wplc_pro_email_address = wplc_settings_page_pro('chat_email_address');
     } else {
         $wplc_pro_chat_name = "
             <tr>
@@ -710,6 +779,8 @@ function wplc_settings_page_basic() {
 
                 </td>
             </tr>
+        ";
+        $wplc_pro_chat_fs2 = "
             <tr>
                 <td width='200' valign='top'>".__("Offline text","wplivechat").":</td>
                 <td>
@@ -718,85 +789,104 @@ function wplc_settings_page_basic() {
 
                 </td>
             </tr>
+        ";        
+        $wplc_pro_email_address = "
+            <tr>
+                <td width='200' valign='top'>".__("Email Address","wplivechat").":</td>
+                <td>
+                    <input type='text' size='50' maxlength='150' class='regular-text' readonly value='' /><small><i> ".__("Get offline messages with the ","wplivechat")." <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=offlinemessages\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">".__("Pro Add-on","wplivechat")."</a>.   </i></small> <br />
+                </td>
+            </tr>
         ";
     }
     
     
+    echo "<div id=\"wplc_tabs\">";
+    echo "  <ul>";
+    echo "      <li><a href=\"#tabs-1\">".__("General Settings","wplivechat")."</a></li>";
+    echo "      <li><a href=\"#tabs-2\">".__("Chat Box","wplivechat")."</a></li>";
+    echo "      <li><a href=\"#tabs-3\">".__("Offline Messages","wplivechat")."</a></li>";
+    echo "      <li><a href=\"#tabs-4\">".__("Styling","wplivechat")."</a></li>";
+    echo "  </ul>";
+    echo "  <div id=\"tabs-1\">";
+    echo "      <h3>".__("Main Settings",'wplivechat')."</h3>";
+    echo "      <table class='form-table' width='700'>";
+    echo "          <tr>";
+    echo "              <td width='200' valign='top'>".__("Chat enabled","wplivechat").":</td>";
+    echo "              <td>";
+    echo "                  <select id='wplc_settings_enabled' name='wplc_settings_enabled'>";
+    echo "                      <option value=\"1\" ".$wplc_settings_enabled[1].">".__("Yes","wplivechat")."</option>";
+    echo "                      <option value=\"2\" ".$wplc_settings_enabled[2].">".__("No","wplivechat")."</option>";
+    echo "                  </select>";
+    echo "              </td>";
+    echo "          </tr>";
+    echo "      </table>";
+
+    echo "  </div>";
+    echo "  <div id=\"tabs-2\">";
+    echo "      <h3>".__("Chat Window Settings",'wplivechat')."</h3>";
+    echo "      <table class='form-table' width='700'>";
+    echo "          <tr>";
+    echo "              <td width='200' valign='top'>".__("Chat box alignment","wplivechat").":</td>";
+    echo "              <td>";
+    echo "                  <select id='wplc_settings_align' name='wplc_settings_align'>";
+    echo "                      <option value=\"1\" ".$wplc_settings_align[1].">".__("Bottom left","wplivechat")."</option>";
+    echo "                      <option value=\"2\" ".$wplc_settings_align[2].">".__("Bottom right","wplivechat")."</option>";
+    echo "                  </select>";
+    echo "              </td>";
+    echo "          </tr>";    
+    echo "          $wplc_pro_chat_name";
+    echo "          $wplc_pro_chat_pic";
+    echo "          $wplc_pro_chat_logo";
+    echo "          $wplc_pro_chat_delay";
+    echo "          $wplc_pro_chat_emailme";
+    echo "      </table>";
+
+    echo "  </div>";
+    echo "  <div id=\"tabs-3\">";
+    echo "      <h3>".__("Offline Messages",'wplivechat')."</h3>";
+    echo "      <table class='form-table' width='700'>";
+    echo "          $wplc_pro_email_address";
+    echo "          $wplc_pro_chat_fs2";
+    echo "      </table>";
+    echo "  </div>";
+
+    echo "  <div id=\"tabs-4\">";
+    echo "      <h3>".__("Styling",'wplivechat')."</h3>";
+    echo "      <table class='form-table' width='700'>";
+    echo "          <tr>";
+    echo "              <td width='200' valign='top'>".__("Chat box fill color","wplivechat").":</td>";
+    echo "              <td>";
+    echo "                  <input id=\"wplc_settings_fill\" name=\"wplc_settings_fill\" type=\"text\" class=\"color\" value=\"".$wplc_settings_fill."\" />";
+    echo "              </td>";
+    echo "          </tr>";
+    echo "          <tr>";
+    echo "              <td width='200' valign='top'>".__("Chat box font color","wplivechat").":</td>";
+    echo "              <td>";
+    echo "                  <input id=\"wplc_settings_font\" name=\"wplc_settings_font\" type=\"text\" class=\"color\" value=\"".$wplc_settings_font."\" />";
+    echo "              </td>";
+    echo "          </tr>";
+    echo "          $wplc_pro_chat_fs";
+    echo "      </table>";
+    echo "  </div>";
+    echo "</div>";
+    echo "<p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='".__("Save Settings","wplivechat")."' /></p>";
+    echo "</form>";
     
-    echo "
-                <h3>".__("Main Settings",'wplivechat')."</h3>
-                <table class='form-table' width='700'>
-                    <tr>
-                        <td width='200' valign='top'>".__("Chat enabled","wplivechat").":</td>
-                        <td>
-                            <select id='wplc_settings_enabled' name='wplc_settings_enabled'>
-                                <option value=\"1\" ".$wplc_settings_enabled[1].">".__("Yes","wplivechat")."</option>
-                                <option value=\"2\" ".$wplc_settings_enabled[2].">".__("No","wplivechat")."</option>
-                            </select>
-                        </td>
-                    </tr>
-
-                </table>
-
-
-                <h3>".__("Chat Window Settings",'wplivechat')."</h3>
-                <table class='form-table' width='700'>
-                    $wplc_pro_chat_name
-                    $wplc_pro_chat_pic
-                    $wplc_pro_chat_logo
-                    $wplc_pro_chat_delay
-                    $wplc_pro_chat_emailme
-                    <tr>
-                        <td width='200' valign='top'>".__("Chat box alignment","wplivechat").":</td>
-                        <td>
-                            <select id='wplc_settings_align' name='wplc_settings_align'>
-                                <option value=\"1\" ".$wplc_settings_align[1].">".__("Bottom left","wplivechat")."</option>
-                                <option value=\"2\" ".$wplc_settings_align[2].">".__("Bottom right","wplivechat")."</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width='200' valign='top'>".__("Chat box fill color","wplivechat").":</td>
-                        <td>
-                            <input id=\"wplc_settings_fill\" name=\"wplc_settings_fill\" type=\"text\" class=\"color\" value=\"".$wplc_settings_fill."\" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width='200' valign='top'>".__("Chat box font color","wplivechat").":</td>
-                        <td>
-                            <input id=\"wplc_settings_font\" name=\"wplc_settings_font\" type=\"text\" class=\"color\" value=\"".$wplc_settings_font."\" />
-                        </td>
-                    </tr>
-
-                    $wplc_pro_chat_fs
-                    
-                </table>
-
-
-                <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='".__("Save Settings","wplivechat")." &raquo;' /></p>
-
-
-            </form>
-    ";
-
     echo "</div>";
 
     
 }
-function wplc_head() {
+function wplc_head_basic() {
     global $wpdb;
 
     if (isset($_POST['wplc_save_settings'])){
 
-        $wplc_data['wplc_settings_align'] = attribute_escape($_POST['wplc_settings_align']);
-        $wplc_data['wplc_settings_fill'] = attribute_escape($_POST['wplc_settings_fill']);
-        $wplc_data['wplc_settings_font'] = attribute_escape($_POST['wplc_settings_font']);
-        $wplc_data['wplc_settings_enabled'] = attribute_escape($_POST['wplc_settings_enabled']);
+        $wplc_data['wplc_settings_align'] = esc_attr($_POST['wplc_settings_align']);
+        $wplc_data['wplc_settings_fill'] = esc_attr($_POST['wplc_settings_fill']);
+        $wplc_data['wplc_settings_font'] = esc_attr($_POST['wplc_settings_font']);
+        $wplc_data['wplc_settings_enabled'] = esc_attr($_POST['wplc_settings_enabled']);
         update_option('WPLC_SETTINGS', $wplc_data);
-
-        if (function_exists("wplc_register_pro_version")) {
-            wplc_pro_save_settings();
-        }
 
         echo "<div class='updated'>";
         _e("Your settings have been saved.","wplivechat");

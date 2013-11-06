@@ -158,7 +158,11 @@ if ($check == 1) {
     }
 
 
-
+    if ($_POST['action'] == "wplc_admin_close_chat") {
+        $chat_id = $_POST['cid'];
+        wplc_change_chat_status($chat_id,1);
+        echo 'done';
+    }
 
 
 
@@ -166,14 +170,23 @@ if ($check == 1) {
     // user
 
 
-        if ($_POST['action'] == "wplc_user_awaiting_chat") {
+    if ($_POST['action'] == "wplc_user_awaiting_chat") {
         $chat_id = $_POST['id'];
         echo wplc_return_chat_status($chat_id);
+    }
+    if ($_POST['action'] == "wplc_user_minimize_chat") {
+        $chat_id = $_POST['cid'];
+        wplc_change_chat_status($_POST['cid'],2);
     }
     if ($_POST['action'] == "wplc_user_close_chat") {
         $chat_id = $_POST['cid'];
         wplc_change_chat_status($_POST['cid'],1);
     }
+    if ($_POST['action'] == "wplc_user_maximize_chat") {
+        $chat_id = $_POST['cid'];
+        wplc_change_chat_status($_POST['cid'],3);
+    }
+    
     if ($_POST['action'] == "wplc_user_send_msg") {
         $chat_id = $_POST['cid'];
         $chat_msg = $_POST['msg'];
@@ -189,6 +202,10 @@ if ($check == 1) {
         echo wplc_return_user_chat_messages($_POST['cid']);
         wplc_mark_as_read_user_chat_messages($_POST['cid']);
     }
+    if ($_POST['action'] == "wplc_update_user_chat_status") {
+        echo wplc_return_chat_status($_POST['cid']);
+    }
+
     if ($_POST['action'] == "wplc_user_reactivate_chat") {
         wplc_change_chat_status($_POST['cid'],3);
         echo wplc_return_chat_messages($_POST['cid']);
