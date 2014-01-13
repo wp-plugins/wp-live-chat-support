@@ -7,11 +7,11 @@ Tested up to: 3.8
 Stable tag: trunk
 License: GPLv2
 
-The most cost effective Live Chat plugin. Chat with your visitors for free!
+The most cost effective Live Chat plugin. Provide chat support for your visitors for free!
 
 == Description ==
 
-The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
+The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party live chat connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so.
 
 = Free Version Features =
 
@@ -31,18 +31,12 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 	► Set up your user profile
 	► Add your company logo to the live chat window
 	► Add your photo to the live chat window
+	► Edit the style of your live chat window
 	► Edit all text fields
 	► World-class support
 	► Fully customizable live chat experience
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $14.95 once off!
-
-= Coming Soon =
-
-* Multiple live chat operators
-* Better control of chat history
-* More advanced customization
-
 
 == Installation ==
 
@@ -71,6 +65,15 @@ Once installed and activated, a link should appear in your left navigation panel
 
 
 == Changelog ==
+
+= 2.7 =
+* Fixed the chat initiation bug
+* Fixed the style bug
+* Added support to email for proper smtp (pro)
+* Fixed cookie bugs
+* Add delete live chat history option (pro)
+* Added UTF8 character support
+* Added error reporting (pro)
 
 = 2.6 =
 * Fixed a bug that showed 'page not found' when saving the live chat settings

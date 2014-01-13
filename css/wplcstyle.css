@@ -1,4 +1,4 @@
-#wp-live-chat input[type="button"] { width:100px !important; }
+#wp-live-chat input[type="button"] { width: auto }
 #wp-live-chat input[type="text"] { width:150px; border:1px solid #CCC; }
 #wp-live-chat textarea { width:145px; height:40px; border:1px solid #CCC; }
 #wplc_chatbox { 
