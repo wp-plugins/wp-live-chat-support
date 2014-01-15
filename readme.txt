@@ -7,7 +7,7 @@ Tested up to: 3.8
 Stable tag: trunk
 License: GPLv2
 
-Live Chat Support for Your Site For FREE!
+Live Chat Support for Your Site for FREE!
 
 == Description ==
 
