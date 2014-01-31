@@ -39,7 +39,14 @@
                       <p class="description">Hides chat for 24hrs when user clicks X</p>
                   </td>
                   <td valign='top'>
-                      <input type="checkbox" name="wplc_hide_chat" value="true" disabled /> <small><i>Only available in the <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=hide" title="Buy the Pro version for only $14.95 once off. Free updates and support forever">Pro version</a></i></small>
+                      <input type="checkbox"  value="true" readonly disabled/>
+                      <small>
+                        <i> 
+                            <?php _e("available in the","wplivechat")?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=name" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
+                            <?php _e("only","wplivechat")?>
+                        </i>
+                    </small>
                   </td>
               </tr>
           </table>
