@@ -1,4 +1,4 @@
-﻿ï»¿=== WP Live Chat Support ===
+﻿=== WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin
