@@ -1,7 +1,7 @@
 ﻿=== WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
-Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin
+Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.5
 Tested up to: 3.8.1
 Stable tag: trunk
@@ -15,26 +15,26 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 
 = Free Version Features =
 
-	â–º WP Live Chat Support is a fully functional live chat plugin
-	â–º Initiate live chats with your visitors
-	â–º Easy to use interface for both the admin and the visitor
-	â–º No advertising or links
-	â–º No "Powered by" links on the live chat window
-	â–º No monthly live chat subscriptions needed
-	â–º Provide live support for your site for free
+	► WP Live Chat Support is a fully functional live chat plugin
+	► Initiate live chats with your visitors
+	► Easy to use interface for both the admin and the visitor
+	► No advertising or links
+	► No "Powered by" links on the live chat window
+	► No monthly live chat subscriptions needed
+	► Provide live support for your site for free
 
 
 = Pro Version Features =
 
-	â–º Initiate live chats with online visitors
-	â–º Chat to more than one visitor at a time
-	â–º Access historical live chat records
-	â–º Set up your user profile
-	â–º Add your company logo to the live chat window
-	â–º Add your photo to the live chat window
-	â–º Edit all text fields
-	â–º World-class support
-	â–º Fully customizable live chat experience
+	► Initiate live chats with online visitors
+	► Chat to more than one visitor at a time
+	► Access historical live chat records
+	► Set up your user profile
+	► Add your company logo to the live chat window
+	► Add your photo to the live chat window
+	► Edit all text fields
+	► World-class support
+	► Fully customizable live chat experience
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $24.95 once off!
 
