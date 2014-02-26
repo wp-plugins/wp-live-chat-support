@@ -83,6 +83,10 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
+= 3.02 =
+
+* Fixed CSS Box Border Issue 
+
 = 3.01 =
 
 * Fixed CSS bug with icons
