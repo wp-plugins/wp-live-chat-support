@@ -7,7 +7,15 @@
  * 4 = Chat window - user and admin can now chat
  */
 jQuery(document).ready(function() {
-
+        jQuery(function() {
+            jQuery( "#wp-live-chat" ).draggable({ 
+                handle: "#wp-live-chat-header",
+                drag: function( event, ui ) {
+                    jQuery(this).css("right","");
+                    jQuery(this).css("bottom","inherit");
+                }
+                });
+        });
 
         
         var wplc_user_auto_refresh = "";
@@ -51,6 +59,12 @@ jQuery(document).ready(function() {
         
         /* minimize chat window */
         jQuery("#wp-live-chat-minimize").on("click", function() {
+            if(jQuery("#wp-live-chat").attr("original_pos") === "right"){
+                jQuery("#wp-live-chat").css("left   ", "");
+            }
+            jQuery("#wp-live-chat").css(jQuery("#wp-live-chat").attr("original_pos"), "100px");
+            jQuery("#wp-live-chat").css("top", "");
+            jQuery("#wp-live-chat").css("bottom", "0");
             jQuery("#wp-live-chat-1").show();
             jQuery("#wp-live-chat-1").css('cursor', 'pointer');
             jQuery("#wp-live-chat-2").hide();
@@ -96,7 +110,8 @@ jQuery(document).ready(function() {
         
         jQuery("#wp-live-chat-1").on("click", function() {
             //jQuery("#wp-live-chat-1").hide();
-            jQuery("#wp-live-chat-1").css('cursor', 'default');
+            jQuery("#wp-live-chat-header").css('cursor', 'all-scroll');
+            jQuery("#wp-live-chat-1").css('cursor', 'all-scroll');
             jQuery.cookie('wplc_hide', "", { expires: 1, path: '/' });
             jQuery("#wp-live-chat-minimize").show();
             jQuery("#wp-live-chat-close").show();
@@ -211,7 +226,7 @@ jQuery(document).ready(function() {
                 wplc_name = jQuery.cookie('wplc_name');
             }
             jQuery("#wplc_chatmsg").val('');
-            jQuery("#wplc_chatbox").append("<strong>"+wplc_name+"</strong>: "+wplc_chat+"<br />");
+            jQuery("#wplc_chatbox").append("<span class='wplc-user-message'><strong>"+wplc_name+"</strong>:<hr/> "+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
             var height = jQuery('#wplc_chatbox')[0].scrollHeight;
             jQuery('#wplc_chatbox').scrollTop(height);
 
@@ -244,7 +259,7 @@ jQuery(document).ready(function() {
                     jQuery("#wp-live-chat-minimize").hide();
                     document.getElementById('wplc_chatmsg').disabled = true;
                 }
-                console.log("wplc_update_user_chat_response "+response);
+                //console.log("wplc_update_user_chat_response "+response);
             });
             
             

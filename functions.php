@@ -199,7 +199,17 @@ function wplc_return_user_chat_messages($cid) {
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
+        $image = "";
+        
+            if(function_exists("wplc_pro_get_admin_picture")){
+                $src = wplc_pro_get_admin_picture();
+                if($src){
+                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                }
+            }
+        
+        
+        $msg_hist .= "<span class='wplc-admin-message'>$image <strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
 
@@ -242,7 +252,23 @@ function wplc_return_chat_messages($cid) {
         $msg = $result->msg;
         $timestamp = strtotime($result->timestamp);
         $timeshow = date("H:i:s",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
+        $image = "";
+        if($result->originates == 1){
+            $class = "wplc-admin-message";
+            if(function_exists("wplc_pro_get_admin_picture")){
+                $src = wplc_pro_get_admin_picture();
+                if($src){
+                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                }
+            }
+        } else {
+            $class = "wplc-user-message";
+        }
+        
+        
+        
+        
+        $msg_hist .= "<span class='$class'>$image <strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
     return $msg_hist;
@@ -383,7 +409,6 @@ function wplc_return_status($status) {
         return "requesting chat";
     }
 }
-
 
 function wplc_user_initiate_chat($name,$email,$cid = null) {
     global $wpdb;

@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 2.10
+Version: 3.0
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "2.10";
+$wplc_version = "3.0";
 
 require_once (plugin_dir_path( __FILE__ )."functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
@@ -67,7 +67,7 @@ function wplc_action_callback() {
 
 
 function wplc_admin_menu() {
-    $wplc_mainpage = add_menu_page('WP Live Chat', __('Live Chat','wplivechat'), 'read', 'wplivechat-menu', 'wplc_admin_menu_layout');
+    $wplc_mainpage = add_menu_page('WP Live Chat', __('Live Chat','wplivechat'), 'manage_options', 'wplivechat-menu', 'wplc_admin_menu_layout');
     add_submenu_page('wplivechat-menu', __('Settings','wplivechat'), __('Settings','wplivechat'), 'manage_options' , 'wplivechat-menu-settings', 'wplc_admin_settings_layout');
     add_submenu_page('wplivechat-menu', __('History','wplivechat'), __('History','wplivechat'), 'manage_options' , 'wplivechat-menu-history', 'wplc_admin_history_layout');
     
@@ -110,6 +110,9 @@ function wplc_draw_user_box() {
 
     wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
     wp_enqueue_script( 'wplc-user-script' );
+    wp_enqueue_script( 'jquery' );
+    wp_enqueue_script( 'jquery-ui-core' );
+    wp_enqueue_script( 'jquery-ui-draggable');
     wplc_output_box();
 
 }
@@ -126,42 +129,48 @@ function wplc_output_box() {
     $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
     if (!function_exists("wplc_register_pro_version") && $wplc_is_admin_logged_in != 1) {
         return "";
-    }    
+    }  
+    if($wplc_settings["wplc_settings_align"] == 1){
+        $original_pos = "left";
+    } else {
+        $original_pos = "right";
+    }
     
 ?>    
-<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>;">
+<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>;" original_pos="<?php echo $original_pos ?>">
 
     
     <?php if (function_exists("wplc_register_pro_version")) {
         wplc_pro_output_box();
     } else {
     ?>
-
-        <div id="wp-live-chat-minimize" style="display:none; background-color: <?php echo $wplc_settings_font; ?> !important; color: <?php echo $wplc_settings_fill; ?> !important;"></div>
-        <div id="wp-live-chat-close" style="display:none; background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">X</div>
-        <div id="wp-live-chat-1" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
-            <strong>Questions?</strong> Chat with us
+        <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
+            
+            <div id="wp-live-chat-minimize" style="display:none;"><i class="fa fa-minus"  ></i></div>
+            <div id="wp-live-chat-close" style="display:none;"><i class="fa fa-times"  ></i></div>
+            
+            <div id="wp-live-chat-1" >
+                <div style="display:block; ">
+                <strong>Questions?</strong> Chat with us
+                </div>
+            </div>
         </div>
         <div id="wp-live-chat-2" style="display:none;">
-            <table>
-            <tr>
-                <td></td>
-                <td><strong>Start Live Chat</strong></td>
-            </tr>
-            <tr>
-                <td><?php _e("Name","wplivechat"); ?></td>
-                <td><input type="text" name="wplc_name" id="wplc_name" value="" /></td>
-            </tr>
-            <tr>
-                <td><?php _e("Email","wplivechat"); ?></td>
-                <td><input type="text" name="wplc_email" id="wplc_email" value="" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input id="wplc_start_chat_btn" type="button" value="Start Chat" /></td>
-            </tr>
-            </table>
+            
+            <div id="wp-live-chat-2-info">
+               <strong>Start Live Chat</strong> 
+            </div>
+
+                <input type="text" name="wplc_name" id="wplc_name" value="" placeholder="<?php _e("Name","wplivechat"); ?>"/>
+           
+                <input type="text" name="wplc_email" id="wplc_email" value="" placeholder="<?php _e("Email","wplivechat"); ?>"/>
+           
+                <input id="wplc_start_chat_btn" type="button" value="Start Chat" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
+
+            
+            
         </div>
+        
         <div id="wp-live-chat-3" style="display:none;">
             <p>Connecting you to a sales person. Please be patient.</p>
         </div>
@@ -337,12 +346,12 @@ function wplc_admin_javascript() {
 function wplc_admin_menu_layout() {
    if (function_exists("wplc_register_pro_version")) {
        global $wplc_pro_version;
-       if ($wplc_pro_version < 2.3) {
+       if ($wplc_pro_version < 3.0) {
            ?>
            <div class='error below-h1'>
 
                <p>Dear Pro User<br /></p>
-               <p>You are using an outdated version of WP Live Chat Support Pro. Please <a href="<?php echo get_option('siteurl'); ?>/wp-admin/update-core.php\" target=\"_BLANK\">update to at least version 2.3</a> to ensure all functionality is in working order.</p>
+               <p>You are using an outdated version of WP Live Chat Support Pro. Please <a href="http://wp-livechat.com/get-updated-version/" target=\"_BLANK\">update to at least version 3.0</a> to ensure all functionality is in working order.</p>
                <p>&nbsp;</p>
                <p>If you are having difficulty updating the plugin, please contact nick@wp-livechat.com</p>
 
@@ -405,7 +414,37 @@ function wplc_draw_chat_area($cid) {
         WHERE `id` = '$cid'
         LIMIT 1
         "
-    );
+    );?>
+        <style>
+            .wplc-user-message{
+                display: inline-block;
+                padding: 5px;
+                -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                border-radius: 5px;
+                float: left;
+                margin-bottom: 5px;
+            }
+            .wplc-user-message hr , .wplc-admin-message hr{
+                margin:0;
+            }
+            .wplc-clear-float-message{
+                clear: both;
+            }
+
+            .wplc-admin-message{
+                display: inline-block;
+                padding: 5px;
+                -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+                border-radius: 5px;
+                float: right;
+                margin-bottom: 5px;
+            }
+        </style>
+        <?php
 
     
     foreach ($results as $result) {
@@ -429,7 +468,7 @@ function wplc_draw_chat_area($cid) {
         echo "
         <p style=\"display:block; width:290px; text-align:right; font-size:10px;\"><a href=\"javascript:void(0);\" class=\"wplc_admin_close_chat\" id=\"wplc_admin_close_chat\">".__("End chat","wplivechat")."</a></p>
         <div id='admin_chat_box'>
-            <div id='admin_chat_box_area_".$result->id."' style='height:200px; width:290px; border:1px solid #ccc; overflow:auto;'>".wplc_return_chat_messages($cid)."</div>
+            <div id='admin_chat_box_area_".$result->id."' style='height:200px; width:290px; border:1px solid #ccc; overflow:auto; padding: 5px;'>".wplc_return_chat_messages($cid)."</div>
             <p>
         ";
         if ($result->status != 1) {
@@ -635,7 +674,7 @@ function wplc_handle_db() {
           `status` int(11) NOT NULL,
           `url` varchar(700) NOT NULL,
           `last_active_timestamp` datetime NOT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
     ";
 
@@ -651,7 +690,7 @@ function wplc_handle_db() {
           `timestamp` datetime NOT NULL,
           `status` INT(3) NOT NULL,
           `originates` INT(3) NOT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
     ";
 
@@ -662,6 +701,8 @@ function wplc_handle_db() {
 }
 
 function wplc_add_user_stylesheet() {
+    wp_register_style( 'wplc-font-awesome', plugins_url('/css/font-awesome.min.css', __FILE__) );
+    wp_enqueue_style( 'wplc-font-awesome' );
     wp_register_style( 'wplc-style', plugins_url('/css/wplcstyle.css', __FILE__) );
     wp_enqueue_style( 'wplc-style' );
     
