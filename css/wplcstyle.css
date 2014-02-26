@@ -97,10 +97,12 @@
     position: relative;
     bottom:8px;
     font-size: 10px;
+    vertical-align: bottom;
 }
 #wp-live-chat-minimize .fa-minus{
     position: relative;
-    top: 3px;
+    top: 5px;
+    vertical-align: top;
 }
 
 #wp-live-chat-2-info {
@@ -182,8 +184,6 @@
     margin-bottom: 5px;
 }
 #wplc_message_div{
-    width: 200px;
     text-align: center;
-    margin: 0 auto; 
 }
 

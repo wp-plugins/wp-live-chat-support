@@ -83,6 +83,11 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
+= 3.01 =
+
+* Fixed CSS bug with icons
+* Fixed CSS bug with inputs
+
 = 3.0 =
 * Improved chat UI
 * Chat Box is draggable
