@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 3.02
+Version: 3.03
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "3.02";
+$wplc_version = "3.03";
 
 require_once (plugin_dir_path( __FILE__ )."functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
@@ -488,11 +488,17 @@ function wplc_draw_chat_area($cid) {
 
 function wplc_return_admin_chat_javascript($cid) {
         $ajax_nonce = wp_create_nonce("wplc");
+        if(function_exists("wplc_pro_get_admin_picture")){
+                $src = wplc_pro_get_admin_picture();
+                if($src){
+                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                }
+            }
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
-
+            var wplc_image = "<?php echo $image ?>";
             var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
             var wplc_gcid = '<?php echo $cid; ?>';
@@ -546,7 +552,7 @@ function wplc_return_admin_chat_javascript($cid) {
                 jQuery("#wplc_admin_chatmsg").val('');
                 
                 
-                jQuery("#admin_chat_box_area_"+wplc_cid).append("<strong>"+wplc_name+"</strong>: "+wplc_chat+"<br />");
+                jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_image+" <strong>"+wplc_name+"</strong>:<hr/>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
                 var height = jQuery('#admin_chat_box_area_'+wplc_cid)[0].scrollHeight;
                 jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
                 

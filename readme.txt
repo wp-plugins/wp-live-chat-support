@@ -84,6 +84,10 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
+= 3.03 =
+
+* Fixed Text Area CSS Bug
+
 = 3.02 =
 
 * Fixed CSS Box Border Issue 

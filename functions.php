@@ -328,7 +328,7 @@ function wplc_return_admin_chat_messages($cid) {
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<strong>$from</strong>: $msg<br />";
+        $msg_hist .= "<span class='wplc-user-message'><strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
 
