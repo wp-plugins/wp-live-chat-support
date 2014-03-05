@@ -7,15 +7,7 @@
  * 4 = Chat window - user and admin can now chat
  */
 jQuery(document).ready(function() {
-        jQuery(function() {
-            jQuery( "#wp-live-chat" ).draggable({ 
-                handle: "#wp-live-chat-header",
-                drag: function( event, ui ) {
-                    jQuery(this).css("right","");
-                    jQuery(this).css("bottom","inherit");
-                }
-                });
-        });
+        
 
         
         var wplc_user_auto_refresh = "";
@@ -60,7 +52,7 @@ jQuery(document).ready(function() {
         /* minimize chat window */
         jQuery("#wp-live-chat-minimize").on("click", function() {
             if(jQuery("#wp-live-chat").attr("original_pos") === "right"){
-                jQuery("#wp-live-chat").css("left   ", "");
+                jQuery("#wp-live-chat").css("left", "");
             }
             jQuery("#wp-live-chat").css(jQuery("#wp-live-chat").attr("original_pos"), "100px");
             jQuery("#wp-live-chat").css("top", "");
@@ -89,8 +81,9 @@ jQuery(document).ready(function() {
             jQuery("#wp-live-chat-3").hide();
             jQuery("#wp-live-chat-4").hide();
             jQuery("#wp-live-chat-minimize").hide();
-            jQuery.cookie('wplc_hide', hide_chat, { expires: 1, path: '/' });
-            jQuery.cookie('wplc_stage', "1", { expires: 1, path: '/' });
+            jQuery.cookie('wplc_hide', wplc_hide_chat, { expires: 1, path: '/' });
+            jQuery.cookie('wplc_cid', null, { expires: 1, path: '/' });
+            jQuery.cookie('wplc_stage', 1, { expires: 1, path: '/' });
             
             
             
@@ -100,6 +93,7 @@ jQuery(document).ready(function() {
                 cid: wplc_check_cookie_id
             };
             jQuery.post(wplc_ajaxurl, data, function(response) {
+                console.log(response);
                     //console.log("wplc_user_close_chat");
                     clearInterval(wplc_user_auto_refresh_status);
                     clearInterval(wplc_user_auto_refresh);
@@ -107,14 +101,25 @@ jQuery(document).ready(function() {
             });            
         });   
         
-        
+        //open chat
         jQuery("#wp-live-chat-1").on("click", function() {
+            
             //jQuery("#wp-live-chat-1").hide();
             jQuery("#wp-live-chat-header").css('cursor', 'all-scroll');
             jQuery("#wp-live-chat-1").css('cursor', 'all-scroll');
             jQuery.cookie('wplc_hide', "", { expires: 1, path: '/' });
             jQuery("#wp-live-chat-minimize").show();
             jQuery("#wp-live-chat-close").show();
+            
+            jQuery(function() {
+                jQuery( "#wp-live-chat" ).draggable({ 
+                    handle: "#wp-live-chat-header",
+                    drag: function( event, ui ) {
+                        jQuery(this).css("right","");
+                        jQuery(this).css("bottom","inherit");
+                    }
+                });
+            });
 
             wplc_check_cookie_stage = jQuery.cookie('wplc_stage');
             if (wplc_check_cookie_stage === "4") {
@@ -150,8 +155,13 @@ jQuery(document).ready(function() {
                 //jQuery("#wplc_chatmsg").focus();
                 //jQuery("#wp-live-chat-2").hide();
             } */
-            else if (wplc_check_cookie_stage === "1"){
-                jQuery("#wp-live-chat-2").show();
+            else if (wplc_check_cookie_stage === "1" || !wplc_check_cookie_stage){
+                if(jQuery("#wp-live-chat-2").is(":visible") === false && jQuery("#wp-live-chat-4").is(":visible") === false){
+                    jQuery("#wp-live-chat-2").show();
+                }
+            }
+            else if (wplc_check_cookie_stage === "3"){
+                jQuery("#wp-live-chat-3").show();
             }
         });
 
@@ -165,6 +175,10 @@ jQuery(document).ready(function() {
 
             jQuery("#wp-live-chat-2").hide();
             jQuery("#wp-live-chat-3").show();
+            
+            var date = new Date();
+            date.setTime(date.getTime() + (1 * 60 * 1000));
+            jQuery.cookie('wplc_stage', 3, { expires: date, path: '/' });
 
             wplc_check_cookie_id = jQuery.cookie('wplc_cid');
             var wplc_chat_session_id;
@@ -192,7 +206,6 @@ jQuery(document).ready(function() {
             };
             jQuery.post(wplc_ajaxurl, data, function(response) {
                 //console.log("wplc_user_awaiting_chat");
-                
                 if (response == "3") {
                     clearInterval(wplc_user_waiting);
                     var wplc_name = jQuery("#wplc_name").val();
@@ -208,7 +221,11 @@ jQuery(document).ready(function() {
                     wplc_user_auto_refresh = setInterval(function (){wpcl_user_auto_update_chat_box(cid);}, 3500);
                     wplc_user_auto_refresh_status = setInterval(function (){wpcl_user_auto_update_chat_status(wplc_check_cookie_id);}, 3500);
 
-                };
+                } else if(response === "0"){
+                    clearInterval(wplc_user_waiting);
+                    jQuery.cookie('wplc_stage', 1, { expires: 1, path: '/' });
+                    
+                }
             });
             return;
         }
@@ -248,7 +265,7 @@ jQuery(document).ready(function() {
                     security: wplc_nonce
             };
             jQuery.post(wplc_ajaxurl, data, function(response) {
-                if (response == "1") {
+                if (response === "1") {
                     jQuery("#wplc_chatbox").append("The chat has been ended by the operator.<br />");
                     var height = jQuery('#wplc_chatbox')[0].scrollHeight;
                     jQuery('#wplc_chatbox').scrollTop(height);
@@ -274,8 +291,10 @@ jQuery(document).ready(function() {
             jQuery.post(wplc_ajaxurl, data, function(response) {
                 //console.log("wplc_update_user_chat_boxes");
                 jQuery("#wplc_chatbox").append(response);
-                var height = jQuery('#wplc_chatbox')[0].scrollHeight;
-                jQuery('#wplc_chatbox').scrollTop(height);
+                if(response){
+                    var height = jQuery('#wplc_chatbox')[0].scrollHeight;
+                    jQuery('#wplc_chatbox').scrollTop(height);
+                }
 
             });
 
