@@ -84,6 +84,19 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
+= 3.04 =
+
+* Fixed Close & Minimixe Button Styling Issues
+* Fixed bug where text was not hidden when offline message was sent
+* Fixed bug that would hide text behind image if text was 2 lines
+* Fixed bug that continuesly scrolled chat down
+* Fixed styling of inputs on some themes (overlaps chat box)
+* Set CSS color for inputs
+* Fixed bug that wasn't alerting admin in wp-admin to chat if Alert via email was set (Pro)
+* Fixed Double opening bug if chat was moved
+* Fixed Bug to inform admin and user either or has ended the chat
+* Fixed other small bugs
+
 = 3.03 =
 
 * Fixed Text Area CSS Bug

@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 3.03
+Version: 3.04
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "3.03";
+$wplc_version = "3.04";
 
 require_once (plugin_dir_path( __FILE__ )."functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
@@ -91,25 +91,17 @@ function wplc_user_top_js() {
 </script>
 <?php
 
-$hide_chat = get_option('WPLC_HIDE_CHAT');
-    if($hide_chat == true){
-        $hide_chat = "yes";
-    } else {
-        $hide_chat = '';
-    }
-    ?>
-        <script>
-            var hide_chat = "<?php echo $hide_chat; ?>";
-        </script>
-    <?php
+
 }
 
 function wplc_draw_user_box() {
     $wplc_settings = get_option("WPLC_SETTINGS");
     if ($wplc_settings["wplc_settings_enabled"] == 2) { return; }
 
+    
     wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
     wp_enqueue_script( 'wplc-user-script' );
+    wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'jquery-ui-core' );
     wp_enqueue_script( 'jquery-ui-draggable');
@@ -146,8 +138,8 @@ function wplc_output_box() {
     ?>
         <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
             
-            <div id="wp-live-chat-minimize" style="display:none;"><i class="fa fa-minus"  ></i></div>
-            <div id="wp-live-chat-close" style="display:none;"><i class="fa fa-times"  ></i></div>
+            <i id="wp-live-chat-minimize" class="fa fa-minus" style="display:none;" ></i>
+            <i id="wp-live-chat-close" class="fa fa-times" style="display:none;" ></i>
             
             <div id="wp-live-chat-1" >
                 <div style="display:block; ">
@@ -305,6 +297,7 @@ function wplc_admin_javascript() {
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                         //console.log("wplc_update_admin_chat");
                         jQuery("#wplc_admin_chat_area").html(response);
+                        
                         if (response.indexOf("pending") >= 0) {
                             var orig_title = document.getElementsByTagName("title")[0].innerHTML;
                             document.title = "** CHAT REQUEST **";
@@ -509,7 +502,7 @@ function wplc_return_admin_chat_javascript($cid) {
                 jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
             }
 
-            jQuery(".wplc_admin_accept").live("click", function() {
+            jQuery(".wplc_admin_accept").on("click", function() {
                 var cid = jQuery(this).attr("cid");
                 
                 var data = {
@@ -529,7 +522,7 @@ function wplc_return_admin_chat_javascript($cid) {
                     jQuery("#wplc_admin_send_msg").click();
                 }
             });
-            jQuery("#wplc_admin_close_chat").live("click", function() {
+            jQuery("#wplc_admin_close_chat").on("click", function() {
                 var wplc_cid = jQuery("#wplc_admin_cid").val();
                 var data = {
                         action: 'wplc_admin_close_chat',
@@ -545,7 +538,7 @@ function wplc_return_admin_chat_javascript($cid) {
                 
             });
 
-            jQuery("#wplc_admin_send_msg").live("click", function() {
+            jQuery("#wplc_admin_send_msg").on("click", function() {
                 var wplc_cid = jQuery("#wplc_admin_cid").val();
                 var wplc_chat = jQuery("#wplc_admin_chatmsg").val();
                 var wplc_name = "a"+"d"+"m"+"i"+"n";
