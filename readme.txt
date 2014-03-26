@@ -36,7 +36,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * World-class support
 * Fully customizable live chat experience
 
-Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $24.95 once off!
+Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $29.95 once off!
 
 = 5 second live chat installation =
 
@@ -83,6 +83,11 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 
 == Changelog ==
+
+= 3.05 
+
+* Low priority update 
+
 
 = 3.04 =
 
