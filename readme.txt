@@ -84,7 +84,11 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
-= 3.05 
+= 3.06 =
+
+Fixed Placeholder text not showing in input on IE
+
+= 3.05 =
 
 * Low priority update 
 
