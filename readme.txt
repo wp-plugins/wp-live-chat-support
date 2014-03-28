@@ -86,7 +86,7 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 = 3.06 =
 
-Fixed Placeholder text not showing in input on IE
+*Fixed Placeholder text not showing in input on IE
 
 = 3.05 =
 
@@ -174,4 +174,4 @@ Fixed Placeholder text not showing in input on IE
 * More text fields can be customized
 
 = 1.0 =
-* Launch!
+* Launch! 
