@@ -1,0 +1,266 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2014-02-17 15:00+0200\n"
+"PO-Revision-Date: 2014-02-17 15:00+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: C:\\wamp\\www\\wordpress361\\wp-content\\plugins\\wp-"
+"live-chat-support\n"
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:131
+msgid "IP"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:132
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:152
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:70
+msgid "Name"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:133
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:156
+msgid "Email"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:134
+msgid "URL"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:135
+msgid "Status"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:136
+msgid "Action"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:143
+msgid "No chat sessions available at the moment"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/functions.php:435
+msgid "Get Pro Add-on to accept more chats"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:70
+msgid "Live Chat"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:71
+msgid "Settings"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:72
+msgid "History"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:177
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:440
+msgid "Send"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:385
+msgid "With the Pro add-on of WP Live Chat Support, you can"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:385
+msgid "see who's online and initiate chats"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:385
+msgid "with your online visitors with the click of a button."
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:385
+msgid "Buy the Pro add-on now for only $24.95 once off. Free Updates FOREVER."
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:385
+msgid "Buy the Pro add-on now for only $24.95 once off. Free Updates Forever."
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:430
+msgid "End chat"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:577
+msgid "User has minimized the chat window"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:583
+msgid "User has opened the chat window"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:590
+msgid "User has closed and ended the chat"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:697
+msgid "WP Live Chat History"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:702
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:46
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:77
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:93
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:109
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:125
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:142
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:163
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:177
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:227
+msgid "Pro Add-on"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/wp-live-chat-support.php:726
+msgid "Your settings have been saved."
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:6
+msgid "WP Live Chat Support Settings"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:19
+msgid "General Settings"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:20
+msgid "Chat Box"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:21
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:152
+msgid "Offline Messages"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:22
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:189
+msgid "Styling"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:25
+msgid "Main Settings"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:28
+msgid "Chat enabled"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:31
+msgid "Yes"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:32
+msgid "No"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:38
+msgid "Hide Chat"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:45
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:76
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:92
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:108
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:124
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:141
+msgid "available in the"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:47
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:78
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:94
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:110
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:126
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:143
+msgid "only"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:56
+msgid "Chat Window Settings"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:59
+msgid "Chat box alignment"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:62
+msgid "Bottom left"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:63
+msgid "Bottom right"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:86
+msgid "Picture"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:89
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:105
+msgid "Upload Image"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:102
+msgid "Logo"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:118
+msgid "Chat delay (seconds)"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:134
+msgid "Chat notifications"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:138
+msgid "Alert me via email as soon as someone wants to chat"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:156
+msgid "Email Address"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:162
+msgid "Get offline messages with the "
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:171
+msgid "Offline text"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:176
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:226
+msgid "Edit these text fields using the "
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:192
+msgid "Chat box fill color"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:198
+msgid "Chat box font color"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:205
+msgid "First section text"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:212
+msgid "Second section text"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:221
+msgid "Reactivate chat section text"
+msgstr ""
+
+#: C:\wamp\www\wordpress361\wp-content\plugins\wp-live-chat-support/includes/settings_page.php:238
+msgid "Save Settings"
+msgstr ""
