@@ -106,7 +106,7 @@ jQuery(document).ready(function() {
                 cid: wplc_check_cookie_id
             };
             jQuery.post(wplc_ajaxurl, data, function(response) {
-                console.log(response);
+                console.log(wplc_check_cookie_id);
                     //console.log("wplc_user_close_chat");
                     clearInterval(wplc_user_auto_refresh_status);
                     clearInterval(wplc_user_auto_refresh);
@@ -204,8 +204,8 @@ jQuery(document).ready(function() {
             };
             jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_start_chat");
-                    wplc_chat_session_id = response;
-                    wplc_check_cookie_id = response;
+                    wplc_chat_session_id = jQuery.trim(response);
+                    wplc_check_cookie_id = jQuery.trim(response);
                     wplc_user_waiting = setInterval(function (){wplc_user_await_session(wplc_chat_session_id);}, 5000);
 
             });

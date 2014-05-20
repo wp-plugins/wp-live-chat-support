@@ -3,7 +3,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.5
-Tested up to: 3.8.1
+Tested up to: 3.9.1
 Stable tag: trunk
 License: GPLv2
 
@@ -84,9 +84,15 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Changelog ==
 
+= 3.07 =
+
+* Fixed height issues with input boxes
+* Fixed Input that was showing half over chat area
+* Fixed Endless Connecting
+
 = 3.06 =
 
-*Fixed Placeholder text not showing in input on IE
+* Fixed Placeholder text not showing in input on IE
 
 = 3.05 =
 

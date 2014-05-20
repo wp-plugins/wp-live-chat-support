@@ -408,6 +408,7 @@ function wplc_return_status($status) {
     if ($status == 6) {
         return "requesting chat";
     }
+    
 }
 
 function wplc_user_initiate_chat($name,$email,$cid = null) {
