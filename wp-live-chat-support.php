@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 3.07
+Version: 3.08
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,13 +17,18 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "3.07";
+$wplc_version = "3.08";
+
+
+
+
 
 require_once (plugin_dir_path( __FILE__ )."functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
 
 add_action('wp_footer', 'wplc_display_box');
 
+add_action('init','wplc_init');
 
 if (function_exists('wplc_head_pro')) {
     add_action('admin_head', 'wplc_head_pro');
@@ -44,6 +49,10 @@ add_action('admin_head', 'wplc_superadmin_javascript');
 register_activation_hook( __FILE__, 'wplc_activate' );
 
 
+function wplc_init() {
+    $plugin_dir = basename(dirname(__FILE__))."/languages/";
+    load_plugin_textdomain( 'wplivechat', false, $plugin_dir );
+}
 
 
 function wplc_action_callback() {
@@ -85,6 +94,7 @@ function wplc_user_top_js() {
 <script type="text/javascript">
     <?php if (!function_exists("wplc_register_pro_version")) { ?>
     var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+    var wplc_wp_load_url = '<?php echo wplc_get_home_path(); ?>wp-load.php';
     <?php } ?>
    var wplc_nonce = '<?php echo $ajax_nonce; ?>';
 </script>
@@ -152,11 +162,11 @@ function wplc_output_box() {
                <strong>Start Live Chat</strong> 
             </div>
 
-                <input type="text" name="wplc_name" id="wplc_name" value="" placeholder="<?php _e("Name","wplivechat"); ?>"/>
+                <input type="text" name="wplc_name" id="wplc_name" value="" placeholder="<?php _e("Name","wplivechat"); ?>" />
            
-                <input type="text" name="wplc_email" id="wplc_email" value="" placeholder="<?php _e("Email","wplivechat"); ?>"/>
+                <input type="text" name="wplc_email" id="wplc_email" value="" placeholder="<?php _e("Email","wplivechat"); ?>"  />
            
-                <input id="wplc_start_chat_btn" type="button" value="Start Chat" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
+                <input id="wplc_start_chat_btn" type="button" value="<?php _e("Start Chat","wplivechat"); ?>" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
 
             
             
@@ -257,6 +267,7 @@ function wplc_superadmin_javascript() {
                 var data = {
                         action: 'wplc_admin_set_transient',
                         security: '<?php echo $ajax_nonce; ?>'
+                        
                 };
                 jQuery.post(ajaxurl, data, function(response) {
                     //console.log("wplc_admin_set_transient");
@@ -280,6 +291,7 @@ function wplc_admin_javascript() {
     <script type="text/javascript">
         jQuery(document).ready(function() {
             var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+            var wplc_wp_load_url = '<?php echo wplc_get_home_path(); ?>wp-load.php';
             var wplc_autoLoad = null;
             var wplc_refresh_chat_area = null;
             var wplc_refresh_status = null;
@@ -291,7 +303,8 @@ function wplc_admin_javascript() {
             function wpcl_admin_update_chats(cid) {
                 var data = {
                         action: 'wplc_update_admin_chat',
-                        security: '<?php echo $ajax_nonce; ?>'
+                        security: '<?php echo $ajax_nonce; ?>',
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                         //console.log("wplc_update_admin_chat");
@@ -316,7 +329,8 @@ function wplc_admin_javascript() {
             function wplc_update_statuses() {
                 var data = {
                         action: 'wplc_update_admin_status',
-                        security: '<?php echo $ajax_nonce; ?>'
+                        security: '<?php echo $ajax_nonce; ?>',
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_status");
@@ -492,6 +506,7 @@ function wplc_return_admin_chat_javascript($cid) {
 
             var wplc_image = "<?php echo $image ?>";
             var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+            var wplc_wp_load_url = '<?php echo wplc_get_home_path(); ?>wp-load.php';
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
             var wplc_gcid = '<?php echo $cid; ?>';
             
@@ -507,7 +522,8 @@ function wplc_return_admin_chat_javascript($cid) {
                 var data = {
                         action: 'wplc_admin_accept_chat',
                         cid: cid,
-                        security: wplc_nonce
+                        security: wplc_nonce,
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_admin_accept_chat");
@@ -526,7 +542,8 @@ function wplc_return_admin_chat_javascript($cid) {
                 var data = {
                         action: 'wplc_admin_close_chat',
                         security: '<?php echo $ajax_nonce; ?>',
-                        cid: wplc_cid
+                        cid: wplc_cid,
+                        wplc_wp_load_url:wplc_wp_load_url
                         
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
@@ -553,7 +570,8 @@ function wplc_return_admin_chat_javascript($cid) {
                         action: 'wplc_admin_send_msg',
                         security: wplc_nonce,
                         cid: wplc_cid,
-                        msg: wplc_chat
+                        msg: wplc_chat,
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                         //console.log("wplc_admin_send_msg");
@@ -572,7 +590,8 @@ function wplc_return_admin_chat_javascript($cid) {
                 var data = {
                         action: 'wplc_update_admin_chat_boxes',
                         cid: cid,
-                        security: wplc_nonce
+                        security: wplc_nonce,
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_chat_boxes");
@@ -598,7 +617,8 @@ function wplc_return_admin_chat_javascript($cid) {
                 var data = {
                         action: 'wplc_update_admin_return_chat_status',
                         cid: <?php echo $cid; ?>,
-                        security: '<?php echo $ajax_nonce; ?>'
+                        security: '<?php echo $ajax_nonce; ?>',
+                        wplc_wp_load_url:wplc_wp_load_url
                 };
                 jQuery.post(wplc_ajaxurl, data, function(response) {
                     //console.log("wplc_update_admin_return_chat_status");
@@ -775,5 +795,18 @@ function wplc_logout() {
 }
 add_action('wp_logout', 'wplc_logout');
 
+function wplc_get_home_path() {
+	$home = get_option( 'home' );
+	$siteurl = get_option( 'siteurl' );
+	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+		$wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+		$pos = strripos( str_replace( '\\', '/', $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
+		$home_path = substr( $_SERVER['SCRIPT_FILENAME'], 0, $pos );
+		$home_path = trailingslashit( $home_path );
+	} else {
+		$home_path = ABSPATH;
+	}
 
+	return str_replace( '\\', '/', $home_path );
+}
 

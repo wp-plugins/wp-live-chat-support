@@ -2,7 +2,7 @@
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
-Requires at least: 3.5
+Requires at least: 3.6
 Tested up to: 3.9.1
 Stable tag: trunk
 License: GPLv2
@@ -83,6 +83,12 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 
 == Changelog ==
+
+= 3.08 =
+
+* Fixed Languages not been translated
+* Fixed 500 Error from ajax call
+* Email validation bug fixed
 
 = 3.07 =
 

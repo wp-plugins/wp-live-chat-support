@@ -4,15 +4,15 @@ ini_set('html_errors', 0);
 define('SHORTINIT', true);
 
 
-$absolute_path = __FILE__;
+//$absolute_path = __FILE__;
 
-$path_to_file = explode( 'wp-content', $absolute_path );
+//$path_to_file = explode( 'wp-content', $absolute_path );
 
-$path_to_wp = $path_to_file[0];
+//$path_to_wp = $path_to_file[0];
 
+// changed the path to wp-load to get from post
 
-
-require_once( $path_to_wp.'/wp-load.php' );
+require_once( $_POST['wplc_wp_load_url'] );
 
 
 require( ABSPATH . WPINC . '/l10n.php' );
