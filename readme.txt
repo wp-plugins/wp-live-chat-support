@@ -84,6 +84,10 @@ Overhauled Ajax calls to be less resource intensive in version 4. It's recommend
 
 == Changelog ==
 
+= 4.0.2 =
+* Table creation bug fix
+* Small bug fix (warning message)
+
 = 4.0.1 =
 * Fixed a bug (missing function)
 

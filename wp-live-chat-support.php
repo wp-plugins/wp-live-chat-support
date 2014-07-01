@@ -3,7 +3,7 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.0.1
+Version: 4.0.2
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
@@ -17,7 +17,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.0.1";
+$wplc_version = "4.0.2";
 
 
 
@@ -198,6 +198,14 @@ function wplc_output_box() {
 function wplc_display_box() {
     $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
     if ($wplc_is_admin_logged_in != 1) { echo "<!-- wplc a-n-c -->"; }
+    
+    /* do not show if pro is outdated */
+    global $wplc_pro_version;
+    if (isset($wplc_pro_version)) {
+        $float_version = floatval($wplc_pro_version);
+        if ($float_version < 4) { return; }
+    }
+    
     if (function_exists("wplc_register_pro_version")) { wplc_pro_draw_user_box(); } else { wplc_draw_user_box(); }
 }
 
@@ -394,7 +402,7 @@ function wplc_admin_javascript() {
 function wplc_admin_menu_layout() {
    if (function_exists("wplc_register_pro_version")) {
        global $wplc_pro_version;
-       if (floatval($wplc_pro_version) < 4.0) {
+       if (floatval($wplc_pro_version) < 4) {
            ?>
            <div class='error below-h1'>
 
@@ -802,7 +810,7 @@ function wplc_handle_db() {
         CREATE TABLE ".$wplc_tblname_msgs." (
           id int(11) NOT NULL AUTO_INCREMENT,
           chat_sess_id int(11) NOT NULL,
-          from varchar(150) CHARACTER SET utf8 NOT NULL,
+          `from` varchar(150) CHARACTER SET utf8 NOT NULL,
           msg varchar(700) CHARACTER SET utf8 NOT NULL,
           timestamp datetime NOT NULL,
           status INT(3) NOT NULL,
@@ -813,6 +821,7 @@ function wplc_handle_db() {
 
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
+   
    add_option("wplc_db_version", $wplc_version);
    update_option("wplc_db_version",$wplc_version);
 }
