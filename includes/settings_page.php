@@ -20,6 +20,7 @@
           <li><a href="#tabs-2"><?php _e("Chat Box","wplivechat")?></a></li>
           <li><a href="#tabs-3"><?php _e("Offline Messages","wplivechat")?></a></li>
           <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
+          <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
       </ul>
       <div id="tabs-1">
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
@@ -28,15 +29,15 @@
                   <td width='200' valign='top'><?php _e("Chat enabled","wplivechat")?>:</td>
                   <td>
                       <select id='wplc_settings_enabled' name='wplc_settings_enabled'>
-                          <option value="1" <?php $wplc_settings_enabled[1]?>><?php _e("Yes","wplivechat")?></option>
-                          <option value="2" <?php $wplc_settings_enabled[2]?>><?php _e("No","wplivechat")?></option>
+                          <option value="1" <?php echo $wplc_settings_enabled[1]?>><?php _e("Yes","wplivechat")?></option>
+                          <option value="2" <?php echo $wplc_settings_enabled[2]?>><?php _e("No","wplivechat")?></option>
                       </select>
                   </td>
               </tr>
               <tr>
                   <td width='200' valign='top'>
                       <?php _e("Hide Chat","wplivechat")?>:
-                      <p class="description">Hides chat for 24hrs when user clicks X</p>
+                      <p class="description"><?php _e("Hides chat for 24hrs when user clicks X", "wplivechat") ?></p>
                   </td>
                   <td valign='top'>
                       <input type="checkbox"  value="true" readonly disabled/>
@@ -59,8 +60,8 @@
                   <td width='200' valign='top'><?php _e("Chat box alignment","wplivechat")?>:</td>
                   <td>
                       <select id='wplc_settings_align' name='wplc_settings_align'>
-                          <option value="1" <?php $wplc_settings_align[1]?>><?php _e("Bottom left","wplivechat")?></option>
-                          <option value="2" <?php $wplc_settings_align[2]?>><?php _e("Bottom right","wplivechat")?></option>
+                          <option value="1" <?php echo $wplc_settings_align[1]?>><?php _e("Bottom left","wplivechat")?></option>
+                          <option value="2" <?php echo $wplc_settings_align[2]?>><?php _e("Bottom right","wplivechat")?></option>
                       </select>
                   </td>
               </tr>    
@@ -204,15 +205,15 @@
             <tr>
                 <td width='200' valign='top'><?php _e("First section text","wplivechat")?>:</td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Questions?' /> <br />
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat with us' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e("Questions?","wplivechat") ?>' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e("Chat with us","wplivechat") ?>' /> <br />
                 </td>
             </tr>
             <tr>
                 <td width='200' valign='top'><?php _e("Second section text","wplivechat") ?>:</td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Start Chat' /> <br />
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Connecting you to a sales person. Please be patient.' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e("Start Chat","wplivechat") ?>' /> <br />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e("Connecting you to a sales person. Please be patient.", "wplivechat") ?>' /> <br />
 
 
                 </td>
@@ -220,7 +221,7 @@
             <tr>
                 <td width='200' valign='top'><?php _e("Reactivate chat section text","wplivechat")?>:</td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Reactivating your previous chat...' />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e("Reactivating your previous chat...", "wplivechat") ?>' />
                     <small>
                         <i>
                             <?php _e("Edit these text fields using the ","wplivechat")?>
@@ -234,6 +235,10 @@
             </tr>
           </table>
       </div>
+        <div id="tabs-5">
+            <h3><?php _e("Multiple Agents", "wplivechat") ?></h3>
+            <p><?php _e("Get","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents"><?php _e("Multiple agent support", "wplivechat") ?></a></p>
+        </div>
     </div>
     <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='<?php _e("Save Settings","wplivechat")?>' /></p>
     </form>

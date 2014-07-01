@@ -2,7 +2,7 @@
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
-Requires at least: 3.6
+Requires at least: 3.8
 Tested up to: 3.9.1
 Stable tag: trunk
 License: GPLv2
@@ -36,9 +36,10 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * World-class support
 * Fully customizable live chat experience
 
+
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $29.95 once off!
 
-= 5 second live chat installation =
+= 30 second live chat installation =
 
 Our live chat plugin instantly gives you the ability to chat directly with potential clients and/or website visitors when they're ready to do so. Initiate a live chat with a certain visitor or wait for them to initiate a live chat with you. Increase your website conversion rates by providing real time live support.
 
@@ -49,7 +50,6 @@ Once the live chat plugin is activated, click on "Live Chat" in the left menu na
 
 = Coming Soon to WP Live Chat Support =
 
-* Multiple live chat operators
 * More advanced customization and themes
 
 
@@ -79,10 +79,20 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Upgrade Notice ==
 
-* Nothing required
+Overhauled Ajax calls to be less resource intensive in version 4. It's recommended to upgrade the WP Live Chat Support Pro Version as well. 
 
 
 == Changelog ==
+
+= 4.0.0 = 
+
+* Overhauled the live chat Ajax calls to be less resource intensive
+* Fixed many localization strings
+* Added Feedback Page
+* Added Welcome Page
+* Fixed Visitor pending forever - Now Shown a message that admin is away
+* Fixed many small bugs
+* Added Multiple Live Chat Agents support (Add On)
 
 = 3.08 =
 

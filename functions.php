@@ -22,7 +22,7 @@ function wplc_log_user_on_page($name,$email) {
     return $lastid;
 
 }
-function wplc_update_user_on_page($cid) {
+function wplc_update_user_on_page($cid, $status = 5) {
     global $wpdb;
     global $wplc_tblname_chats;
 
@@ -33,7 +33,7 @@ function wplc_update_user_on_page($cid) {
             `url` = '".$_SERVER['HTTP_REFERER']."',
             `last_active_timestamp` = '".date("Y-m-d H:i:s")."',
             `ip` = '".$_SERVER['REMOTE_ADDR']."',
-            `status` = '5'
+            `status` = '$status'
 
         WHERE `id` = '$cid'
         LIMIT 1
@@ -108,11 +108,27 @@ function wplc_return_chat_name($cid) {
     }
 
 }
+function wplc_return_chat_email($cid) {
+    global $wpdb;
+    global $wplc_tblname_chats;
+    $results = $wpdb->get_results(
+        "
+        SELECT *
+        FROM $wplc_tblname_chats
+        WHERE `id` = '$cid'
+        "
+    );
+    foreach ($results as $result) {
+        return $result->email;
+    }
+
+}
 function wplc_list_chats() {
 
     global $wpdb;
     global $wplc_tblname_chats;
-
+    $status = 3;
+    $wplc_c = 0;    
     $results = $wpdb->get_results(
         "
 	SELECT *
@@ -122,27 +138,25 @@ function wplc_list_chats() {
 
 	"
     );
-    echo "
-
-
-      <table class=\"wp-list-table widefat fixed \" cellspacing=\"0\">
-	<thead>
-	<tr>
-		<th scope='col' id='wplc_id_colum' class='manage-column column-id sortable desc'  style=''><span>".__("IP","wplivechat")."</span></th>
-                <th scope='col' id='wplc_name_colum' class='manage-column column-name_title sortable desc'  style=''><span>".__("Name","wplivechat")."</span></th>
-                <th scope='col' id='wplc_email_colum' class='manage-column column-email' style=\"\">".__("Email","wplivechat")."</th>
-                <th scope='col' id='wplc_url_colum' class='manage-column column-url' style=\"\">".__("URL","wplivechat")."</th>
-                <th scope='col' id='wplc_status_colum' class='manage-column column-status'  style=\"\">".__("Status","wplivechat")."</th>
-                <th scope='col' id='wplc_action_colum' class='manage-column column-action sortable desc'  style=\"\"><span>".__("Action","wplivechat")."</span></th>
-        </tr>
-	</thead>
-        <tbody id=\"the-list\" class='list:wp_list_text_link'>
-        ";
+    
+    $table = "<table class=\"wp-list-table widefat fixed \" cellspacing=\"0\">"
+                . "<thead>"
+                    . "<tr>"
+                        . "<th scope='col' id='wplc_id_colum' class='manage-column column-id sortable desc'  style=''><span>".__("IP","wplivechat")."</span></th>"
+                        . "<th scope='col' id='wplc_name_colum' class='manage-column column-name_title sortable desc'  style=''><span>".__("Name","wplivechat")."</span></th>"
+                        . "<th scope='col' id='wplc_email_colum' class='manage-column column-email' style=\"\">".__("Email","wplivechat")."</th>"
+                        . "<th scope='col' id='wplc_url_colum' class='manage-column column-url' style=\"\">".__("URL","wplivechat")."</th>"
+                        . "<th scope='col' id='wplc_status_colum' class='manage-column column-status'  style=\"\">".__("Status","wplivechat")."</th>"
+                        . "<th scope='col' id='wplc_action_colum' class='manage-column column-action sortable desc'  style=\"\"><span>".__("Action","wplivechat")."</span></th>"
+                    . "</tr>"
+                . "</thead>"
+            . "<tbody id=\"the-list\" class='list:wp_list_text_link'>";
 
     if (!$results) {
-        echo "<tr><td></td><td>".__("No chat sessions available at the moment","wplivechat")."</td></tr>";
+        $table .= "<tr><td></td><td>".__("No chat sessions available at the moment","wplivechat")."</td></tr>";
     }
     else {
+        
         foreach ($results as $result) {
             unset($trstyle);
             unset($actions);
@@ -150,30 +164,29 @@ function wplc_list_chats() {
 
             if ($result->status == 2) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"#\" onclick=\"window.open('$url', 'mywindow".$result->id."', 'location=no,status=1,scrollbars=1,width=500,height=650');return false;\">Accept Chat</a>";
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP-Live-Chat-".$result->id."\">Accept Chat</a>";
                 $trstyle = "style='background-color:#FFFBE4; height:30px;'";
             }
             if ($result->status == 3) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"#\" onclick=\"window.open('$url', 'mywindow".$result->id."', 'location=no,status=1,scrollbars=1,width=500,height=650');return false;\">Open Chat Window</a>";
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP-Live-Chat-".$result->id."\">Open Chat Window</a>";
                 $trstyle = "style='background-color:#F7FCFE; height:30px;'";
             }
-
-
-            echo "<tr id=\"record_".$result->id."\" $trstyle>";
-            echo "<td class='chat_id column-chat_d'>".$result->ip."</td>";
-            echo "<td class='chat_name column_chat_name' id='chat_name_".$result->id."'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=40\" /> ".$result->name."</td>";
-            echo "<td class='chat_email column_chat_email' id='chat_email_".$result->id."'>".$result->email."</td>";
-            echo "<td class='chat_name column_chat_url' id='chat_url_".$result->id."'>".$result->url."</td>";
-            echo "<td class='chat_status column_chat_status' id='chat_status_".$result->id."'><strong>".wplc_return_status($result->status)."</strong></td>";if ($wplc_c>1) { $actions = wplc_get_msg(); }
-            echo "<td class='chat_action column-chat_action' id='chat_action_".$result->id."'>$actions</td>";
-            echo "</tr>";
+            if ($wplc_c>1) { $actions = wplc_get_msg(); }
+            $table .= "<tr id=\"record_".$result->id."\" $trstyle>"
+                        . "<td class='chat_id column-chat_d'>".$result->ip."</td>"
+                        . "<td class='chat_name column_chat_name' id='chat_name_".$result->id."'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=40\" /> ".$result->name."</td>"
+                        . "<td class='chat_email column_chat_email' id='chat_email_".$result->id."'>".$result->email."</td>"
+                        . "<td class='chat_name column_chat_url' id='chat_url_".$result->id."'>".$result->url."</td>"
+                        . "<td class='chat_status column_chat_status' id='chat_status_".$result->id."'><strong>".wplc_return_status($result->status)."</strong></td>"
+                        . "<td class='chat_action column-chat_action' id='chat_action_".$result->id."'>$actions</td>"
+                    . "</tr>";
 
         }
     }
-    echo "</table><br /><br />";
-
-
+    $table .= "</table><br /><br />";
+    
+    return $table;
 }
 
 
@@ -207,8 +220,6 @@ function wplc_return_user_chat_messages($cid) {
                     $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
                 }
             }
-        
-        
         $msg_hist .= "<span class='wplc-admin-message'>$image <strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
@@ -247,6 +258,7 @@ function wplc_return_chat_messages($cid) {
         LIMIT 0, 100
         "
     );
+    $msg_hist = "";
     foreach ($results as $result) {
         $from = $result->from;
         $msg = $result->msg;
@@ -320,11 +332,13 @@ function wplc_return_admin_chat_messages($cid) {
 
         "
     );
+    
     $msg_hist = "";
     foreach ($results as $result) {
+        
         $id = $result->id;
         $from = $result->from;
-
+        wplc_mark_as_read_admin_chat_messages($id);    
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
@@ -336,34 +350,19 @@ function wplc_return_admin_chat_messages($cid) {
 
 
 }
-function wplc_mark_as_read_admin_chat_messages($cid) {
+function wplc_mark_as_read_admin_chat_messages($mid) {
     global $wpdb;
     global $wplc_tblname_msgs;
-    $results = $wpdb->get_results(
+        
+    $check = $wpdb->query(
         "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '2'
-            ORDER BY `timestamp` DESC
+        UPDATE $wplc_tblname_msgs
+        SET `status` = 1
+        WHERE `id` = '$mid'
+        LIMIT 1
 
-        "
+    "
     );
-
-
-    foreach ($results as $result) {
-        $id = $result->id;
-        $check = $wpdb->query(
-            "
-            UPDATE $wplc_tblname_msgs
-            SET `status` = 1
-            WHERE `id` = '$id'
-            LIMIT 1
-
-	"
-        );
-    }
-    return "ok";
-
 
 }
 
@@ -391,22 +390,28 @@ function wplc_return_chat_status($cid) {
 
 function wplc_return_status($status) {
     if ($status == 1) {
-        return "complete";
+        return __("complete","wplivechat");
     }
     if ($status == 2) {
-        return "pending";
+        return __("pending", "wplivechat");
     }
     if ($status == 3) {
-        return "active";
+        return __("active", "wplivechat");
     }
     if ($status == 4) {
-        return "deleted";
+        return __("deleted", "wplivechat");
     }
     if ($status == 5) {
-        return "browsing";
+        return __("browsing", "wplivechat");
     }
     if ($status == 6) {
-        return "requesting chat";
+        return __("requesting chat", "wplivechat");
+    }
+    if($status == 8){
+        return __("Chat Ended - User still browsing", "wplivechat");
+    }
+    if($status == 9){
+        return __("User is browsing but doesn't want to chat", "wplivechat");
     }
     
 }
@@ -468,7 +473,7 @@ function wplc_update_chat_statuses() {
         "
         SELECT *
         FROM $wplc_tblname_chats
-        WHERE `status` = '2' OR `status` = '3' OR `status` = '5'
+        WHERE `status` = '2' OR `status` = '3' OR `status` = '5' or `status` = '8' or `status` = '9' or `status` = '10'
         "
     );
     foreach ($results as $result) {
@@ -480,7 +485,7 @@ function wplc_update_chat_statuses() {
             }
         }
         else if ($result->status == 3) {
-            if ((time() -  $timestamp) >= 600) { // 10 minute max
+            if ((time() -  $timestamp) >= 30) { // 30 seconds
                 wplc_change_chat_status($id,1);
             }
         }
@@ -488,6 +493,47 @@ function wplc_update_chat_statuses() {
             if ((time() -  $timestamp) >= 120) { // 2 minute timeout
                 wplc_change_chat_status($id,7); // 7 - timedout
             }
+        } else if($result->status == 8){ // chat is complete but user is still browsing
+            if ((time() -  $timestamp) >= 20) { // 20 seconds
+                wplc_change_chat_status($id,1); // 1 - chat is now complete
+            }
+        } else if($result->status == 9 || $result->status == 10){
+            if ((time() -  $timestamp) >= 20) { // 20 seconds
+                wplc_change_chat_status($id,7); // 7 - timedout
+            }
         }
     }
+}
+function wplc_check_pending_chats(){
+    global $wpdb;
+    global $wplc_tblname_chats;
+    $sql = "SELECT * FROM `$wplc_tblname_chats` WHERE `status` = 2";
+    $wpdb->query($sql);
+    if($wpdb->num_rows){
+        return true;
+    } else {
+        return false;
+    }       
+}
+function wplc_get_active_and_pending_chats(){
+    global $wpdb;
+    global $wplc_tblname_chats;
+    $sql = "SELECT * FROM `$wplc_tblname_chats` WHERE `status` = 2 OR `status` = 3 ORDER BY `status`";
+    $results = $wpdb->get_results($sql);
+    if($results){
+        return $results;
+    } else {
+        return false;
+    }
+}
+function wplc_convert_array_to_string($array){
+    $string = "";
+    if($array){
+        foreach($array as $value){
+            $string.= $value->id." ;";
+        }
+    } else {
+        $string = false;
+    }
+    return $string;
 }
