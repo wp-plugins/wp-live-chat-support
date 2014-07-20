@@ -19,9 +19,9 @@ ini_set('html_errors', 0);
 
 require_once( '../../../wp-load.php' );
 
-function untrailingslashit($string) {
-   return rtrim($string, '/');
-}
+//function untrailingslashit($string) {
+//   return rtrim($string, '/');
+//}
 
 
 define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailing slash
@@ -32,6 +32,10 @@ define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailin
 require_once( ABSPATH . WPINC . '/l10n.php' );
 
 require_once( ABSPATH . WPINC . '/link-template.php' );
+
+require_once( ABSPATH . WPINC . '/formatting.php' );
+
+require_once( ABSPATH . WPINC . '/kses.php' );
 
 
 
@@ -70,7 +74,7 @@ if ($check == 1) {
         set_time_limit(120);
         //sleep(6);
         $i = 1;
-        while($i <= 90){
+        while($i <= 28){
             
             // update chats if they have timed out every 10 seconds
             if($i %10 == 0) {
@@ -110,7 +114,7 @@ if ($check == 1) {
         set_time_limit(120);
         $i = 1;
         $array = array();
-        while($i <= 90){
+        while($i <= 28){
             if(isset($_POST['action_2']) && $_POST['action_2'] == "wplc_long_poll_check_user_opened_chat"){
                 $chat_status = wplc_return_chat_status($_POST['cid']);
                 if($chat_status == 3){
@@ -138,16 +142,16 @@ if ($check == 1) {
         }
     }
     if ($_POST['action'] == "wplc_admin_accept_chat") {
-        wplc_admin_accept_chat($_POST['cid']);
+        wplc_admin_accept_chat(sanitize_text_field($_POST['cid']));
     }
     if ($_POST['action'] == "wplc_admin_close_chat") {
-        $chat_id = $_POST['cid'];
+        $chat_id = sanitize_text_field($_POST['cid']);
         wplc_change_chat_status($chat_id,1);
         echo 'done';
     }
     if ($_POST['action'] == "wplc_admin_send_msg") {
-        $chat_id = $_POST['cid'];
-        $chat_msg = $_POST['msg'];
+        $chat_id = sanitize_text_field($_POST['cid']);
+        $chat_msg = sanitize_text_field($_POST['msg']);
         $wplc_rec_msg = wplc_record_chat_msg("2",$chat_id,$chat_msg);
         if ($wplc_rec_msg) {
             echo 'sent';
@@ -166,7 +170,7 @@ if ($check == 1) {
         $i = 1;
         $array = array("check" => false);
         
-        while($i <= 90){
+        while($i <= 28){
             
             if($_POST['cid'] == null){
                 $user = "user".time();
@@ -256,7 +260,7 @@ if ($check == 1) {
         }
     }
     
-
+/*  */
     if ($_POST['action'] == "wplc_user_close_chat") {
         if($_POST['status'] == 5){
             wplc_change_chat_status($_POST['cid'],9);
@@ -267,16 +271,16 @@ if ($check == 1) {
 
     if ($_POST['action'] == "wplc_user_minimize_chat") {
         $chat_id = $_POST['cid'];
-        wplc_change_chat_status($_POST['cid'],10);
+        wplc_change_chat_status(sanitize_text_field($_POST['cid']),10);
     }
     if ($_POST['action'] == "wplc_user_maximize_chat") {
         $chat_id = $_POST['cid'];
-        wplc_change_chat_status($_POST['cid'],3);
+        wplc_change_chat_status(sanitize_text_field($_POST['cid']),3);
     }
 
     if ($_POST['action'] == "wplc_user_send_msg") {
-        $chat_id = $_POST['cid'];
-        $chat_msg = $_POST['msg'];
+        $chat_id = sanitize_text_field($_POST['cid']);
+        $chat_msg = sanitize_text_field($_POST['msg']);
         $wplc_rec_msg = wplc_record_chat_msg("1",$chat_id,$chat_msg);
         if ($wplc_rec_msg) {
             echo 'sent';
@@ -287,13 +291,13 @@ if ($check == 1) {
     if ($_POST['action'] == "wplc_start_chat") {
         if (isset($_POST['cid'])) {
             if ($_POST['name'] && $_POST['email']) {
-                echo wplc_user_initiate_chat($_POST['name'],$_POST['email'],$_POST['cid']); // echo the chat session id
+                echo wplc_user_initiate_chat(sanitize_text_field($_POST['name']),sanitize_email($_POST['email']),sanitize_text_field($_POST['cid'])); // echo the chat session id
             } else {
                 echo "error2";
             }
         } else {
             if ($_POST['name'] && $_POST['email']) {
-                echo wplc_user_initiate_chat($_POST['name'],$_POST['email']); // echo the chat session id
+                echo wplc_user_initiate_chat(sanitize_text_field($_POST['name']),sanitize_email($_POST['email'])); // echo the chat session id
             } else {
                 echo "error2";
             }

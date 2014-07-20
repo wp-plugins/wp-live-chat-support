@@ -8,7 +8,7 @@
         $wplc_settings = get_option("WPLC_SETTINGS");
         if ($wplc_settings["wplc_settings_align"]) { $wplc_settings_align[intval($wplc_settings["wplc_settings_align"])] = "SELECTED"; }
         if ($wplc_settings["wplc_settings_enabled"]) { $wplc_settings_enabled[intval($wplc_settings["wplc_settings_enabled"])] = "SELECTED"; }
-        if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = $wplc_settings["wplc_settings_fill"]; } else { $wplc_settings_fill = "73BE28"; }
+        if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = $wplc_settings["wplc_settings_fill"]; } else { $wplc_settings_fill = "ed832f"; }
         if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = $wplc_settings["wplc_settings_font"]; } else { $wplc_settings_font = "FFFFFF"; }
         if(get_option("WPLC_HIDE_CHAT") == true) { $wplc_hide_chat = "checked"; } else { $wplc_hide_chat = ""; };
      ?>
@@ -62,9 +62,20 @@
                       <select id='wplc_settings_align' name='wplc_settings_align'>
                           <option value="1" <?php echo $wplc_settings_align[1]?>><?php _e("Bottom left","wplivechat")?></option>
                           <option value="2" <?php echo $wplc_settings_align[2]?>><?php _e("Bottom right","wplivechat")?></option>
+                          <option value="3" <?php echo $wplc_settings_align[3]?>><?php _e("Left","wplivechat")?></option>
+                          <option value="4" <?php echo $wplc_settings_align[4]?>><?php _e("Right","wplivechat")?></option>
                       </select>
                   </td>
-              </tr>    
+              </tr>
+              <tr>
+                  <td>
+                      <?php _e("Auto Pop-up","wplivechat") ?>
+                  </td>
+                  <td>
+                      <input type="checkbox" name="wplc_auto_pop_up" value="1" <?php if($wplc_settings['wplc_auto_pop_up'] == 1 ){ echo "checked";} ?>/>
+                      <p class="description"><small><?php _e("Expand the chat box automatically (prompts the user to enter their name and email address).","wplivechat") ?></small></p>
+                  </td>
+              </tr>
               <tr>
             <!-- Chat Name-->
                 <td width='200' valign='top'>

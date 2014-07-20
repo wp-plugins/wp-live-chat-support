@@ -108,6 +108,9 @@ jQuery(document).ready(function() {
                             jQuery("#wplc_cid").val(wplc_cid);
                             if(response['status'] == 3){ // only if not minimized open aswell
                                 open_chat();
+                                if(jQuery('#wp-live-chat').hasClass('wplc_left') === true || jQuery('#wp-live-chat').hasClass('wplc_right') === true){
+                                    jQuery('#wp-live-chat').height("400px");
+                                }
                             }
                             if(response['data'] != null){ // append messages to chat area
                                 jQuery("#wplc_chatbox").append(response['data']);
@@ -156,14 +159,20 @@ jQuery(document).ready(function() {
         } else {
             if(wplc_check_hide_cookie != "yes"){
                 wplc_dc = setTimeout(function (){
-                    jQuery("#wp-live-chat").css({ "display" : "block" }); 
+                    jQuery("#wp-live-chat").css({ "display" : "block" });
+                    if(jQuery("#wp-live-chat").attr('wplc-auto-pop-up') == true){
+                        jQuery("#wp-live-chat-2").css({ "display" : "block" });
+                        jQuery("#wp-live-chat-minimize").show();
+                        jQuery("#wp-live-chat-close").show();
+                        jQuery('#wp-live-chat').removeClass("wplc_close");
+                        jQuery('#wp-live-chat').addClass("wplc_open");
+                    }
                 }, window.wplc_delay);
             }
-            
         }
         wplc_init_chat_box = false;
     }
-    
+
     
     
      
@@ -185,12 +194,28 @@ jQuery(document).ready(function() {
    
         /* minimize chat window */
         jQuery("#wp-live-chat-minimize").on("click", function() {
-            if(jQuery("#wp-live-chat").attr("original_pos") === "right"){
+            jQuery('#wp-live-chat').height("");
+            if(jQuery("#wp-live-chat").attr("original_pos") === "bottom_right"){
                 jQuery("#wp-live-chat").css("left", "");
+                jQuery("#wp-live-chat").css("bottom", "0");
+                jQuery("#wp-live-chat").css("right", "100px");
+            } else if(jQuery("#wp-live-chat").attr("original_pos") === "bottom_right"){
+                jQuery("#wp-live-chat").css("left", "");
+                jQuery("#wp-live-chat").css("bottom", "0");
+                jQuery("#wp-live-chat").css("right", "100px");
+            } else if(jQuery("#wp-live-chat").attr("original_pos") === "left"){
+                jQuery("#wp-live-chat").css("left", "0");
+                jQuery("#wp-live-chat").css("bottom", "100px");
+            } else if(jQuery("#wp-live-chat").attr("original_pos") === "right"){
+                jQuery("#wp-live-chat").css("left", "");
+                jQuery("#wp-live-chat").css("right", "0");
+                jQuery("#wp-live-chat").css("bottom", "100px");
             }
-            jQuery("#wp-live-chat").css(jQuery("#wp-live-chat").attr("original_pos"), "100px");
+            jQuery('#wp-live-chat').addClass("wplc_close");
+            jQuery('#wp-live-chat').removeClass("wplc_open");
+            //jQuery("#wp-live-chat").css(jQuery("#wp-live-chat").attr("original_pos"), "100px");
             jQuery("#wp-live-chat").css("top", "");
-            jQuery("#wp-live-chat").css("bottom", "0");
+            wplc_chat_status = jQuery.cookie('wplc_chat_status');
             jQuery("#wp-live-chat-1").show();
             jQuery("#wp-live-chat-1").css('cursor', 'pointer');
             jQuery("#wp-live-chat-2").hide();
@@ -199,15 +224,17 @@ jQuery(document).ready(function() {
             jQuery("#wp-live-chat-react").hide();
             jQuery("#wp-live-chat-minimize").hide();
             jQuery.cookie('wplc_minimize', "yes", { expires: 1, path: '/' });
-            var data = {
-                action: 'wplc_user_minimize_chat',
-                security: wplc_nonce,
-                cid: wplc_cid
-            };
-            
-            jQuery.post(wplc_ajaxurl, data, function(response) {
-                    //console.log(wplc_cid);
-            });
+            if(wplc_chat_status != 5 && wplc_chat_status != 10 && wplc_chat_status != 9 && wplc_chat_status != 8){
+                var data = {
+                    action: 'wplc_user_minimize_chat',
+                    security: wplc_nonce,
+                    cid: wplc_cid
+                };
+                
+                jQuery.post(wplc_ajaxurl, data, function(response) {
+                        //console.log(wplc_cid);
+                });
+            }
             
         });
          /* close chat window */
@@ -235,6 +262,8 @@ jQuery(document).ready(function() {
         //open chat window function
          
         function open_chat(){
+            jQuery('#wp-live-chat').removeClass("wplc_close");
+            jQuery('#wp-live-chat').addClass("wplc_open");
             //jQuery("#wp-live-chat-1").hide();
             jQuery("#wp-live-chat-react").hide();
             jQuery("#wp-live-chat-header").css('cursor', 'all-scroll');
@@ -352,18 +381,24 @@ jQuery(document).ready(function() {
 
         
 
-
+        function wplc_strip(str) {
+            str=str.replace(/<br>/gi, "\n");
+            str=str.replace(/<p.*>/gi, "\n");
+            str=str.replace(/<a.*href="(.*?)".*>(.*?)<\/a>/gi, " $2 ($1) ");
+            str=str.replace(/<(?:.|\s)*?>/g, "");
+            return str;
+        }
 
 
         jQuery("#wplc_chatmsg").keyup(function(event){
-            if(event.keyCode == 13){
+            if(event.keyCode === 13){
                 jQuery("#wplc_send_msg").trigger("click");
             }
         });
-
         jQuery("#wplc_send_msg").on("click", function() {
             var wplc_cid = jQuery("#wplc_cid").val();
-            var wplc_chat = jQuery("#wplc_chatmsg").val();
+            var wplc_chat = wplc_strip(document.getElementById('wplc_chatmsg').value);
+            
             var wplc_name = jQuery("#wplc_name").val();
             if (typeof wplc_name == "undefined" || wplc_name == null || wplc_name == "") {
                 wplc_name = jQuery.cookie('wplc_name');

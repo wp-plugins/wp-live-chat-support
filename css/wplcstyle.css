@@ -56,7 +56,6 @@
 
 #wp-live-chat {
     position: fixed;
-    bottom: 0;
     z-index: 105;
     display: block;
     background: #fff;
@@ -210,4 +209,97 @@
     height: 40px;
 }
 
+.wplc_close.wplc_left #wp-live-chat-1{
+    -ms-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -ms-transform-origin: left top 0;
+    -moz-transform-origin: left top 0;
+    -webkit-transform-origin: left top 0;
+    transform-origin: left top 0;
+    float: left;
+    width: 195px;
+    position: absolute;
+    top: 27px;
+    padding-left: 0;
+    left: 39px;
+}
+.wplc_left #wp-live-chat-header{
+    border-radius: 0px 5px 5px 0;
+}
+.wplc_close.wplc_left #wp-live-chat-header{
+    position: absolute;
+    top: 0;
+    width: 45px;
+    bottom: 0;
+    right: 0;
+}
+.wplc_open.wplc_left #wp-live-chat-header{
+    border-radius: 0px 5px 0px 0;
+}
 
+.wplc_close.wplc_left .wp-live-chat-wrapper, .wplc_close.wplc_right .wp-live-chat-wrapper{
+    position: relative;
+    height: 250px;
+}
+.wplc_left{
+    border-radius: 0px 5px 5px 0 !important;
+}
+.wplc_close.wplc_left{
+    padding-right: 45px;
+    height: 220px;
+}
+
+.wplc_left #wplc_chatbox, .wplc_right #wplc_chatbox{
+    height: 330px !important;
+    width: 240px;
+}
+
+.wplc_close.wplc_right #wp-live-chat-1{
+    -ms-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    -ms-transform-origin: 0 0 0;
+    -moz-transform-origin: 0 0 0;
+    -webkit-transform-origin: 0 0 0;
+    transform-origin: 0 0 0;
+    float: left;
+    width: 180px;
+    padding:0 !important;
+    bottom: 0;
+    position: absolute;
+    left: 8px;
+}
+
+.wplc_close.wplc_right #wp-live-chat-header{
+    position: absolute;
+    top: 0;
+    width: 45px;
+    bottom: 0;
+    left: 0;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.wplc_close.wplc_right{
+    padding-left: 45px;
+    height: 220px;
+    border-radius: 5px 0px 0px 5px !important;
+}
+.wplc_open.wplc_right #wp-live-chat-header{
+    border-radius: 5px 0px 0px 0;
+}
+.wplc_right{
+    border-radius: 5px 0px 0px 5px !important;
+}
+.wplc_close.wplc_left #wp-live-chat-image{
+    top: 25px;
+    left: 35px;
+}
+.wplc_close.wplc_right #wp-live-chat-image {
+    bottom: 18px;
+    left: initial;
+    right: 38px;
+    top: initial;
+}

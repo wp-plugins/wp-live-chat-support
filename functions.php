@@ -164,12 +164,12 @@ function wplc_list_chats() {
 
             if ($result->status == 2) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP-Live-Chat-".$result->id."\">Accept Chat</a>";
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP_Live_Chat_".$result->id."\">Accept Chat</a>";
                 $trstyle = "style='background-color:#FFFBE4; height:30px;'";
             }
             if ($result->status == 3) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
-                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP-Live-Chat-".$result->id."\">Open Chat Window</a>";
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat\" window-title=\"WP_Live_Chat_".$result->id."\">Open Chat Window</a>";
                 $trstyle = "style='background-color:#F7FCFE; height:30px;'";
             }
             if ($wplc_c>1) { $actions = wplc_get_msg(); }

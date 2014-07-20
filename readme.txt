@@ -3,7 +3,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.8
-Tested up to: 3.9.1
+Tested up to: 4.0
 Stable tag: trunk
 License: GPLv2
 
@@ -79,10 +79,19 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Upgrade Notice ==
 
-Overhauled Ajax calls to be less resource intensive in version 4. It's recommended to upgrade the WP Live Chat Support Pro Version as well. 
-
+= 4.1.0 =
+It is highly recommended that you upgrade to version 4.1.0.
 
 == Changelog ==
+
+= 4.1.0 2014-07-20 =
+* New feature: You can now show the chat box on the left or right
+* Vulnerability fix (JS injections). Thank you Patrik @ www.it-securityguard.com
+* Fixed 403 bug when saving settings
+* Fixed Ajax Time out error (Lowered From 90 to 28)
+* Fixed IE8 bug
+* Added option to auto pop up chat window
+* Added Italian language files. Thanks to Davide
 
 = 4.0.2 =
 * Table creation bug fix
@@ -203,4 +212,4 @@ Overhauled Ajax calls to be less resource intensive in version 4. It's recommend
 * More text fields can be customized
 
 = 1.0 =
-* Launch! 
+* Launch!

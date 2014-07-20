@@ -3,10 +3,23 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.0.2
+Version: 4.1.0
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
+
+
+/* 4.1.0
+ * 
+ * New feature: You can now show the chat box on the left or right
+ * Vulnerability fix (JS injections). Thank you Patrik @ www.it-securityguard.com
+ * Fixed 403 bug when saving settings
+ * Fixed Ajax Time out error (Lowered From 90 to 28)
+ * Fixed IE8 bug
+ * Added option to auto pop up chat window
+ * Added Italian language files. Thanks to Davide
+ *  
+ */
 
 error_reporting(E_ERROR);
 global $wplc_version;
@@ -17,7 +30,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.0.2";
+$wplc_version = "4.1.0";
 
 
 
@@ -122,75 +135,93 @@ function wplc_draw_user_box() {
 }
 function wplc_output_box() {
     
-
+    $wplc_class = "";
     $wplc_settings = get_option("WPLC_SETTINGS");
     if ($wplc_settings["wplc_settings_enabled"] == 2) { return; }
 
-    if ($wplc_settings["wplc_settings_align"] == 1) { $wplc_box_align = "left:100px;"; } else { $wplc_box_align = "right:100px;"; }
-    if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = "#".$wplc_settings["wplc_settings_fill"]; } else {  $wplc_settings_fill = "#73BE28"; }
+    if ($wplc_settings["wplc_settings_align"] == 1) { 
+        $original_pos = "bottom_left";
+        $wplc_box_align = "left:100px; bottom:0px;"; 
+        
+    } else if ($wplc_settings["wplc_settings_align"] == 2){ 
+        $original_pos = "bottom_right";
+        $wplc_box_align = "right:100px; bottom:0px;"; 
+        
+    } else if($wplc_settings["wplc_settings_align"] == 3){
+        $original_pos = "left";
+        $wplc_box_align = "left:0; bottom:100px;";
+        $wplc_class = "wplc_left";
+    } else if($wplc_settings["wplc_settings_align"] == 4){
+        $original_pos = "right";
+        $wplc_box_align = "right:0; bottom:100px;";
+        $wplc_class = "wplc_right";
+    }
+    if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = "#".$wplc_settings["wplc_settings_fill"]; } else {  $wplc_settings_fill = "#ed832f"; }
     if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = "#".$wplc_settings["wplc_settings_font"]; } else {  $wplc_settings_font = "#FFFFFF"; }
 
     $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
     if (!function_exists("wplc_register_pro_version") && $wplc_is_admin_logged_in != 1) {
         return "";
     }  
-    if($wplc_settings["wplc_settings_align"] == 1){
-        $original_pos = "left";
-    } else {
-        $original_pos = "right";
-    }
     
 ?>    
-<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>;" original_pos="<?php echo $original_pos ?>">
+<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>; " class="<?php echo $wplc_class ?> wplc_close" original_pos="<?php echo $original_pos ?>" wplc-auto-pop-up="<?php echo $wplc_settings['wplc_auto_pop_up'] ?>">
 
     
     <?php if (function_exists("wplc_register_pro_version")) {
         wplc_pro_output_box();
     } else {
     ?>
-        <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;">
-            
-            <i id="wp-live-chat-minimize" class="fa fa-minus" style="display:none;" ></i>
-            <i id="wp-live-chat-close" class="fa fa-times" style="display:none;" ></i>
-            
-            <div id="wp-live-chat-1" >
-                <div style="display:block; ">
-                <strong><?php _e("Questions?", "wplivechat") ?></strong> <?php _e("Chat with us", "wplivechat") ?>
+    
+
+        <div class="wp-live-chat-wraper">
+            <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important; ">
+
+                <i id="wp-live-chat-minimize" class="fa fa-minus" style="display:none;" ></i>
+                <i id="wp-live-chat-close" class="fa fa-times" style="display:none;" ></i>
+
+                <div id="wp-live-chat-1" >
+                    <div style="display:block; ">
+                    <strong><?php _e("Questions?", "wplivechat") ?></strong> <?php _e("Chat with us", "wplivechat") ?>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="wp-live-chat-2" style="display:none;">
             
-            <div id="wp-live-chat-2-info">
-               <strong>Start Live Chat</strong> 
+            <div>
+
+                <div id="wp-live-chat-2" style="display:none;">
+
+                    <div id="wp-live-chat-2-info">
+                       <strong>Start Live Chat</strong> 
+                    </div>
+
+                        <input type="text" name="wplc_name" id="wplc_name" value="" placeholder="<?php _e("Name","wplivechat"); ?>" />
+
+                        <input type="text" name="wplc_email" id="wplc_email" value="" placeholder="<?php _e("Email","wplivechat"); ?>"  />
+
+                        <input id="wplc_start_chat_btn" type="button" value="<?php _e("Start Chat","wplivechat"); ?>" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
+
+
+
+                </div>
+
+                <div id="wp-live-chat-3" style="display:none;">
+                    <p><?php _e("Connecting you to a sales person. Please be patient.","wplivechat") ?></p>
+                </div>
+                <div id="wp-live-chat-react" style="display:none;">
+                    <p><?php _e("Reactivating your previous chat...", "wplivechat") ?></p>
+                </div>
+                <div id="wp-live-chat-4" style="display:none;">
+                    <div id="wplc_chatbox"></div>
+                    <p style="text-align:center; font-size:11px;"><?php _e("Press ENTER to send your message", "wplivechat" )?></p>
+                    <p>
+                        <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
+                        <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
+                        <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplivechat"); ?>" style="display:none;" /></p>
+                </div>
             </div>
-
-                <input type="text" name="wplc_name" id="wplc_name" value="" placeholder="<?php _e("Name","wplivechat"); ?>" />
-           
-                <input type="text" name="wplc_email" id="wplc_email" value="" placeholder="<?php _e("Email","wplivechat"); ?>"  />
-           
-                <input id="wplc_start_chat_btn" type="button" value="<?php _e("Start Chat","wplivechat"); ?>" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
-
-            
-            
-        </div>
-        
-        <div id="wp-live-chat-3" style="display:none;">
-            <p><?php _e("Connecting you to a sales person. Please be patient.","wplivechat") ?></p>
-        </div>
-        <div id="wp-live-chat-react" style="display:none;">
-            <p><?php _e("Reactivating your previous chat...", "wplivechat") ?></p>
-        </div>
-        <div id="wp-live-chat-4" style="display:none;">
-            <div id="wplc_chatbox"></div>
-            <p style="text-align:center; font-size:11px;"><?php _e("Press ENTER to send your message", "wplivechat" )?></p>
-            <p>
-                <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
-                <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
-                <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplivechat"); ?>" style="display:none;" /></p>
-        </div>
-            
-    </div>    
+        </div>        
+    </div>   
 <?php  
     }
 }
@@ -334,14 +365,16 @@ function wplc_admin_javascript() {
                                 
                                 var orig_title = document.getElementsByTagName("title")[0].innerHTML;
                                 wplc_pending_refresh = setInterval(function (){
+                                    console.log("chat request");
+                                
                                     document.title = "** CHAT REQUEST **";
                                     wplc_title_alerts1 = setTimeout(function (){ document.title = "__ CHAT Request __"; }, 1000);
-                                    wplc_title_alerts2 = setTimeout(function (){ document.title = "** CHAT REQUEST **"; }, 1500);
-                                    wplc_title_alerts3 = setTimeout(function (){ document.title = "__ CHAT Request __"; }, 2000);
-                                    wplc_title_alerts4 = setTimeout(function (){ document.title = orig_title; }, 2500);
+                                    wplc_title_alerts2 = setTimeout(function (){ document.title = "** CHAT REQUEST **"; }, 2000);
+                                    wplc_title_alerts3 = setTimeout(function (){ document.title = "__ CHAT Request __"; }, 3000);
+                                    wplc_title_alerts4 = setTimeout(function (){ document.title = orig_title; }, 4000);
 
                                     document.getElementById("wplc_sound").innerHTML="<embed src='<?php echo plugins_url('/ring.wav', __FILE__); ?>' hidden=true autostart=true loop=false>";
-                                }, 3000); 
+                                }, 5000); 
                             } else {
                                 //console.log("end");
                                 clearInterval(wplc_pending_refresh);
@@ -383,7 +416,11 @@ function wplc_admin_javascript() {
         jQuery(document).ready(function() {
             jQuery('body').on("click", "a", function (event) {
                 if(jQuery(this).hasClass('wplc_open_chat')){
-                    event.preventDefault();
+                    if(event.preventDefault) {
+			event.preventDefault();
+                    } else {
+                        event.returnValue = false;
+                    }
                     window.open(jQuery(this).attr("href"), jQuery(this).attr("window-title" ), "width=600,height=600,scrollbars=yes", false);
                 }
             });
@@ -731,9 +768,16 @@ function wplc_return_admin_chat_javascript($cid) {
                 
             });
 
+            function wplc_strip(str) {
+                str=str.replace(/<br>/gi, "\n");
+                str=str.replace(/<p.*>/gi, "\n");
+                str=str.replace(/<a.*href="(.*?)".*>(.*?)<\/a>/gi, " $2 ($1) ");
+                str=str.replace(/<(?:.|\s)*?>/g, "");
+                return str;
+            }
             jQuery("#wplc_admin_send_msg").on("click", function() {
                 var wplc_cid = jQuery("#wplc_admin_cid").val();
-                var wplc_chat = jQuery("#wplc_admin_chatmsg").val();
+                var wplc_chat = wplc_strip(document.getElementById('wplc_admin_chatmsg').value);
                 var wplc_name = "a"+"d"+"m"+"i"+"n";
                 jQuery("#wplc_admin_chatmsg").val('');
                 
@@ -776,7 +820,7 @@ function wplc_return_admin_chat_javascript($cid) {
 function wplc_activate() {
     wplc_handle_db();
     if (!get_option("WPLC_SETTINGS")) {
-        add_option('WPLC_SETTINGS',array("wplc_settings_align" => "2", "wplc_settings_enabled" => "1", "wplc_settings_fill" => "73BE28", "wplc_settings_font" => "FFFFFF"));
+        add_option('WPLC_SETTINGS',array("wplc_settings_align" => "2", "wplc_settings_enabled" => "1", "wplc_settings_fill" => "ed832f", "wplc_settings_font" => "FFFFFF"));
     }
     add_option("WPLC_HIDE_CHAT","true");
     add_option("WPLC_FIRST_TIME", true);
@@ -887,6 +931,7 @@ function wplc_head_basic() {
         $wplc_data['wplc_settings_fill'] = esc_attr($_POST['wplc_settings_fill']);
         $wplc_data['wplc_settings_font'] = esc_attr($_POST['wplc_settings_font']);
         $wplc_data['wplc_settings_enabled'] = esc_attr($_POST['wplc_settings_enabled']);
+        $wplc_data['wplc_auto_pop_up'] = esc_attr($_POST['wplc_auto_pop_up']);
         update_option('WPLC_SETTINGS', $wplc_data);
         update_option("WPLC_HIDE_CHAT", $_POST['wplc_hide_chat']);
         echo "<div class='updated'>";
