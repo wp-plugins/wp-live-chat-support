@@ -7,7 +7,7 @@ Tested up to: 4.0
 Stable tag: trunk
 License: GPLv2
 
-The most cost effective Live Chat plugin. Chat with your visitors for free!
+Fully functional Live Chat plugin. Chat with your visitors for free! No need for third party connections or monthly payments.
 
 == Description ==
 
@@ -26,6 +26,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 
 = Pro Version Features =
 
+* Unlimited live chat agents
 * Initiate live chats with online visitors
 * Chat to more than one visitor at a time
 * Access historical live chat records
@@ -66,9 +67,20 @@ Once the live chat plugin is activated, click on "Live Chat" in the left menu na
 
 Once installed and activated, a link should appear in your left navigation panel within your WP-ADMIN section. Click on the "Live Chat" link and follow the on screen instructions.
 
-= The live chat box is not showing up =
+= Where can I find documentation for WP Live Chat Support? =
 
 Please review the live chat documentation on [our website](http://wp-livechat.com/documentation/).
+
+= Troubleshooting =
+If you're experiencing issues running WP Live Chat Support, please take note of the following:
+
+- The live chat box will only show up on the front end if you are logged in to your wp-admin section.
+- The default delay before the live chat box appears is 10 seconds. You can change this on the settings page.
+- If you press the "X" within the live chat window on the front end, a cookie will be set that will stop the chat box from showing for another 24 hours.
+- If the live chat box still does not appear on your website, please go through the following steps:
+- - Please ensure your theme’s footer.php file has the following line before the closing body tag: <?php wp_footer(); ?>
+- - Ensure that no other plugins are causing JavaScript errors on your website. This could interfere with the execution of our plugin's JavaScript.
+- - If you need more help, please use the [WP Live Chat Support support forum](http://wp-livechat.com/forums/forum/support/) or contact us and we'll get to the bottom of the problem as soon as possible!
 
 == Screenshots ==
 
@@ -79,18 +91,25 @@ Please review the live chat documentation on [our website](http://wp-livechat.co
 
 == Upgrade Notice ==
 
-= 4.1.0 =
-It is highly recommended that you upgrade to version 4.1.0.
+= 4.1.1 =
+It is highly recommended that you upgrade to version 4.1.1
 
 == Changelog ==
 
+= 4.1.1 2014-07-29 =
+* Significant performance improvements
+* Live chat window will now only show in one window (if user has multiple tabs open on your site)
+* You can now see the browser of the live chat user
+* Improved the UI of the backend
+* Bug fixes
+
 = 4.1.0 2014-07-20 =
-* New feature: You can now show the chat box on the left or right
+* New feature: You can now show the live chat box on the left or right
 * Vulnerability fix (JS injections). Thank you Patrik @ www.it-securityguard.com
 * Fixed 403 bug when saving settings
 * Fixed Ajax Time out error (Lowered From 90 to 28)
 * Fixed IE8 bug
-* Added option to auto pop up chat window
+* Added option to auto pop up live chat window
 * Added Italian language files. Thanks to Davide
 
 = 4.0.2 =

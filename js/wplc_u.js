@@ -11,12 +11,13 @@
  * 8 - complete but now browsing again
  * 9 - user closed chat before starting chat
  * 10 - user minimized active chat
+ * 11 - user moved on to another page (session variable is different)
  * 
  */
 
 jQuery(document).ready(function() {
     
-    
+    var wplc_session_variable = new Date().getTime();
     var wplc_cid;
     var wplc_check_hide_cookie;
     var wplc_chat_status = "";
@@ -38,14 +39,14 @@ jQuery(document).ready(function() {
     wplc_chat_status = 5;
     
 
-
     var data = {
         action: 'wplc_call_to_server_visitor',
         security: wplc_nonce,
         cid:wplc_cid,
         wplc_name: wplc_cookie_name,
         wplc_email: wplc_cookie_email,
-        status:wplc_chat_status
+        status:wplc_chat_status,
+        wplcsession:wplc_session_variable
     };
     // ajax long polling function
     wplc_call_to_server_chat(data);
@@ -75,8 +76,12 @@ jQuery(document).ready(function() {
                     jQuery.cookie('wplc_email', response['wplc_email'], { expires: 1, path: '/' });
                     wplc_cid = jQuery.trim(response['cid']);
                     wplc_chat_status = response['status'];
-                        //console.log(data);
-                    
+                    //console.log(jQuery.cookie('wplc_chat_status'));
+                    //console.log('1 setting wplc_chat_stauts to '+wplc_chat_status);
+                    jQuery.cookie('wplc_chat_status', null, { path: '/' });
+                    //console.log(jQuery.cookie('wplc_chat_status'));
+                    jQuery.cookie('wplc_chat_status', wplc_chat_status, { expires: 1, path: '/' });
+                    //console.log(jQuery.cookie('wplc_chat_status'));
                     // handle response
                     if(data['status'] == response['status']){
                         if(data['status'] == 5 && wplc_init_chat_box_check == true){ // open chat box on load
@@ -103,6 +108,10 @@ jQuery(document).ready(function() {
                             jQuery("#wp-live-chat-minimize").hide();
                             document.getElementById('wplc_chatmsg').disabled = true;
                             jQuery("#wplc_chatbox").append("<em>"+response['data']+"</em><br />");
+                        }
+                        else if(parseInt(response['status']) == 11){ /* use moved on to another page (perhaps in another tab so close this instance */
+                            jQuery("#wp-live-chat").css({ "display" : "none" });
+                            wplc_run = false;
                         }
                         else if(response['status'] == 3 || response['status'] == 10){ // re-initialize chat
                             jQuery("#wplc_cid").val(wplc_cid);
@@ -145,7 +154,8 @@ jQuery(document).ready(function() {
                 complete: function(response){
                     //console.log(wplc_run);
                     if (wplc_run) { 
-                        wplc_call_to_server_chat(data);
+                        setTimeout(wplc_call_to_server_chat(data), 1500);
+                        
                     }
             },
             timeout: 120000
@@ -282,7 +292,6 @@ jQuery(document).ready(function() {
             });
             
             wplc_chat_status = jQuery.cookie('wplc_chat_status');
-            
             if (wplc_chat_status == 3 || wplc_chat_status == 10) {
                 jQuery("#wp-live-chat-4").show();
                 jQuery("#wplc_chatmsg").focus();
@@ -359,14 +368,16 @@ jQuery(document).ready(function() {
                         security: wplc_nonce,
                         name: wplc_name,
                         email: wplc_email,
-                        cid: wplc_cid
+                        cid: wplc_cid,
+                        wplcsession: wplc_session_variable
                 };
             } else { // no cookie recorded yet for this visitor
                 var data = {
                         action: 'wplc_start_chat',
                         security: wplc_nonce,
                         name: wplc_name,
-                        email: wplc_email
+                        email: wplc_email,
+                        wplcsession: wplc_session_variable
                 };
             }
             //changed ajax url so wp_mail function will work and not stop plugin from alerting admin there is a pending chat
