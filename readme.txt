@@ -77,10 +77,12 @@ If you're experiencing issues running WP Live Chat Support, please take note of 
 - The live chat box will only show up on the front end if you are logged in to your wp-admin section.
 - The default delay before the live chat box appears is 10 seconds. You can change this on the settings page.
 - If you press the "X" within the live chat window on the front end, a cookie will be set that will stop the chat box from showing for another 24 hours.
-- If the live chat box still does not appear on your website, please go through the following steps:
-- - Please ensure your theme’s footer.php file has the following line before the closing body tag: <?php wp_footer(); ?>
-- - Ensure that no other plugins are causing JavaScript errors on your website. This could interfere with the execution of our plugin's JavaScript.
-- - If you need more help, please use the [WP Live Chat Support support forum](http://wp-livechat.com/forums/forum/support/) or contact us and we'll get to the bottom of the problem as soon as possible!
+
+If the live chat box still does not appear on your website, please go through the following steps:
+
+- Please ensure your theme's footer.php file has the following line before the closing body tag: <?php wp_footer(); ?>
+- Ensure that no other plugins are causing JavaScript errors on your website. This could interfere with the execution of our plugin's JavaScript.
+- If you need more help, please use the [support forum](http://wp-livechat.com/forums/forum/support/) or contact us and we'll get to the bottom of the problem as soon as possible!
 
 == Screenshots ==
 
@@ -95,6 +97,9 @@ If you're experiencing issues running WP Live Chat Support, please take note of 
 It is highly recommended that you upgrade to version 4.1.1
 
 == Changelog ==
+
+= 4.1.2 2014-07-29 =
+* DB bug fix
 
 = 4.1.1 2014-07-29 =
 * Significant performance improvements
