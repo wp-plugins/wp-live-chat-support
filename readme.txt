@@ -94,9 +94,12 @@ If the live chat box still does not appear on your website, please go through th
 == Upgrade Notice ==
 
 = 4.1.1 =
-It is highly recommended that you upgrade to version 4.1.1
+It is highly recommended that you upgrade to WP Live Chat Support version 4.1.1
 
 == Changelog ==
+
+= 4.1.3 2014-07-30 =
+* Code improvements (PHP warnings)
 
 = 4.1.2 2014-07-29 =
 * DB bug fix

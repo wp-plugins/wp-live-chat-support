@@ -29,8 +29,8 @@
                   <td width='200' valign='top'><?php _e("Chat enabled","wplivechat")?>:</td>
                   <td>
                       <select id='wplc_settings_enabled' name='wplc_settings_enabled'>
-                          <option value="1" <?php echo $wplc_settings_enabled[1]?>><?php _e("Yes","wplivechat")?></option>
-                          <option value="2" <?php echo $wplc_settings_enabled[2]?>><?php _e("No","wplivechat")?></option>
+                          <option value="1" <?php if (isset($wplc_settings_enabled[1])) { echo $wplc_settings_enabled[1]; } ?>><?php _e("Yes","wplivechat"); ?></option>
+                          <option value="2" <?php if (isset($wplc_settings_enabled[2])) { echo $wplc_settings_enabled[2]; }?>><?php _e("No","wplivechat"); ?></option>
                       </select>
                   </td>
               </tr>
@@ -60,10 +60,10 @@
                   <td width='200' valign='top'><?php _e("Chat box alignment","wplivechat")?>:</td>
                   <td>
                       <select id='wplc_settings_align' name='wplc_settings_align'>
-                          <option value="1" <?php echo $wplc_settings_align[1]?>><?php _e("Bottom left","wplivechat")?></option>
-                          <option value="2" <?php echo $wplc_settings_align[2]?>><?php _e("Bottom right","wplivechat")?></option>
-                          <option value="3" <?php echo $wplc_settings_align[3]?>><?php _e("Left","wplivechat")?></option>
-                          <option value="4" <?php echo $wplc_settings_align[4]?>><?php _e("Right","wplivechat")?></option>
+                          <option value="1" <?php if (isset($wplc_settings_align[1])) { echo $wplc_settings_align[1]; } ?>><?php _e("Bottom left","wplivechat"); ?></option>
+                          <option value="2" <?php if (isset($wplc_settings_align[2])) { echo $wplc_settings_align[2]; } ?>><?php _e("Bottom right","wplivechat"); ?></option>
+                          <option value="3" <?php if (isset($wplc_settings_align[3])) { echo $wplc_settings_align[3]; } ?>><?php _e("Left","wplivechat"); ?></option>
+                          <option value="4" <?php if (isset($wplc_settings_align[4])) { echo $wplc_settings_align[4]; } ?>><?php _e("Right","wplivechat"); ?></option>
                       </select>
                   </td>
               </tr>
@@ -72,7 +72,7 @@
                       <?php _e("Auto Pop-up","wplivechat") ?>
                   </td>
                   <td>
-                      <input type="checkbox" name="wplc_auto_pop_up" value="1" <?php if($wplc_settings['wplc_auto_pop_up'] == 1 ){ echo "checked";} ?>/>
+                      <input type="checkbox" name="wplc_auto_pop_up" value="1" <?php if(isset($wplc_settings['wplc_auto_pop_up'])  && $wplc_settings['wplc_auto_pop_up'] == 1 ) { echo "checked"; } ?>/>
                       <p class="description"><small><?php _e("Expand the chat box automatically (prompts the user to enter their name and email address).","wplivechat") ?></small></p>
                   </td>
               </tr>

@@ -3,13 +3,16 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.2
+Version: 4.1.3
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.2
+/* 4.1.3
+ * Code improvements (PHP warnings)
+ * 
+ * 4.1.2
  * DB bug fix
  * 
  * 4.1.1
@@ -39,7 +42,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.2";
+$wplc_version = "4.1.3";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -188,7 +191,7 @@ function wplc_output_box() {
     }  
     
 ?>    
-<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>; " class="<?php echo $wplc_class ?> wplc_close" original_pos="<?php echo $original_pos ?>" wplc-auto-pop-up="<?php echo $wplc_settings['wplc_auto_pop_up'] ?>">
+<div id="wp-live-chat" style="display:none; <?php echo $wplc_box_align; ?>; " class="<?php echo $wplc_class ?> wplc_close" original_pos="<?php echo $original_pos ?>" wplc-auto-pop-up="<?php if (isset($wplc_settings['wplc_auto_pop_up'])) { echo $wplc_settings['wplc_auto_pop_up']; } ?>">
 
     
     <?php if (function_exists("wplc_register_pro_version")) {
@@ -749,7 +752,7 @@ function wplc_return_admin_chat_javascript($cid) {
 
         jQuery(document).ready(function() {
         
-            var wplc_image = "<?php echo $image ?>";
+            var wplc_image = "<?php if (isset($image)) { echo $image; } else { echo ""; } ?>";
             var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
             
             
@@ -887,8 +890,8 @@ function wplc_handle_db() {
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
    dbDelta($sql);
 
-   $sql = "
-        CREATE TABLE ".$wplc_tblname_msgs." (
+   $sql = '
+        CREATE TABLE '.$wplc_tblname_msgs.' (
           id int(11) NOT NULL AUTO_INCREMENT,
           chat_sess_id int(11) NOT NULL,
           `from` varchar(150) CHARACTER SET utf8 NOT NULL,
@@ -898,10 +901,10 @@ function wplc_handle_db() {
           originates INT(3) NOT NULL,
           PRIMARY KEY  (id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-    ";
+    ';
 
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-   dbDelta($sql);
+   @dbDelta($sql);
    
    add_option("wplc_db_version", $wplc_version);
    update_option("wplc_db_version",$wplc_version);
@@ -915,7 +918,7 @@ function wplc_add_user_stylesheet() {
     
 }
 function wplc_add_admin_stylesheet() {
-    if (isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings') {
+    if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings')) {
         wp_register_style( 'wplc-admin-style', 'http://code.jquery.com/ui/1.8.24/themes/smoothness/jquery-ui.css' );
         wp_enqueue_style( 'wplc-admin-style' );
         wp_register_style( 'wplc-font-awesome', plugins_url('/css/font-awesome.min.css', __FILE__) );
@@ -928,7 +931,7 @@ if (isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu-settings') {
 }
 function wplc_admin_scripts_basic() {
     
-    if ($_GET['page'] == "wplivechat-menu-settings") {
+    if (isset($_GET['page']) && $_GET['page'] == "wplivechat-menu-settings") {
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script('jquery-ui-core');
 
@@ -967,13 +970,13 @@ function wplc_head_basic() {
 
     if (isset($_POST['wplc_save_settings'])){
 
-        $wplc_data['wplc_settings_align'] = esc_attr($_POST['wplc_settings_align']);
-        $wplc_data['wplc_settings_fill'] = esc_attr($_POST['wplc_settings_fill']);
-        $wplc_data['wplc_settings_font'] = esc_attr($_POST['wplc_settings_font']);
-        $wplc_data['wplc_settings_enabled'] = esc_attr($_POST['wplc_settings_enabled']);
-        $wplc_data['wplc_auto_pop_up'] = esc_attr($_POST['wplc_auto_pop_up']);
+        if (isset($_POST['wplc_settings_align'])) { $wplc_data['wplc_settings_align'] = esc_attr($_POST['wplc_settings_align']); }
+        if (isset($_POST['wplc_settings_fill'])) { $wplc_data['wplc_settings_fill'] = esc_attr($_POST['wplc_settings_fill']); }
+        if (isset($_POST['wplc_settings_font'])) { $wplc_data['wplc_settings_font'] = esc_attr($_POST['wplc_settings_font']); }
+        if (isset($_POST['wplc_settings_enabled'])) { $wplc_data['wplc_settings_enabled'] = esc_attr($_POST['wplc_settings_enabled']); }
+        if (isset($_POST['wplc_auto_pop_up'])) { $wplc_data['wplc_auto_pop_up'] = esc_attr($_POST['wplc_auto_pop_up']); }
         update_option('WPLC_SETTINGS', $wplc_data);
-        update_option("WPLC_HIDE_CHAT", $_POST['wplc_hide_chat']);
+         if (isset($_POST['wplc_hide_chat'])) { update_option("WPLC_HIDE_CHAT", $_POST['wplc_hide_chat']); }
         echo "<div class='updated'>";
         _e("Your settings have been saved.","wplivechat");
         echo "</div>";
