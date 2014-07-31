@@ -69,13 +69,32 @@ function wplc_record_chat_msg($from,$cid,$msg) {
 
     if ($from == "1") {
         $fromname = wplc_return_chat_name($cid);
+        //$fromemail = wplc_return_chat_email($cid);
         $orig = '2';
     }
     else {
         $fromname = "admin";
+        //$fromemail = "SET email";
         $orig = '1';
     }
+    
+    /*
+    include 'includes/XMPPHP/XMPP.php';
 
+    #Use XMPPHP_Log::LEVEL_VERBOSE to get more logging for error reports
+    #If this doesn't work, are you running 64-bit PHP with < 5.2.6?
+    $conn = new XMPPHP_XMPP('talk.google.com', 5222, '', '', 'xmpphp', 'gmail.com', $printlog=false, $loglevel=XMPPHP_Log::LEVEL_INFO);
+
+    try {
+        $conn->connect();
+        $conn->processUntil('session_start');
+        $conn->presence();
+        $conn->message($fromemail, $msg);
+        $conn->disconnect();
+    } catch(XMPPHP_Exception $e) {
+        die($e->getMessage());
+    }
+*/
     $ins_array = array(
         'chat_sess_id' => $cid,
         'timestamp' => date("Y-m-d H:i:s"),
@@ -84,10 +103,17 @@ function wplc_record_chat_msg($from,$cid,$msg) {
         'status' => 0,
         'originates' => $orig
     );
+
     $rows_affected = $wpdb->insert( $wplc_tblname_msgs, $ins_array );
 
     wplc_update_active_timestamp($cid);
     wplc_change_chat_status($cid,3);
+    
+    
+    
+
+    
+    
     return true;
 
 
@@ -659,11 +685,12 @@ function wplc_error_directory() {
 }
 
 function wplc_error_log($error) {
+    /*
     $content = "\r\n[".date("Y-m-d")."] [".date("H:i:s")."]".$error;
     $fp = @fopen(ABSPATH.'/wp-content/uploads/wp-live-chat-support'."/error_log.txt","a+");
     fwrite($fp,$content);
     fclose($fp);
-    
+    */
     
 }
 function Memory_Usage($decimals = 2)

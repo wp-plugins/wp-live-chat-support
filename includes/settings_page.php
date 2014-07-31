@@ -1,4 +1,3 @@
-
 <div class="wrap">
     <div id="icon-edit" class="icon32 icon32-posts-post">
         <br>

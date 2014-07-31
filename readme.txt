@@ -16,9 +16,10 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 = Free Version Features =
 
 * WP Live Chat Support is a fully functional live chat plugin
-* Initiate live chats with your visitors
+* Live chat directly with your visitors
 * Easy to use interface for both the admin and the visitor
 * Users can drag the live chat box around their page
+* Change the colors of the live chat box
 * No advertising or links
 * No "Powered by" links on the live chat window
 * No monthly live chat subscriptions needed
@@ -48,10 +49,20 @@ Our live chat plugin instantly gives you the ability to chat directly with poten
 
 Once the live chat plugin is activated, click on "Live Chat" in the left menu navigation. As soon as a visitor lands on your website, their details will be displayed in the live chat control panel. A live chat box will be displayed on their screen. If they fill out their details and click "Start chat", a ringing sound will trigger in your live chat control panel. Once you accept the chat, you can communicate directly with your visitor.
 
-
 = Coming Soon to WP Live Chat Support =
 
 * More advanced customization and themes
+
+= Translations =
+Get a free copy of the WP Live Chat Support Pro version in exchange for translating our plugin!
+
+* English
+* Brazilian (Gustavo Silva)
+* Chinese - Simplified^
+* Chinese - Traditional^
+* Italian^
+
+^ Language file needs updating
 
 
 == Installation ==
@@ -64,12 +75,13 @@ Once the live chat plugin is activated, click on "Live Chat" in the left menu na
 == Frequently Asked Questions ==
 
 = I've installed the live chat plugin, now what? =
-
 Once installed and activated, a link should appear in your left navigation panel within your WP-ADMIN section. Click on the "Live Chat" link and follow the on screen instructions.
 
 = Where can I find documentation for WP Live Chat Support? =
-
 Please review the live chat documentation on [our website](http://wp-livechat.com/documentation/).
+
+= Does WP Live Chat Support connect to a third party server? =
+No. WP Live Chat Support was developed to specifically create and manage live chats on your server. Installing this plugin will essentially turn your website into it's own live chat server. We have put every effort into making this process as smooth as possible while ensuring low resource usage on your host. We have incorporated long polling into the live chat functionality which ensures a quick chat response time between the admin and the user while maintaining a low resource footprint.
 
 = Troubleshooting =
 If you're experiencing issues running WP Live Chat Support, please take note of the following:
@@ -94,9 +106,13 @@ If the live chat box still does not appear on your website, please go through th
 == Upgrade Notice ==
 
 = 4.1.1 =
-It is highly recommended that you upgrade to WP Live Chat Support version 4.1.1
+It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.1.4 2014-07-31 =
+* Significant performance improvements
+* Brazilian translation added - thank you Gustavo Silva
 
 = 4.1.3 2014-07-30 =
 * Code improvements (PHP warnings)

@@ -1,5 +1,6 @@
 <?php
-
+@session_start();
+@ob_start();
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 604800');
@@ -26,12 +27,13 @@ require_once( '../../../wp-load.php' );
 
 define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailing slash
 
-/* time in seconds between updating the user on the page within the DB  (lower number = higher resource usage) */
-define('WPLC_DELAY_BETWEEN_UPDATES',3);
-/* time in seconds between long poll loop (lower number = higher resource usage) */
-define('WPLC_DELAY_BETWEEN_LOOPS',1);
+$iterations = 60; 
+/* time in microseconds between updating the user on the page within the DB  (lower number = higher resource usage) */
+define('WPLC_DELAY_BETWEEN_UPDATES',500000);
+/* time in microseconds between long poll loop (lower number = higher resource usage) */
+define('WPLC_DELAY_BETWEEN_LOOPS',500000);
 /* this needs to take into account the previous constants so that we dont run out of time, which in turn returns a 503 error */
-define('WPLC_TIMEOUT',((WPLC_DELAY_BETWEEN_UPDATES + WPLC_DELAY_BETWEEN_LOOPS + 30))*28);
+define('WPLC_TIMEOUT',((WPLC_DELAY_BETWEEN_UPDATES + WPLC_DELAY_BETWEEN_LOOPS))*$iterations);
 
 
 
@@ -82,7 +84,7 @@ if ($check == 1) {
         if (defined('WPLC_TIMEOUT')) { set_time_limit(WPLC_TIMEOUT); } else { set_time_limit(120); }
         //sleep(6);
         $i = 1;
-        while($i <= 28){
+        while($i <= $iterations){
             
             // update chats if they have timed out every 10 seconds
             if($i %10 == 0) {
@@ -114,7 +116,8 @@ if ($check == 1) {
                 echo json_encode($array);
                 break;
             }
-            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { sleep(WPLC_DELAY_BETWEEN_LOOPS); } else { sleep(1); }
+            @ob_end_flush();
+            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { usleep(WPLC_DELAY_BETWEEN_LOOPS); } else { usleep(500000); }
             $i++;
         }
     }
@@ -122,7 +125,7 @@ if ($check == 1) {
         if (defined('WPLC_TIMEOUT')) { set_time_limit(WPLC_TIMEOUT); } else { set_time_limit(120); }
         $i = 1;
         $array = array();
-        while($i <= 28){
+        while($i <= $iterations){
             if(isset($_POST['action_2']) && $_POST['action_2'] == "wplc_long_poll_check_user_opened_chat"){
                 $chat_status = wplc_return_chat_status($_POST['cid']);
                 if($chat_status == 3){
@@ -145,7 +148,8 @@ if ($check == 1) {
                 echo json_encode($array);
                 break;
             }
-            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { sleep(WPLC_DELAY_BETWEEN_LOOPS); } else { sleep(1); }
+            @ob_end_flush();
+            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { usleep(WPLC_DELAY_BETWEEN_LOOPS); } else { usleep(500000); }
             $i++;
         }
     }
@@ -178,7 +182,7 @@ if ($check == 1) {
         $i = 1;
         $array = array("check" => false);
         
-        while($i <= 28){
+        while($i <= $iterations){
             
             if($_POST['cid'] == null || $_POST['cid'] == "" || $_POST['cid'] == "null"){
                 $user = "user".time();
@@ -197,16 +201,12 @@ if ($check == 1) {
                 $array['cid'] = $_POST['cid'];
                 if($new_status == $_POST['status']){ // if status matches do the following
                     if($_POST['status'] != 2){
-                        //wplc_error_log("[".$_POST['wplcsession']."] [".__LINE__."] [*$i] Updating user on page ".$_SERVER['HTTP_REFERER']);
-                        
                         /* check if session_variable is different? if yes then stop this script completely. */
                         if (isset($_POST['wplcsession']) && $_POST['wplcsession'] != '' && $i > 1) {
                             $wplc_session_variable = $_POST['wplcsession'];
                             $current_session_variable = wplc_return_chat_session_variable($_POST['cid']);
-                            //wplc_error_log("[".$_POST['wplcsession']."] [".__LINE__."] Checking against session variable ".$current_session_variable);
                             if ($current_session_variable != "" && $current_session_variable != $wplc_session_variable) {
                                 /* stop this script */
-                                 //wplc_error_log("[".$_POST['wplcsession']."] [".__LINE__."] [*$i] TERMINATING");
                                 $array['status'] = 11;
                                 echo json_encode($array);
                                 die();
@@ -214,8 +214,9 @@ if ($check == 1) {
                         }
                         
                         
-                        wplc_update_user_on_page($_POST['cid'], $_POST['status'],$_POST['wplcsession']);
-                        if (defined('WPLC_DELAY_BETWEEN_UPDATES')) { sleep(WPLC_DELAY_BETWEEN_UPDATES); } else { sleep(3); }
+                        if ($i == 1) {
+                            wplc_update_user_on_page(sanitize_text_field($_POST['cid']), sanitize_text_field($_POST['status']),$_POST['wplcsession']);
+                        }
                     }
                     if ($_POST['status'] == 0){ // browsing - user tried to chat but admin didn't answer so turn back to browsing
                         wplc_update_user_on_page($_POST['cid'], 5,$_POST['wplcsession']);
@@ -281,8 +282,9 @@ if ($check == 1) {
                 echo json_encode($array);
                 break;
             }
-            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { sleep(WPLC_DELAY_BETWEEN_LOOPS); } else { sleep(1); }
             $i++;
+            @ob_end_flush();
+            if (defined('WPLC_DELAY_BETWEEN_LOOPS')) { usleep(WPLC_DELAY_BETWEEN_LOOPS); } else { usleep(500000); }
         }
     }
     
