@@ -3,13 +3,16 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.4
+Version: 4.1.5
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.4
+/* 4.1.5
+ * Code improvements (PHP warnings - set_time_limit caused warnings on some hosts)
+ * 
+ * 4.1.4
  * Significant performance improvements
  * Brazilian translation added - thank you Gustavo Silva
  * 
@@ -46,7 +49,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.4";
+$wplc_version = "4.1.5";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");

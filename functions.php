@@ -78,23 +78,7 @@ function wplc_record_chat_msg($from,$cid,$msg) {
         $orig = '1';
     }
     
-    /*
-    include 'includes/XMPPHP/XMPP.php';
-
-    #Use XMPPHP_Log::LEVEL_VERBOSE to get more logging for error reports
-    #If this doesn't work, are you running 64-bit PHP with < 5.2.6?
-    $conn = new XMPPHP_XMPP('talk.google.com', 5222, '', '', 'xmpphp', 'gmail.com', $printlog=false, $loglevel=XMPPHP_Log::LEVEL_INFO);
-
-    try {
-        $conn->connect();
-        $conn->processUntil('session_start');
-        $conn->presence();
-        $conn->message($fromemail, $msg);
-        $conn->disconnect();
-    } catch(XMPPHP_Exception $e) {
-        die($e->getMessage());
-    }
-*/
+   
     $ins_array = array(
         'chat_sess_id' => $cid,
         'timestamp' => date("Y-m-d H:i:s"),

@@ -81,7 +81,7 @@ $check = 1;
 if ($check == 1) {
 
     if($_POST['action'] == 'wplc_admin_long_poll'){
-        if (defined('WPLC_TIMEOUT')) { set_time_limit(WPLC_TIMEOUT); } else { set_time_limit(120); }
+        if (defined('WPLC_TIMEOUT')) { @set_time_limit(WPLC_TIMEOUT); } else { @set_time_limit(120); }
         //sleep(6);
         $i = 1;
         while($i <= $iterations){
@@ -122,7 +122,7 @@ if ($check == 1) {
         }
     }
     if($_POST['action'] == "wplc_admin_long_poll_chat"){
-        if (defined('WPLC_TIMEOUT')) { set_time_limit(WPLC_TIMEOUT); } else { set_time_limit(120); }
+        if (defined('WPLC_TIMEOUT')) { @set_time_limit(WPLC_TIMEOUT); } else { @set_time_limit(120); }
         $i = 1;
         $array = array();
         while($i <= $iterations){
@@ -178,7 +178,7 @@ if ($check == 1) {
     //User Ajax
     
     if($_POST['action'] == 'wplc_call_to_server_visitor'){
-        if (defined('WPLC_TIMEOUT')) { set_time_limit(WPLC_TIMEOUT); } else { set_time_limit(120); }
+        if (defined('WPLC_TIMEOUT')) { @set_time_limit(WPLC_TIMEOUT); } else { @set_time_limit(120); }
         $i = 1;
         $array = array("check" => false);
         

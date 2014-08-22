@@ -38,6 +38,11 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * World-class support
 * Fully customizable live chat experience
 
+= Coming soon =
+* Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
+* Quick responses - Create "quick responses" for your live chat window (click to insert a response)
+* XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
+
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $29.95 once off!
 
@@ -58,6 +63,8 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 
 * English
 * Brazilian (Gustavo Silva)
+* Russian (Igor Butsky)
+* Spanish (Sergio Castrillon)
 * Chinese - Simplified^
 * Chinese - Traditional^
 * Italian^
@@ -109,6 +116,9 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.1.5 - 2014-08-22 - Low priority =
+* Code improvements (PHP warnings - set_time_limit caused warnings on some hosts)
 
 = 4.1.4 2014-07-31 =
 * Significant performance improvements
