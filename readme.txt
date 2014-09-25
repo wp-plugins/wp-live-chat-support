@@ -34,7 +34,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Set up your user profile
 * Add your company logo to the live chat window
 * Add your photo to the live chat window
-* Edit all text fields
+* Edit all text fields shown on the live chat box
 * World-class support
 * Fully customizable live chat experience
 
@@ -62,9 +62,12 @@ Once the live chat plugin is activated, click on "Live Chat" in the left menu na
 Get a free copy of the WP Live Chat Support Pro version in exchange for translating our plugin!
 
 * English
-* Brazilian (Gustavo Silva)
-* Russian (Igor Butsky)
+* German (Dennis Klinger)
 * Spanish (Sergio Castrillon)
+* Russian (Igor Butsky)
+* Brazilian (Gustavo Silva)
+* Hebrew (David Cohen)
+* Slovakian (Dana Kadarova)
 * Chinese - Simplified^
 * Chinese - Traditional^
 * Italian^
@@ -108,6 +111,8 @@ If the live chat box still does not appear on your website, please go through th
 1. Front-end of WP Live Chat Support
 2. Back-end of WP Live Chat Support
 3. Settings page of WP Live Chat Support
+4. "Leave a message" functionality available in WP Live Chat Support Pro
+5. Initiate a live chat with a visitor on your website (pro version)
 
 
 == Upgrade Notice ==
@@ -117,7 +122,14 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
-= 4.1.5 - 2014-08-22 - Low priority =
+= 4.1.6 2014-09-25 - Low priority =
+* Code improvements (JavaScript errors fixed in IE)
+* New WP Live Chat Support Translations Added:
+*  - Slovakian (Thank You Dana Kadarova)
+*  - German (Thank You Dennis Klingr)
+*  - Hebrew (Thank You David Cohen)
+
+= 4.1.5 2014-08-22 - Low priority =
 * Code improvements (PHP warnings - set_time_limit caused warnings on some hosts)
 
 = 4.1.4 2014-07-31 =

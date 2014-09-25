@@ -10,30 +10,18 @@ ini_set('html_errors', 0);
 define('SHORTINIT', true);
 
 
-//$absolute_path = __FILE__;
-
-//$path_to_file = explode( 'wp-content', $absolute_path );
-
-//$path_to_wp = $path_to_file[0];
-
-// changed the path to wp-load to get from post
-
 require_once( '../../../wp-load.php' );
-
-//function untrailingslashit($string) {
-//   return rtrim($string, '/');
-//}
 
 
 define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailing slash
 
-$iterations = 60; 
+$iterations = 55; 
 /* time in microseconds between updating the user on the page within the DB  (lower number = higher resource usage) */
 define('WPLC_DELAY_BETWEEN_UPDATES',500000);
 /* time in microseconds between long poll loop (lower number = higher resource usage) */
 define('WPLC_DELAY_BETWEEN_LOOPS',500000);
 /* this needs to take into account the previous constants so that we dont run out of time, which in turn returns a 503 error */
-define('WPLC_TIMEOUT',((WPLC_DELAY_BETWEEN_UPDATES + WPLC_DELAY_BETWEEN_LOOPS))*$iterations);
+define('WPLC_TIMEOUT',(((WPLC_DELAY_BETWEEN_UPDATES + WPLC_DELAY_BETWEEN_LOOPS))*$iterations)/1000000);
 
 
 

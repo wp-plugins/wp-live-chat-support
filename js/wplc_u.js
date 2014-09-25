@@ -154,7 +154,7 @@ jQuery(document).ready(function() {
                 complete: function(response){
                     //console.log(wplc_run);
                     if (wplc_run) { 
-                        setTimeout(wplc_call_to_server_chat(data), 1500);
+                        setTimeout(function() { wplc_call_to_server_chat(data); }, 1500);
                         
                     }
             },
