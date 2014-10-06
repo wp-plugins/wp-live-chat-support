@@ -3,18 +3,26 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.6
+Version: 4.1.7
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.6
+/* 4.1.7
+ * Bug fix: sound was not played when user received a message from the admin
+ * Internationalization update
+ * New WP Live Chat Support Translation added:
+ *  * Swedish (Thank You Tobias Sernhede)
+ *  * French (Thank You Marcello Cavallucci)
+ * 
+ * 
+ * 4.1.6
  * Code improvements (JavaScript errors fixed in IE)
  * New WP Live Chat Support Translations Added:
- *  - Slovakian (Thank You Dana Kadarova)
- *  - German (Thank You Dennis Klingr)
- *  - Hebrew (Thank You David Cohen)
+ *  * Slovakian (Thank You Dana Kadarova)
+ *  * German (Thank You Dennis Klingr)
+ *  * Hebrew (Thank You David Cohen)
  * 
  * 4.1.5
  * Code improvements (PHP warnings - set_time_limit caused warnings on some hosts)
@@ -56,7 +64,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.6";
+$wplc_version = "4.1.7";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -167,6 +175,7 @@ function wplc_draw_user_box() {
     wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
     wp_enqueue_script( 'wplc-user-script' );
     wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
+    wp_localize_script('wplc-user-script', 'wplc_plugin_url', plugins_url());
     wp_enqueue_script( 'jquery' );
     wp_enqueue_script( 'jquery-ui-core' );
     wp_enqueue_script( 'jquery-ui-draggable');
@@ -252,12 +261,14 @@ function wplc_output_box() {
                     <p><?php _e("Reactivating your previous chat...", "wplivechat") ?></p>
                 </div>
                 <div id="wp-live-chat-4" style="display:none;">
+                    <div id="wplc_sound_update" style='height:0; width:0; display:none; border:0;'></div>;
                     <div id="wplc_chatbox"></div>
                     <p style="text-align:center; font-size:11px;"><?php _e("Press ENTER to send your message", "wplivechat" )?></p>
                     <p>
                         <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
                         <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
-                        <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplivechat"); ?>" style="display:none;" /></p>
+                        <input id="wplc_send_msg" type="button" value="<?php _e("Send","wplivechat"); ?>" style="display:none;" />
+                    </p>
                 </div>
             </div>
         </div>        
@@ -640,6 +651,8 @@ function wplc_draw_chat_area($cid) {
                 <input id='wplc_admin_cid' type='hidden' value='".$_GET['cid']."' />
                 <input id='wplc_admin_send_msg' type='button' value='".__("Send","wplivechat")."' style=\"display:none;\" />
                     </p>
+                ".__("Assign Quick Response","wplivechat")." <select name='wplc_macros_select' class='wplc_macros_select' disabled><option>".__('Select','wplivechat')."</option></select> <a href='http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=quick_resposnes' title='".__('Add Quick Responses to your Live Chat','wplivechat')."' target='_BLANK'>".__("Pro version only","wplivechat")."</a>
+
             </div>
             ";
             //echo wplc_return_admin_chat_javascript($_GET['cid']);

@@ -7,7 +7,7 @@ Tested up to: 4.0
 Stable tag: trunk
 License: GPLv2
 
-Fully functional Live Chat plugin. Chat with your visitors for free! No need for third party connections or monthly payments.
+Why pay a monthly fee? Fully functional Live Chat plugin. Chat with your visitors for free! No need for third party connections or monthly payments.
 
 == Description ==
 
@@ -27,9 +27,11 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 
 = Pro Version Features =
 
+* Pay once and never again for WP Live Chat Support Pro
 * Unlimited live chat agents
 * Initiate live chats with online visitors
 * Chat to more than one visitor at a time
+* Quick Responses (insert a predefined response to your live chat box)
 * Access historical live chat records
 * Set up your user profile
 * Add your company logo to the live chat window
@@ -38,13 +40,15 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * World-class support
 * Fully customizable live chat experience
 
+Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
+
 = Coming soon =
-* Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
-* Quick responses - Create "quick responses" for your live chat window (click to insert a response)
-* XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
-
-
-Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/) for only $29.95 once off!
+* (Oct 2014) (Free & Pro) New feature - Enable/disable the requirement for the user's name and email address when initiating a live chat.
+* (Oct 2014) (Free & Pro) Design update - New transitions (live chat box slides up, fades, jumps, etc after x seconds)
+* (Cct 2014) (Free & Pro) Improvements - Better link and image handling within the live chat text area
+* (Nov 2014) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
+* (Nov 2014) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
+* (Jan 2015) (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
 
 = 30 second live chat installation =
 
@@ -54,10 +58,6 @@ Our live chat plugin instantly gives you the ability to chat directly with poten
 
 Once the live chat plugin is activated, click on "Live Chat" in the left menu navigation. As soon as a visitor lands on your website, their details will be displayed in the live chat control panel. A live chat box will be displayed on their screen. If they fill out their details and click "Start chat", a ringing sound will trigger in your live chat control panel. Once you accept the chat, you can communicate directly with your visitor.
 
-= Coming Soon to WP Live Chat Support =
-
-* More advanced customization and themes
-
 = Translations =
 Get a free copy of the WP Live Chat Support Pro version in exchange for translating our plugin!
 
@@ -65,9 +65,11 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * German (Dennis Klinger)
 * Spanish (Sergio Castrillon)
 * Russian (Igor Butsky)
+* French (Marcello Cavallucci)
 * Brazilian (Gustavo Silva)
 * Hebrew (David Cohen)
 * Slovakian (Dana Kadarova)
+* Swedish (Tobias Sernhede)
 * Chinese - Simplified^
 * Chinese - Traditional^
 * Italian^
@@ -122,12 +124,17 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.1.7 2014-10-06 - Low priority =
+* Bug fix: sound was not played when user received a live chat message from the admin
+* Internationalization update
+* New WP Live Chat Support Translation added:
+*  * Swedish (Thank You Tobias Sernhede)
+
 = 4.1.6 2014-09-25 - Low priority =
-* Code improvements (JavaScript errors fixed in IE)
-* New WP Live Chat Support Translations Added:
-*  - Slovakian (Thank You Dana Kadarova)
-*  - German (Thank You Dennis Klingr)
-*  - Hebrew (Thank You David Cohen)
+* Live chat translations added:
+* - Hebrew
+* - German
+* - Slovakian
 
 = 4.1.5 2014-08-22 - Low priority =
 * Code improvements (PHP warnings - set_time_limit caused warnings on some hosts)
