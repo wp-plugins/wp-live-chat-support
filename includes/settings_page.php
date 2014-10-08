@@ -10,6 +10,8 @@
         if ($wplc_settings["wplc_settings_fill"]) { $wplc_settings_fill = $wplc_settings["wplc_settings_fill"]; } else { $wplc_settings_fill = "ed832f"; }
         if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = $wplc_settings["wplc_settings_font"]; } else { $wplc_settings_font = "FFFFFF"; }
         if(get_option("WPLC_HIDE_CHAT") == true) { $wplc_hide_chat = "checked"; } else { $wplc_hide_chat = ""; };
+        
+                
      ?>
     <form action='' name='wplc_settings' method='POST' id='wplc_settings'>
     
@@ -47,6 +49,42 @@
                             <?php _e("only","wplivechat")?>
                         </i>
                     </small>
+                  </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Require Name And Email","wplivechat")?>:
+                      <p class="description"><?php _e("Users will have to enter their Name and Email Address when starting a chat", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="checkbox" value="1" name="wplc_require_user_info" <?php if(isset($wplc_settings['wplc_require_user_info'])  && $wplc_settings['wplc_require_user_info'] == 1 ) { echo "checked"; } ?> />                    
+                  </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Input Field Replacement Text","wplivechat")?>:
+                      <p class="description"><?php _e("This is the text that will show in place of the Name And Email fields", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <textarea cols="45" rows="5" name="wplc_user_alternative_text" ><?php if(isset($wplc_settings['wplc_user_alternative_text'])) { echo stripslashes($wplc_settings['wplc_user_alternative_text']); } ?></textarea>
+                </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Use Logged In User Details","wplivechat")?>:
+                      <p class="description"><?php _e("A user's Name and Email Address will be used by default if they are logged in.", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="checkbox" value="1" name="wplc_loggedin_user_info" <?php if(isset($wplc_settings['wplc_loggedin_user_info'])  && $wplc_settings['wplc_loggedin_user_info'] == 1 ) { echo "checked"; } ?> />                      
+                  </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Enable On Mobile Devices","wplivechat"); ?>
+                      <p class="description"><?php _e("Disabling this will mean that the Chat Box will not be displayed on mobile devices. (Smartphones and Tablets)", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="checkbox" value="1" name="wplc_enabled_on_mobile" <?php if(isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] == 1 ) { echo "checked"; } ?> />                      
                   </td>
               </tr>
           </table>

@@ -38,6 +38,8 @@ jQuery(document).ready(function() {
     jQuery.cookie('wplc_chat_status', 5, { expires: 1, path: '/' });
     wplc_chat_status = 5;
     
+//    var wplc_details = 1;
+//    console.log(wplc_details);
 
     var data = {
         action: 'wplc_call_to_server_visitor',
@@ -387,7 +389,7 @@ jQuery(document).ready(function() {
 
         jQuery("#wplc_start_chat_btn").on("click", function() {
             var wplc_name = jQuery("#wplc_name").val();
-            var wplc_email = jQuery("#wplc_email").val();
+            var wplc_email = jQuery("#wplc_email").val();            
             if (wplc_name.length <= 0) { alert("Please enter your name"); return false; }
             if (wplc_email.length <= 0) { alert("Please enter your email address"); return false; }
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
