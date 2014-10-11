@@ -3,13 +3,16 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.8
+Version: 4.1.9
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.8
+/* 4.1.9
+ * Bug fix: Mobile Detect class caused an error if it existed in another plugin or theme. A check has been put in place. 
+ * 
+ * 4.1.8
  * New feature: There is now an option if you do not require the user to input their name and email address before sending a chat request
  * New feature: Logged in users do not have to enter their details prior to sending the chat request.
  * New feature: Turn the chat on/off on a mobile device (smart phone and tablets)
@@ -69,7 +72,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.8";
+$wplc_version = "4.1.9";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -88,7 +91,6 @@ if (function_exists('wplc_head_pro')) {
     add_action('admin_head', 'wplc_head_basic');
 }
 
-
 add_action('wp_enqueue_scripts', 'wplc_add_user_stylesheet' );
 add_action('admin_enqueue_scripts', 'wplc_add_admin_stylesheet');
 
@@ -101,12 +103,13 @@ add_action('admin_head', 'wplc_superadmin_javascript');
 register_activation_hook( __FILE__, 'wplc_activate' );
 
 
-require_once (plugin_dir_path( __FILE__ ).'includes/Mobile_Detect.php');
-    
+if(!class_exists('Mobile_Detect')){
+    require_once (plugin_dir_path( __FILE__ ).'includes/Mobile_Detect.php');
+}
+
 $wplc_detect_device = new Mobile_Detect;
  
 $wplc_is_mobile = $wplc_detect_device->isMobile();
-    
 
 function wplc_basic_check(){
     // check if basic exists if pro is installed

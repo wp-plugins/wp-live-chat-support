@@ -123,6 +123,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.1.9 2014-10-10 - Low priority =
+* Bug fix: Mobile Detect class caused an error if it existed in another plugin or theme. A check has been put in place. 
+
 = 4.1.8 2014-10-08 - Low priority =
 * New feature: There is now an option if you do not require the user to input their name and email address before sending a chat request
 * New feature: Logged in users do not have to enter their details prior to sending the chat request.
