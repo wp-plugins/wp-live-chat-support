@@ -37,14 +37,15 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Add your company logo to the live chat window
 * Add your photo to the live chat window
 * Edit all text fields shown on the live chat box
+* Include/exclude the live chat from appearing on certain pages
 * World-class support
 * Fully customizable live chat experience
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
 = Coming soon =
-* (Oct 2014) (Free & Pro) Design update - New transitions (chat box slides up, fades, jumps, etc after x seconds)
-* (Cct 2014) (Free & Pro) Improvements - Better link and image handling within the live chat text area
+* (Nov 2014) (Free & Pro) Design update - New transitions (chat box slides up, fades, jumps, etc after x seconds)
+* (Nov 2014) (Free & Pro) Improvements - Better link and image handling within the live chat text area
 * (Nov 2014) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
 * (Nov 2014) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
 * (Jan 2015) (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
@@ -118,10 +119,14 @@ If the live chat box still does not appear on your website, please go through th
 
 == Upgrade Notice ==
 
-= 4.1.1 =
+= 4.1.4 =
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.1.10 2014-10-29 - Low priority =
+* Code Improvements: (Checks for DONOTCACHE)
+* New Pro Feature: You can now include or exclude the live chat window on certain pages
 
 = 4.1.9 2014-10-10 - Low priority =
 * Bug fix: Mobile Detect class caused an error if it existed in another plugin or theme. A check has been put in place. 

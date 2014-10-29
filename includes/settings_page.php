@@ -27,7 +27,7 @@
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
           <table class='form-table' width='700'>
               <tr>
-                  <td width='200' valign='top'><?php _e("Chat enabled","wplivechat")?>:</td>
+                  <td width='400' valign='top'><?php _e("Chat enabled","wplivechat")?>:</td>
                   <td>
                       <select id='wplc_settings_enabled' name='wplc_settings_enabled'>
                           <option value="1" <?php if (isset($wplc_settings_enabled[1])) { echo $wplc_settings_enabled[1]; } ?>><?php _e("Yes","wplivechat"); ?></option>
@@ -38,7 +38,7 @@
               <tr>
                   <td width='200' valign='top'>
                       <?php _e("Hide Chat","wplivechat")?>:
-                      <p class="description"><?php _e("Hides chat for 24hrs when user clicks X", "wplivechat") ?></p>
+                      <p class="description"><?php _e("Hides chat for 24hrs when user clicks X", "wplivechat") ?> </p>
                   </td>
                   <td valign='top'>
                       <input type="checkbox"  value="true" readonly disabled/>
@@ -46,7 +46,8 @@
                         <i> 
                             <?php _e("available in the","wplivechat")?> 
                             <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=name" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
-                            <?php _e("only","wplivechat")?>
+                            <?php _e("only","wplivechat")?>.
+                            $19.95 <?php _e(" once off. Updates included forever.","wplivechat"); ?>
                         </i>
                     </small>
                   </td>
@@ -87,6 +88,39 @@
                       <input type="checkbox" value="1" name="wplc_enabled_on_mobile" <?php if(isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] == 1 ) { echo "checked"; } ?> />                      
                   </td>
               </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Include chat window on the following pages:","wplivechat"); ?>
+                      <p class="description"><?php _e("Show the chat window on the following pages. Leave blank to show on all. (Use comma-separated Page ID's)", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="text" readonly="readonly" />
+                      <small>
+                        <i> 
+                            <?php _e("available in the","wplivechat")?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=include_pages" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
+                            <?php _e("only","wplivechat")?>
+                        </i>
+                    </small>
+                  </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Exclude chat window on the following pages:","wplivechat"); ?>
+                      <p class="description"><?php _e("Do not show the chat window on the following pages. Leave blank to show on all. (Use comma-separated Page ID's)", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="text" readonly="readonly"/>
+                      <small>
+                        <i> 
+                            <?php _e("available in the","wplivechat")?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=exclude_pages" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
+                            <?php _e("only","wplivechat")?>
+                        </i>
+                    </small>
+                  </td>
+              </tr>
+              
           </table>
 
       </div>
@@ -285,7 +319,7 @@
       </div>
         <div id="tabs-5">
             <h3><?php _e("Multiple Agents", "wplivechat") ?></h3>
-            <p><?php _e("Get","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents"><?php _e("Multiple agent support", "wplivechat") ?></a></p>
+            <p><?php _e("Get","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents" target="_BLANK"><?php _e("Multiple agent support", "wplivechat") ?></a></p>
         </div>
     </div>
     <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='<?php _e("Save Settings","wplivechat")?>' /></p>

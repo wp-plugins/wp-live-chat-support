@@ -3,21 +3,25 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.9
+Version: 4.1.10
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.9
+/* 4.1.10 2014-10-29 - Low priority
+ * Code Improvements: (Checks for DONOTCACHE)
+ * New Pro Feature: You can now include or exclude the chat window on certain pages
+ * 
+ * 4.1.9 2014-10-10 - Low priority
  * Bug fix: Mobile Detect class caused an error if it existed in another plugin or theme. A check has been put in place. 
  * 
- * 4.1.8
+ * 4.1.8 2014-10-08 - Low priority
  * New feature: There is now an option if you do not require the user to input their name and email address before sending a chat request
  * New feature: Logged in users do not have to enter their details prior to sending the chat request.
  * New feature: Turn the chat on/off on a mobile device (smart phone and tablets)
  * 
- * 4.1.7
+ * 4.1.7 2014-10-06 - Low priority
  * Bug fix: sound was not played when user received a message from the admin
  * Internationalization update
  * New WP Live Chat Support Translation added:
@@ -72,7 +76,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.9";
+$wplc_version = "4.1.10";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -168,8 +172,8 @@ function wplc_admin_menu() {
 add_action('wp_head','wplc_user_top_js');
 function wplc_user_top_js() {
     echo "<!-- DEFINING DO NOT CACHE -->";
-    define('DONOTCACHEPAGE', true);
-    define('DONOTCACHEDB', true);
+    if(!defined('DONOTCACHEPAGE')) { define('DONOTCACHEPAGE', true); }
+    if(!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
     $ajax_nonce = wp_create_nonce("wplc");
     wp_register_script( 'wplc-user-jquery-cookie', plugins_url('/js/jquery-cookie.js', __FILE__) , array('jquery-ui-draggable'));
     wp_enqueue_script( 'wplc-user-jquery-cookie');
@@ -192,6 +196,9 @@ function wplc_user_top_js() {
 function wplc_draw_user_box() {
     global $wplc_is_mobile;
     $wplc_settings = get_option("WPLC_SETTINGS");
+    
+    
+    
     if($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] != 1) { return; }
     if($wplc_settings["wplc_settings_enabled"] == 2) { return; }
 
@@ -209,7 +216,7 @@ function wplc_output_box() {
     global $wplc_is_mobile;    
     $wplc_class = "";
     $wplc_settings = get_option("WPLC_SETTINGS");
-
+    
     if($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] != 1) { return; }
     
     if ($wplc_settings["wplc_settings_enabled"] == 2) { return; }
@@ -280,6 +287,9 @@ function wplc_output_box() {
                                 $wplc_use_loggedin_user_details = 0;
                             }
                                 
+                            $wplc_loggedin_user_name = "";
+                            $wplc_loggedin_user_email = "";
+                                    
                             if($wplc_use_loggedin_user_details == 1){
                                 global $current_user;
                                 
@@ -624,7 +634,7 @@ function wplc_admin_menu_layout_display() {
         </div>
         
         <h1><?php _e("Visitors on site","wplivechat") ?></h1>    
-        <p><?php _e("With the Pro add-on of WP Live Chat Support, you can","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats","wplivechat"); ?>" target=\"_BLANK\"><?php _e("see who's online and initiate chats","wplivechat"); ?></a> <?php _e("with your online visitors with the click of a button.","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $29.95 once off. Free Updates FOREVER.","wplivechat"); ?>" target=\"_BLANK\"><strong><?php _e("Buy the Pro add-on now for only $29.95 once off. Free Updates Forever.","wplivechat"); ?></strong></a></p>
+        <p><?php _e("With the Pro add-on of WP Live Chat Support, you can","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats","wplivechat"); ?>" target=\"_BLANK\"><?php _e("see who's online and initiate chats","wplivechat"); ?></a> <?php _e("with your online visitors with the click of a button.","wplivechat"); ?> <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95 once off. Free Updates FOREVER.","wplivechat"); ?>" target=\"_BLANK\"><strong><?php _e("Buy the Pro add-on now for only $19.95 once off. Free Updates Forever.","wplivechat"); ?></strong></a></p>
     <?php
     }
     else {
@@ -1063,7 +1073,7 @@ function wplc_admin_history_layout() {
         wplc_pro_admin_display_history();
     }
     else {
-        echo "<br /><br >This option is only available in the <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Pro Add-on</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Get it now for only $29.95 once off!</a>";
+        echo "<br /><br >This option is only available in the <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Pro Add-on</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Get it now for only $19.95 once off!</a>";
     }
 }
 
