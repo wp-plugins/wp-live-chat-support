@@ -1,3 +1,4 @@
+
 === WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
@@ -123,6 +124,10 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.0 2014-11-20 - Medium priority =
+* Chat UI Improvements
+* Small bug fixes
 
 = 4.1.10 2014-10-29 - Low priority =
 * Code Improvements: (Checks for DONOTCACHE)

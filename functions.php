@@ -253,7 +253,7 @@ function wplc_return_user_chat_messages($cid) {
                     $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
                 }
             }
-        $msg_hist .= "<span class='wplc-admin-message'>$image <strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
+        $msg_hist .= "<span class='wplc-admin-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
 
@@ -292,11 +292,24 @@ function wplc_return_chat_messages($cid) {
         "
     );
     $msg_hist = "";
+    $previous_time = "";
+    $previous_timestamp = 0;
     foreach ($results as $result) {
         $from = $result->from;
         $msg = $result->msg;
         $timestamp = strtotime($result->timestamp);
-        $timeshow = date("H:i:s",$timestamp);
+
+        $time_diff = $timestamp - $previous_timestamp;
+        if ($time_diff > 60) { $show_time = true; } else { $show_time = false; }
+        
+        $date = new DateTime($timestamp);
+        $timeshow = date('l, F d Y h:i A',$timestamp);
+
+        if ($previous_time == $timeshow || !$show_time) { $timeshow = ""; }
+        $previous_time = $timeshow;
+        $previous_timestamp = $timestamp;
+        
+        
         $image = "";
         if($result->originates == 1){
             $class = "wplc-admin-message";
@@ -313,7 +326,7 @@ function wplc_return_chat_messages($cid) {
         
         
         
-        $msg_hist .= "<span class='$class'>$image <strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
+        $msg_hist .= "<span class='chat_time'>$timeshow</span><span class='$class'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
     return $msg_hist;
@@ -375,7 +388,7 @@ function wplc_return_admin_chat_messages($cid) {
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<span class='wplc-user-message'><strong>$from</strong>:<hr/> $msg</span><br /><div class='wplc-clear-float-message'></div>";
+        $msg_hist .= "<span class='wplc-user-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
 
     }
 

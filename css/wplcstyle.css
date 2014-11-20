@@ -64,7 +64,7 @@
     box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.5);
     border-radius: 5px 5px 0 0 ;
     color:#999;
-    max-width: 250px;  
+    max-width: 280px;  
     max-height: 400px;
     z-index: 9999;
 }
@@ -147,16 +147,23 @@
 }
 #wp-live-chat-image{
     position: absolute;
-    padding: 5px;
     width: 40px;
+    padding:4px;
     max-height: 40px;
     background: #fff;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
     border-radius: 3px;
     top: -35px;
-    left: 10px;
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    -moz-box-shadow:    0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.5);
+    left: 20px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(100, 100, 100, 0.7);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(100, 100, 100, 0.7);
+    box-shadow:         0px 0px 5px 0px rgba(100, 100, 100, 0.7);
+}
+#wp-live-chat-image img { 
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 #wp-live-chat-2 {
     padding:5px;
@@ -173,34 +180,11 @@
      filter:none;
      text-shadow: none;
 }
-.wplc-user-message{
-    display: inline-block;
-    padding: 5px;
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    border-radius: 5px;
-    float: right;
-    margin-bottom: 5px;
-}
-.wplc-user-message hr , .wplc-admin-message hr{
-    margin:0;
-    height: 1px;
-}
 .wplc-clear-float-message{
     clear: both;
 }
 
-.wplc-admin-message{
-    display: inline-block;
-    padding: 5px;
-    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-    border-radius: 5px;
-    float: left;
-    margin-bottom: 5px;
-}
+
 #wplc_message_div{
     text-align: center;
 }
@@ -302,4 +286,51 @@
     left: initial;
     right: 38px;
     top: initial;
+}
+
+
+
+
+.wplc-admin-message { 
+    
+    padding:10px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    margin-top:2px;
+    background-color:#EEE;
+    display: inline-block;
+    float: left;
+    clear:both;
+    margin-bottom: 3px;
+
+    
+}
+
+.wplc-user-message { 
+    
+    padding:10px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #ffdb99;
+    margin-top:2px;
+    background-color:#fff6ef;
+    color:#000;
+    display: inline-block;
+    float: right;
+    clear:both;
+    margin-bottom: 3px;
+
+}
+
+.chat_time {
+    display:block;
+    width:100%;
+    text-align:center;
+    font-size:0.8em;
+    color:#ccc;
+    clear:both;
+    
 }

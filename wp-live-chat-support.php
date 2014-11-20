@@ -3,13 +3,17 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.1.10
+Version: 4.2.0
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.1.10 2014-10-29 - Low priority
+/* 4.2.0 2014-11-20 - Medium priority
+ * Chat UI Improvements
+ * Small bug fixes
+ * 
+ * 4.1.10 2014-10-29 - Low priority
  * Code Improvements: (Checks for DONOTCACHE)
  * New Pro Feature: You can now include or exclude the chat window on certain pages
  * 
@@ -76,7 +80,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.1.10";
+$wplc_version = "4.2.0";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -557,7 +561,7 @@ function wplc_admin_javascript() {
                     } else {
                         event.returnValue = false;
                     }
-                    window.open(jQuery(this).attr("href"), jQuery(this).attr("window-title" ), "width=600,height=600,scrollbars=yes", false);
+                    window.open(jQuery(this).attr("href"), jQuery(this).attr("window-title" ), "width=800,height=600,scrollbars=yes", false);
                 }
             });
             
@@ -662,33 +666,12 @@ function wplc_draw_chat_area($cid) {
         "
     );?>
         <style>
-            .wplc-user-message{
-                display: inline-block;
-                padding: 5px;
-                -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                border-radius: 5px;
-                float: left;
-                margin-bottom: 5px;
-            }
-            .wplc-user-message hr , .wplc-admin-message hr{
-                margin:0;
-            }
+            
             .wplc-clear-float-message{
                 clear: both;
             }
 
-            .wplc-admin-message{
-                display: inline-block;
-                padding: 5px;
-                -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                -moz-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.5);
-                border-radius: 5px;
-                float: right;
-                margin-bottom: 5px;
-            }
+
         </style>
         <?php
 
@@ -703,43 +686,58 @@ function wplc_draw_chat_area($cid) {
         
         echo "<h2>$status Chat with ".$result->name."</h2>";
         echo "<style>#adminmenuwrap { display:none; } #adminmenuback { display:none; } #wpadminbar { display:none; } #wpfooter { display:none; } .update-nag { display:none; }</style>";
-        echo "<div style='display:block;'>";
-            echo "<div style='float:left; width:100px;'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."\" /></div>";
-            echo "<div id=\"wplc_sound_update\"></div>";
-            echo "<div style='float:left; width:350px;'>";
-            echo "<table>";
-            echo "<tr><td><i class=\"fa fa-envelope\"> </i></td><td><a href='mailto:".$result->email."' title='".$result->email."'>".$result->email."</a></td></tr>";
-            echo "<tr><td valign='top'><i class=\"fa fa-user\"> </i></td><td>";
-            echo "<img src='".$wplc_basic_plugin_url."/images/$browser_image' alt='$browser' title='$browser' /> ";
-            echo "<a href='http://www.ip-adress.com/ip_tracer/".$user_ip."' title='Whois for ".$user_ip."'>".$user_ip."</a>";
-            echo "</td></tr>";
-            echo "<tr><td><i class=\"fa fa-link\"> </i></td><td>".$result->url. "  (<a href='".$result->url."' target='_BLANK'>open</a>)"."</td></tr>";
-            echo "<tr><td><i class=\"fa fa-clock-o\"> </i></td><td>".$result->timestamp."</td></tr>";
-            echo "</table><br />";
-            echo "</div>";
+        
+        echo "<div class=\"end_chat_div\"><a href=\"javascript:void(0);\" class=\"wplc_admin_close_chat button\" id=\"wplc_admin_close_chat\">".__("End chat","wplivechat")."</a></div>";
+        
+        echo "<div id='admin_chat_box'>";
+        
+        echo"<div class='admin_chat_box'><div class='admin_chat_box_inner' id='admin_chat_box_area_".$result->id."'>".wplc_return_chat_messages($cid)."</div><div class='admin_chat_box_inner_bottom'>".wplc_return_chat_response_box($cid)."</div></div>";
+        echo "<div class='admin_visitor_info'>";
+        echo "  <div style='float:left; width:100px;'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."\" class=\"admin_chat_img\" /></div>";
+        echo "  <div style='float:left;'>";
+        
+        echo "      <div class='admin_visitor_info_box1'>";
+        echo "          <span class='admin_chat_name'>".$result->name."</span>";
+        echo "          <span class='admin_chat_email'>".$result->email."</span>";
+        echo "      </div>";
+        echo "  </div>";
+        
+        echo "<div class='admin_visitor_advanced_info'>";
+        echo "      <strong>".__("Site Info","wplivechat")."</strong>";
+        echo "      <hr />";
+        echo "      <span class='part1'>".__("Chat initiated on:","wplivechat")."</span> <span class='part2'>".$result->url. "</span>";
         echo "</div>";
 
-        echo "
-                <div style=\"display:block; clear:both; width:99%; text-align:right; font-size:10px;\"><a href=\"javascript:void(0);\" class=\"wplc_admin_close_chat button\" id=\"wplc_admin_close_chat\">".__("End chat","wplivechat")."</a></div>
-        <div id='admin_chat_box'>
-                    <div id='admin_chat_box_area_".$result->id."' style='height:200px; width:95%; border:1px solid #ccc; overflow:auto; background-color:#FFF; padding:2%;'>".wplc_return_chat_messages($cid)."</div>
-            <p>
-        ";
+        echo "<div class='admin_visitor_advanced_info'>";
+        echo "      <strong>".__("Advanced Info","wplivechat")."</strong>";
+        echo "      <hr />";
+        echo "      <span class='part1'>".__("Browser:","wplivechat")."</span><span class='part2'> $browser <img src='".$wplc_basic_plugin_url."/images/$browser_image' alt='$browser' title='$browser' /><br />";
+        echo "      <span class='part1'>".__("IP Address:","wplivechat")."</span><span class='part2'> <a href='http://www.ip-adress.com/ip_tracer/".$user_ip."' title='Whois for ".$user_ip."'>".$user_ip."</a>";
+        echo "</div>";
+        
+        echo "  <div id=\"wplc_sound_update\"></div>";
+        echo "</div>";
+        
         if ($result->status != 1) {
-        echo "
-                <p style=\"text-align:left; font-size:11px;\">Press ENTER to send your message</p>
-                <input type='text' name='wplc_admin_chatmsg' id='wplc_admin_chatmsg' value='' style=\"border:1px solid #666; width:98%;\" />
-                <input id='wplc_admin_cid' type='hidden' value='".$_GET['cid']."' />
-                <input id='wplc_admin_send_msg' type='button' value='".__("Send","wplivechat")."' style=\"display:none;\" />
-                    </p>
-                ".__("Assign Quick Response","wplivechat")." <select name='wplc_macros_select' class='wplc_macros_select' disabled><option>".__('Select','wplivechat')."</option></select> <a href='http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=quick_resposnes' title='".__('Add Quick Responses to your Live Chat','wplivechat')."' target='_BLANK'>".__("Pro version only","wplivechat")."</a>
-
-            </div>
-            ";
+        echo "<div class='admin_chat_quick_controls'>";
+        echo "  <p style=\"text-align:left; font-size:11px;\">Press ENTER to send your message</p>";
+        echo "  ".__("Assign Quick Response","wplivechat")." <select name='wplc_macros_select' class='wplc_macros_select' disabled><option>".__('Select','wplivechat')."</option></select> <a href='http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=quick_resposnes' title='".__('Add Quick Responses to your Live Chat','wplivechat')."' target='_BLANK'>".__("Pro version only","wplivechat")."</a>";
+        echo "  </div>";
+        echo "</div>";
+            
             //echo wplc_return_admin_chat_javascript($_GET['cid']);
         }
         
     }
+}
+function wplc_return_chat_response_box($cid) { 
+    $ret = "<div class=\"chat_response_box\">";
+    $ret .= "<input type='text' name='wplc_admin_chatmsg' id='wplc_admin_chatmsg' value='' placeholder='".__("type here...","wplivechat")."' />";
+    $ret .= "<input id='wplc_admin_cid' type='hidden' value='$cid' />";
+    $ret .= "<input id='wplc_admin_send_msg' type='button' value='".__("Send","wplivechat")."' style=\"display:none;\" />";
+    $ret .= "</div>";
+    return $ret;
+    
 }
 
 function wplc_return_admin_chat_javascript($cid) {
@@ -929,7 +927,7 @@ function wplc_return_admin_chat_javascript($cid) {
                 jQuery("#wplc_admin_chatmsg").val('');
                 
                 
-                jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_image+" <strong>"+wplc_name+"</strong>:<hr/>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+                jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
                 var height = jQuery('#admin_chat_box_area_'+wplc_cid)[0].scrollHeight;
                 jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
                 
@@ -1041,9 +1039,12 @@ function wplc_add_admin_stylesheet() {
     if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings')) {
         wp_register_style( 'wplc-admin-style', 'http://code.jquery.com/ui/1.8.24/themes/smoothness/jquery-ui.css' );
         wp_enqueue_style( 'wplc-admin-style' );
+        wp_register_style( 'wplc-chat-style', plugins_url('/css/chat-style.css', __FILE__) );
+        wp_enqueue_style( 'wplc-chat-style' );
         wp_register_style( 'wplc-font-awesome', plugins_url('/css/font-awesome.min.css', __FILE__) );
         wp_enqueue_style( 'wplc-font-awesome' );
     }
+    
 }
 
 if (isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu-settings') {

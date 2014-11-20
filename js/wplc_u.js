@@ -457,7 +457,7 @@ jQuery(document).ready(function() {
                 wplc_name = jQuery.cookie('wplc_name');
             }
             jQuery("#wplc_chatmsg").val('');
-            jQuery("#wplc_chatbox").append("<span class='wplc-user-message'><strong>"+wplc_name+"</strong>:<hr/> "+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+            jQuery("#wplc_chatbox").append("<span class='wplc-user-message'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
             var height = jQuery('#wplc_chatbox')[0].scrollHeight;
             jQuery('#wplc_chatbox').scrollTop(height);
 
