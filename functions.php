@@ -301,8 +301,7 @@ function wplc_return_chat_messages($cid) {
 
         $time_diff = $timestamp - $previous_timestamp;
         if ($time_diff > 60) { $show_time = true; } else { $show_time = false; }
-        
-        $date = new DateTime($timestamp);
+//        $date = new DateTime($timestamp);
         $timeshow = date('l, F d Y h:i A',$timestamp);
 
         if ($previous_time == $timeshow || !$show_time) { $timeshow = ""; }

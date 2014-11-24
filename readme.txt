@@ -125,6 +125,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.2.1 2014-11-24 - High priority =
+* Bug Fix: PHP error on agent side in live chat window
+
 = 4.2.0 2014-11-20 - Medium priority =
 * Chat UI Improvements
 * Small bug fixes
