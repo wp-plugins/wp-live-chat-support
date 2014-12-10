@@ -15,7 +15,7 @@
  * 
  */
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function() {        
     
     var wplc_session_variable = new Date().getTime();
     var wplc_cid;
@@ -389,9 +389,11 @@ jQuery(document).ready(function() {
 
         jQuery("#wplc_start_chat_btn").on("click", function() {
             var wplc_name = jQuery("#wplc_name").val();
-            var wplc_email = jQuery("#wplc_email").val();            
+            var wplc_email = jQuery("#wplc_email").val(); 
+
             if (wplc_name.length <= 0) { alert("Please enter your name"); return false; }
             if (wplc_email.length <= 0) { alert("Please enter your email address"); return false; }
+
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
             if (!testEmail.test(wplc_email)){
                 alert("Please Enter a Valid Email Address"); return false;
@@ -457,7 +459,13 @@ jQuery(document).ready(function() {
                 wplc_name = jQuery.cookie('wplc_name');
             }
             jQuery("#wplc_chatmsg").val('');
-            jQuery("#wplc_chatbox").append("<span class='wplc-user-message'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+                        
+            if(wplc_display_name == 'display'){
+                jQuery("#wplc_chatbox").append("<span class='wplc-user-message'>"+wplc_gravatar_image+" <strong>"+wplc_name+"</strong>: "+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+            } else {
+                jQuery("#wplc_chatbox").append("<span class='wplc-user-message'>"+wplc_chat+"</span><div class='wplc-clear-float-message'></div>");
+            }
+            
             var height = jQuery('#wplc_chatbox')[0].scrollHeight;
             jQuery('#wplc_chatbox').scrollTop(height);
 

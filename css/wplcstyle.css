@@ -334,3 +334,7 @@
     clear:both;
     
 }
+
+.wplc-user-message hr, .wplc-admin-message hr{
+    margin-bottom: 0px !important;
+}

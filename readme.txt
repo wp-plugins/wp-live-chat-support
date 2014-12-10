@@ -4,7 +4,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.8
-Tested up to: 4.0
+Tested up to: 4.0.1
 Stable tag: trunk
 License: GPLv2
 
@@ -71,6 +71,10 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Hebrew (David Cohen)
 * Slovakian (Dana Kadarova)
 * Swedish (Tobias Sernhede - adser.se)
+* Mongolian (Monica Batuskh)
+* Romanian (Sergiu Balaes)
+* Czech (Pavel Cvejn)
+* Danish (Mikkel Jeppesen Juhl)
 * Chinese - Simplified^
 * Chinese - Traditional^
 * Italian^
@@ -124,6 +128,20 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+* 4.2.2 2014-12-10 - Low Priority =
+* You can now toggle between displaying or hiding the users name in your Live Chat messages
+* You can now choose to display the Live Chat window to all or only registered users
+* A user image will now display in the Live Chat message
+* jQuery UI CSS is loaded from a local source
+* Bug Fix: Only Admin users can make users Live Chat agents
+* Translations added:
+*  Mongolian (Thank you Monica Batuskh)
+*  Romanian (Thank you Sergiu Balaes)
+*  Czech (Thank you Pavel Cvejn)
+*  Danish (Thank you Mikkel Jeppesen Juhl)
+* Updated Translations:
+*  German (Thank you Dennis Klinger)
 
 = 4.2.1 2014-11-24 - High priority =
 * Bug Fix: PHP error on agent side in live chat window

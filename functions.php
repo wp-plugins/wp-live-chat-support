@@ -228,6 +228,12 @@ function wplc_list_chats() {
 function wplc_return_user_chat_messages($cid) {
     global $wpdb;
     global $wplc_tblname_msgs;
+    
+    $wplc_settings = get_option("WPLC_SETTINGS");
+
+    if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
+            
+    
     $results = $wpdb->get_results(
         "
             SELECT *
@@ -245,15 +251,38 @@ function wplc_return_user_chat_messages($cid) {
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
-        $image = "";
-        
+        if($result->originates == 1){
+            $class = "wplc-admin-message";
             if(function_exists("wplc_pro_get_admin_picture")){
                 $src = wplc_pro_get_admin_picture();
                 if($src){
                     $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                } else {
+                    $image = "";
                 }
+            } else {
+                $image = "";
             }
-        $msg_hist .= "<span class='wplc-admin-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
+        } else {
+            $class = "wplc-user-message";
+            
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+        
+            if($wplc_user_gravatar != ""){
+                $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+            } else {
+                $image = "";
+            }
+        }
+            
+        if($display_name){
+            $msg_hist .= "<span class='wplc-admin-message'>$image <strong>$from</strong>: $msg</span><br /><div class='wplc-clear-float-message'></div>";
+        } else {            
+            $msg_hist .= "<span class='wplc-admin-message'>$msg</span><div class='wplc-clear-float-message'></div>";
+        }
+        
+        
+        
 
     }
 
@@ -278,10 +307,15 @@ function wplc_change_chat_status($id,$status) {
 
 }
 
-
+//come back here
 function wplc_return_chat_messages($cid) {
     global $wpdb;
     global $wplc_tblname_msgs;
+    
+    $wplc_settings = get_option("WPLC_SETTINGS");
+
+    if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
+           
     $results = $wpdb->get_results(
         "
         SELECT *
@@ -309,7 +343,7 @@ function wplc_return_chat_messages($cid) {
         $previous_timestamp = $timestamp;
         
         
-        $image = "";
+        $image = "";        
         if($result->originates == 1){
             $class = "wplc-admin-message";
             if(function_exists("wplc_pro_get_admin_picture")){
@@ -320,12 +354,21 @@ function wplc_return_chat_messages($cid) {
             }
         } else {
             $class = "wplc-user-message";
+            
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+        
+            if($wplc_user_gravatar != ""){
+                $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+            } else {
+                $image = "";
+            }
         }
         
-        
-        
-        
-        $msg_hist .= "<span class='chat_time'>$timeshow</span><span class='$class'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
+        if($display_name){
+            $msg_hist .= "<span class='$class'>$image <strong>$from</strong>: $msg</span><br /><div class='wplc-clear-float-message'></div>";
+        } else {
+            $msg_hist .= "<span class='chat_time'>$timeshow</span><span class='$class'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
+        }
 
     }
     return $msg_hist;
@@ -364,8 +407,13 @@ function wplc_mark_as_read_user_chat_messages($cid) {
 
 
 }
-
+//here
 function wplc_return_admin_chat_messages($cid) {
+    
+    $wplc_settings = get_option("WPLC_SETTINGS");
+
+    if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
+            
     global $wpdb;
     global $wplc_tblname_msgs;
     $results = $wpdb->get_results(
@@ -387,8 +435,31 @@ function wplc_return_admin_chat_messages($cid) {
         $msg = stripslashes($result->msg);
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
-        $msg_hist .= "<span class='wplc-user-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
-
+        $image = "";        
+        if($result->originates == 1){
+            $class = "wplc-admin-message";
+            if(function_exists("wplc_pro_get_admin_picture")){
+                $src = wplc_pro_get_admin_picture();
+                if($src){
+                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                }
+            }
+        } else {
+            $class = "wplc-user-message";
+            
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+        
+            if($wplc_user_gravatar != ""){
+                $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+            } else {
+                $image = "";
+            }
+        }
+        if($display_name){
+            $msg_hist .= "<span class='wplc-user-message'>".$image."<strong>$from</strong>: $msg</span><br /><div class='wplc-clear-float-message'></div>";            
+        } else {            
+            $msg_hist .= "<span class='wplc-user-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
+        }
     }
 
     return $msg_hist;

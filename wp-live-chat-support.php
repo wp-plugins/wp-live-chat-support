@@ -3,13 +3,29 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.2.1
+Version: 4.2.2
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.2.1 2014-11-24 - High Priority
+/* 4.2.2 2014-12-10 - Low Priority
+ * New feature: You can now toggle between displaying or hiding the users name in your Live Chat messages
+ * New feature: You can now choose to display the Live Chat window to all or only registered users
+ * New feature: A user image will now display in the Live Chat message
+ * Code Improvement: jQuery UI CSS is loaded from a local source
+ * Bug Fix: Only Admin users can make users Live Chat agents
+ * 
+ * Translations added:
+ * Mongolian (Thank you Monica Batuskh)
+ * Romanian (Thank you Sergiu Balaes)
+ * Czech (Thank you Pavel Cvejn)
+ * Danish (Thank you Mikkel Jeppesen Juhl)
+ * 
+ * Updated Translations:
+ * German (Thank you Dennis Klinger)
+ * 
+ * 4.2.1 2014-11-24 - High Priority
  * Bug Fix: PHP Error on agent side in chat window
  * 
  * 
@@ -84,7 +100,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.2.1";
+$wplc_version = "4.2.2";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -203,23 +219,76 @@ function wplc_user_top_js() {
 
 function wplc_draw_user_box() {
     global $wplc_is_mobile;
+    
     $wplc_settings = get_option("WPLC_SETTINGS");
     
-    
-    
-    if($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] != 1) { return; }
-    if($wplc_settings["wplc_settings_enabled"] == 2) { return; }
+    if(isset($wplc_settings['wplc_display_to_loggedin_only']) && $wplc_settings['wplc_display_to_loggedin_only'] == 1) {
+        /* Only show to users that are logged in */
+        if(!is_user_logged_in()){
+            return;
+            
+        } else {
+            
+            if($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile']) && $wplc_settings['wplc_enabled_on_mobile'] != 1) { return; }
+            if($wplc_settings["wplc_settings_enabled"] == 2) { return; }
 
-    wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
-    wp_enqueue_script( 'wplc-user-script' );
-    wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
-    wp_localize_script('wplc-user-script', 'wplc_plugin_url', plugins_url());
-    wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'jquery-ui-core' );
-    wp_enqueue_script( 'jquery-ui-draggable');
-    wplc_output_box();
+            if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1) { $wplc_display = 'display'; } else { $wplc_display = 'hide'; }
+            
+            wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
+            wp_enqueue_script( 'wplc-user-script' );
+            wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
+            wp_localize_script('wplc-user-script', 'wplc_plugin_url', plugins_url());
 
+            wp_localize_script('wplc-user-script', 'wplc_display_name', $wplc_display);            
+
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( 'jquery-ui-core' );
+            wp_enqueue_script( 'jquery-ui-draggable');
+            
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+        
+            if($wplc_user_gravatar != ""){
+                $wplc_grav_image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+            } else {
+                $wplc_grav_image = "";
+            }
+            wp_localize_script('wplc-user-script', 'wplc_gravatar_image', $wplc_grav_image);
+            
+            wplc_output_box();
+            
+        }
+    } else {
+        /* Show to all users */
+
+        if($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile']) && $wplc_settings['wplc_enabled_on_mobile'] != 1) { return; }
+        if($wplc_settings["wplc_settings_enabled"] == 2) { return; }
+
+        if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1) { $wplc_display = 'display'; } else { $wplc_display = 'hide'; }
+
+        wp_register_script( 'wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__) );
+        wp_enqueue_script( 'wplc-user-script' );
+        wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
+        wp_localize_script('wplc-user-script', 'wplc_plugin_url', plugins_url());
+
+        wp_localize_script('wplc-user-script', 'wplc_display_name', $wplc_display);
+        
+        if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+        
+        if($wplc_user_gravatar != ""){
+            $wplc_grav_image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+        } else {
+            $wplc_grav_image = "";
+        }
+        wp_localize_script('wplc-user-script', 'wplc_gravatar_image', $wplc_grav_image);
+
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'jquery-ui-core' );
+        wp_enqueue_script( 'jquery-ui-draggable');
+        wplc_output_box();
+        
+    }
 }
+
 function wplc_output_box() {
     global $wplc_is_mobile;    
     $wplc_class = "";
@@ -330,7 +399,8 @@ function wplc_output_box() {
                                 if(isset($wplc_settings['wplc_user_alternative_text'])) { echo stripslashes($wplc_settings['wplc_user_alternative_text']); }
                             echo '</div>';
                             
-                            $wplc_random_user_number = rand(0, 1000000000);
+                            $wplc_random_user_number = rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9).rand(0,9);
+                            
                         ?>
                             <input type="hidden" name="wplc_name" id="wplc_name" value="<?php if($wplc_loggedin_user_name != '') { echo $wplc_loggedin_user_name; } else { echo 'user'.$wplc_random_user_number; } ?>" />
                             <input type="hidden" name="wplc_email" id="wplc_email" value="<?php if($wplc_loggedin_user_email != '') { echo $wplc_loggedin_user_email; } else { echo $wplc_random_user_number.'@'.$wplc_random_user_number.'.com'; } ?>" />
@@ -743,15 +813,19 @@ function wplc_return_chat_response_box($cid) {
     return $ret;
     
 }
-
 function wplc_return_admin_chat_javascript($cid) {
         $ajax_nonce = wp_create_nonce("wplc");
         if(function_exists("wplc_pro_get_admin_picture")){
-                $src = wplc_pro_get_admin_picture();
-                if($src){
-                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
-                }
+            $src = wplc_pro_get_admin_picture();
+            if($src){
+                $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
             }
+        }
+        
+        $wplc_settings = get_option("WPLC_SETTINGS");
+
+        if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 'display'; } else { $display_name = 'hide'; }
+        if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_email_address = $_COOKIE['wplc_email']; } else { $wplc_user_email_address = ""; }
     ?>
         <script type="text/javascript">
         var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
@@ -764,6 +838,11 @@ function wplc_return_admin_chat_javascript($cid) {
             chat_status: chat_status
         };
         var wplc_run = true;
+        var wplc_display_name = '<?php echo $display_name; ?>';
+        var wplc_user_email_address = '<?php echo $wplc_user_email_address; ?>';
+        
+        console.log(wplc_user_email_address);
+        
         function wplc_call_to_server_admin_chat(data) {
             jQuery.ajax({
                 url: wplc_ajaxurl,
@@ -930,8 +1009,11 @@ function wplc_return_admin_chat_javascript($cid) {
                 var wplc_name = "a"+"d"+"m"+"i"+"n";
                 jQuery("#wplc_admin_chatmsg").val('');
                 
-                
-                jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+                if(wplc_display_name == 'display'){
+                    jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_image+" <strong>"+wplc_name+"</strong>:<hr/ style='margin-bottom: 0px;'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+                } else {
+                    jQuery("#admin_chat_box_area_"+wplc_cid).append("<span class='wplc-admin-message'>"+wplc_chat+"</span><br /><div class='wplc-clear-float-message'></div>");
+                } 
                 var height = jQuery('#admin_chat_box_area_'+wplc_cid)[0].scrollHeight;
                 jQuery('#admin_chat_box_area_'+wplc_cid).scrollTop(height);
                 
@@ -980,6 +1062,7 @@ function wplc_activate() {
                 "wplc_loggedin_user_info" => '1',
                 "wplc_user_alternative_text" => $wplc_alt_text,
                 "wplc_enabled_on_mobile" => '1',
+                "wplc_display_name" => '1'
             ));
     }
     add_option("WPLC_HIDE_CHAT","true");
@@ -1041,7 +1124,7 @@ function wplc_add_user_stylesheet() {
 }
 function wplc_add_admin_stylesheet() {
     if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings')) {
-        wp_register_style( 'wplc-admin-style', 'http://code.jquery.com/ui/1.8.24/themes/smoothness/jquery-ui.css' );
+        wp_register_style( 'wplc-admin-style', plugins_url('/css/jquery-ui.css', __FILE__) );
         wp_enqueue_style( 'wplc-admin-style' );
         wp_register_style( 'wplc-chat-style', plugins_url('/css/chat-style.css', __FILE__) );
         wp_enqueue_style( 'wplc-chat-style' );
@@ -1104,7 +1187,9 @@ function wplc_head_basic() {
         if (isset($_POST['wplc_loggedin_user_info'])) { $wplc_data['wplc_loggedin_user_info'] = esc_attr($_POST['wplc_loggedin_user_info']); }
         if (isset($_POST['wplc_user_alternative_text']) && $_POST['wplc_user_alternative_text'] != '') { $wplc_data['wplc_user_alternative_text'] = esc_attr($_POST['wplc_user_alternative_text']); } else { $wplc_data['wplc_user_alternative_text'] = __("Please click 'Start Chat' to initiate a chat with an agent", "wplivechat"); }
         if (isset($_POST['wplc_enabled_on_mobile'])) { $wplc_data['wplc_enabled_on_mobile'] = esc_attr($_POST['wplc_enabled_on_mobile']); }
-                    
+        if (isset($_POST['wplc_display_name'])) { $wplc_data['wplc_display_name'] = esc_attr($_POST['wplc_display_name']); }
+        if (isset($_POST['wplc_display_to_loggedin_only'])) { $wplc_data['wplc_display_to_loggedin_only'] = esc_attr($_POST['wplc_display_to_loggedin_only']); }
+        
 
         update_option('WPLC_SETTINGS', $wplc_data);
         if (isset($_POST['wplc_hide_chat'])) { update_option("WPLC_HIDE_CHAT", $_POST['wplc_hide_chat']); }

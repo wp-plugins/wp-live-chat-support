@@ -121,7 +121,9 @@
     margin-bottom: 3px;
 
 }
-
+.wplc-user-message hr, .wplc-admin-message hr{
+    margin-bottom: 0px !important;
+}
 .chat_time {
     display:block;
     width:100%;

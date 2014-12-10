@@ -210,24 +210,48 @@
                         </i>
                     </small>
                 </td>
-            </tr>
-            <!-- Chat Notification if want to chat-->
+              </tr>
+              <!-- Chat Notification if want to chat-->
               <tr>
-                <td width='200' valign='top'>
-                    <?php _e("Chat notifications","wplivechat")?>:
-                </td>
-                <td>
-                    <input id='wplc_pro_chat_notification' name='wplc_pro_chat_notification' type='checkbox' value='yes' disabled="disabled" readonly/>
-                    <?php _e("Alert me via email as soon as someone wants to chat","wplivechat")?>
-                    <small>
-                        <i>
-                            <?php _e("available in the","wplivechat")?>
-                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=alert" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
-                            <?php _e("only","wplivechat")?>
-                        </i>
-                    </small>
-                </td>
-            </tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Chat notifications", "wplivechat") ?>:
+                  </td>
+                  <td>
+                      <input id='wplc_pro_chat_notification' name='wplc_pro_chat_notification' type='checkbox' value='yes' disabled="disabled" readonly/>
+                      <?php _e("Alert me via email as soon as someone wants to chat", "wplivechat") ?>
+                      <small>
+                          <i>
+                              <?php _e("available in the", "wplivechat") ?>
+                              <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=alert" title="<?php _e("Pro Add-on", "wplivechat") ?>" target="_BLANK"><?php _e("Pro Add-on", "wplivechat") ?></a> 
+                              <?php _e("only", "wplivechat") ?>
+                          </i>
+                      </small>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <?php _e("Display name and avatar in chat", "wplivechat") ?>
+                  </td>
+                  <td>
+                      <input type="checkbox" name="wplc_display_name" value="1" <?php if (isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1) {
+                          echo "checked";
+                      } ?>/>
+                      <p class="description"><small><?php _e("Display the agent and user name above each message in the chat window.", "wplivechat") ?></small></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <?php _e("Only show the chat window to users that are logged in", "wplivechat") ?>
+                  </td>
+                  <td>
+                      <input type="checkbox" name="wplc_display_to_loggedin_only" value="1" <?php
+                      if (isset($wplc_settings['wplc_display_to_loggedin_only']) && $wplc_settings['wplc_display_to_loggedin_only'] == 1) {
+                          echo "checked";
+                      }
+                      ?>/>
+                      <p class="description"><small><?php _e("By checking this, only users that are logged in will be able to chat with you.", "wplivechat") ?></small></p>
+                  </td>
+              </tr>
           </table>
 
       </div>
