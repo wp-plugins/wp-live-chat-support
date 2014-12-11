@@ -75,9 +75,9 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Romanian (Sergiu Balaes)
 * Czech (Pavel Cvejn)
 * Danish (Mikkel Jeppesen Juhl)
+* Italian (Thank You Angelo Giammarresi)
 * Chinese - Simplified^
 * Chinese - Traditional^
-* Italian^
 
 ^ Language file needs updating
 
@@ -129,7 +129,12 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
-* 4.2.2 2014-12-10 - Low Priority =
+= 4.2.3 2014-12-11 - Low Priority = 
+* Updated Translations:
+*  French (Thank you Marcello Cavallucci)
+*  Italian (Thank You Angelo Giammarresi)
+
+= 4.2.2 2014-12-10 - Low Priority =
 * You can now toggle between displaying or hiding the users name in your Live Chat messages
 * You can now choose to display the Live Chat window to all or only registered users
 * A user image will now display in the Live Chat message
