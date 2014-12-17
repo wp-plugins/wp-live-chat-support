@@ -251,13 +251,22 @@
                       ?>/>
                       <p class="description"><small><?php _e("By checking this, only users that are logged in will be able to chat with you.", "wplivechat") ?></small></p>
                   </td>
-              </tr>
+              </tr>              
           </table>
 
       </div>
       <div id="tabs-3">
           <h3><?php _e("Offline Messages",'wplivechat')?></h3>
           <table class='form-table' width='700'>
+              <tr>
+                  <td>
+                      <?php _e("Do not allow users to send offline messages", "wplivechat") ?>
+                  </td>
+                  <td>
+                      <input type="checkbox" name="wplc_hide_when_offline" value="1" readonly="readonly"/>
+                      <p class="description"><small><?php _e("The chat window will be hidden when it is offline. Users will not be able to send offline messages to you", "wplivechat") ?></small></p>
+                  </td>
+              </tr>
               <tr>
                 <td width='200' valign='top'>
                     <?php _e("Email Address","wplivechat")?>:

@@ -16,7 +16,6 @@
  */
 
 jQuery(document).ready(function() {        
-    
     var wplc_session_variable = new Date().getTime();
     var wplc_cid;
     var wplc_check_hide_cookie;
@@ -52,20 +51,19 @@ jQuery(document).ready(function() {
     };
     // ajax long polling function
     wplc_call_to_server_chat(data);
-  
     if(wplc_cid !== null   && wplc_init_chat_box_check == true){
         wplc_init_chat_box(wplc_cid,wplc_chat_status);
     }
  
     var wplc_run = true;
-    function wplc_call_to_server_chat(data) {
+    function wplc_call_to_server_chat(data) {        
         jQuery.ajax({
             url: wplc_ajaxurl,
             data:data,
             type:"POST",
             success: function(response) {
                 if(response){
-                    //console.log(response);
+//                    console.log(response);
                     response = JSON.parse(response);
                     
                     // set vars and cookies
@@ -155,17 +153,18 @@ jQuery(document).ready(function() {
                     } else {
                         console.log('Uncaught Error.\n' + jqXHR.responseText);
 			wplc_run = false;
-                    }
+                    }                    
                 },
                 complete: function(response){
-                    //console.log(wplc_run);
+//                    console.log(wplc_run);
                     if (wplc_run) { 
                         setTimeout(function() { wplc_call_to_server_chat(data); }, 1500);
                         
                     }
             },
-            timeout: 120000
+            timeout: 120000            
         });
+        
     };  
     
     function wplc_init_chat_box(cid, status){
@@ -229,7 +228,7 @@ jQuery(document).ready(function() {
     
      
     //placeholder text fix for IE
-    jQuery('[placeholder]').focus(function() {
+    jQuery('#wp-live-chat [placeholder]').focus(function() {
         var input = jQuery(this);
         if (input.val() == input.attr('placeholder')) {
             input.val('');
@@ -394,9 +393,11 @@ jQuery(document).ready(function() {
             if (wplc_name.length <= 0) { alert("Please enter your name"); return false; }
             if (wplc_email.length <= 0) { alert("Please enter your email address"); return false; }
 
-            var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-            if (!testEmail.test(wplc_email)){
-                alert("Please Enter a Valid Email Address"); return false;
+            if(jQuery("#wplc_email").attr('wplc_hide') !== "1"){
+                var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                if (!testEmail.test(wplc_email)){
+                    alert("Please Enter a Valid Email Address"); return false;
+                }
             }
             jQuery("#wp-live-chat-2").hide();
             jQuery("#wp-live-chat-3").show();
