@@ -1,5 +1,6 @@
 <?php
 $wplc_basic_plugin_url = get_option('siteurl')."/wp-content/plugins/wp-live-chat-support/";
+
 function wplc_log_user_on_page($name,$email,$session) {
     global $wpdb;
     global $wplc_tblname_chats;
@@ -34,7 +35,6 @@ function wplc_update_user_on_page($cid, $status = 5,$session) {
     global $wpdb;
     global $wplc_tblname_chats;
 
-    
      
     $user_data = array(
         'ip' => $_SERVER['REMOTE_ADDR'],
@@ -555,7 +555,7 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
         wplc_pro_notify_via_email();
     }
 
-    if ($cid != null) { /* change from a visitor to a chat */
+    if ($cid != null) { /* change from a visitor to a chat */                
         
         $user_data = array(
             'ip' => $_SERVER['REMOTE_ADDR'],
@@ -582,10 +582,12 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
         return $cid;
     }
     else { // create new ID for the chat
+        
         $user_data = array(
             'ip' => $_SERVER['REMOTE_ADDR'],
             'user_agent' => $_SERVER['HTTP_USER_AGENT']
         );
+        
         $ins_array = array(
             'status' => '2',
             'timestamp' => date("Y-m-d H:i:s"),
@@ -736,14 +738,14 @@ function wplc_error_directory() {
             wp_mkdir_p($upload_dir['basedir'].'/wp-live-chat-support');
             $content = "Error log created";
             $fp = @fopen($upload_dir['basedir'].'/wp-live-chat-support'."/error_log.txt","w+");
-            fwrite($fp,$content);
+            @fwrite($fp,$content);
         }
     } else {
         if (!file_exists(ABSPATH.'wp-content/uploads/wp-live-chat-support')) {
             wp_mkdir_p(ABSPATH.'wp-content/uploads/wp-live-chat-support');
             $content = "Error log created";
             $fp = @fopen(ABSPATH.'wp-content/uploads/wp-live-chat-support'."/error_log.txt","w+");
-            fwrite($fp,$content);
+            @fwrite($fp,$content);
         }
         
     }
@@ -752,12 +754,12 @@ function wplc_error_directory() {
 }
 
 function wplc_error_log($error) {
-    /*
+    
     $content = "\r\n[".date("Y-m-d")."] [".date("H:i:s")."]".$error;
     $fp = @fopen(ABSPATH.'/wp-content/uploads/wp-live-chat-support'."/error_log.txt","a+");
-    fwrite($fp,$content);
-    fclose($fp);
-    */
+    @fwrite($fp,$content);
+    @fclose($fp);
+    
     
 }
 function Memory_Usage($decimals = 2)
@@ -809,4 +811,60 @@ function wplc_record_mem() {
     $fp = @fopen(ABSPATH.'/wp-content/uploads/wp-live-chat-support'."/mem_usag.csv","a+");
     fputcsv($fp, $data);
     fclose($fp);
+}
+
+function wplc_admin_display_missed_chats() {
+
+    global $wpdb;
+    global $wplc_tblname_chats;
+
+    echo "
+        <table class=\"wp-list-table widefat fixed \" cellspacing=\"0\">
+            <thead>
+                <tr>
+                    <th class='manage-column column-id'><span>" . __("Date", "wplivechat") . "</span></th>
+                    <th scope='col' id='wplc_name_colum' class='manage-column column-id'><span>" . __("Name", "wplivechat") . "</span></th>
+                    <th scope='col' id='wplc_email_colum' class='manage-column column-id'>" . __("Email", "wplivechat") . "</th>
+                    <th scope='col' id='wplc_url_colum' class='manage-column column-id'>" . __("URL", "wplivechat") . "</th>
+                </tr>
+            </thead>
+            <tbody id=\"the-list\" class='list:wp_list_text_link'>";
+
+    if (function_exists("wplc_register_pro_version")) {
+        $sql = "
+            SELECT *
+            FROM $wplc_tblname_chats
+            WHERE (`status` = 7 
+            OR `agent_id` = 0)
+            AND `email` != 'no email set'                     
+            ORDER BY `timestamp` DESC
+                ";
+    } else {
+        $sql = "
+            SELECT *
+            FROM $wplc_tblname_chats
+            WHERE `status` = 7             
+            AND `email` != 'no email set'                     
+            ORDER BY `timestamp` DESC
+                ";
+    }
+
+    $results = $wpdb->get_results($sql);
+
+    if (!$results) {
+        echo "<tr><td></td><td>" . __("You have not missed any chat requests.", "wplivechat") . "</td></tr>";
+    } else {
+        foreach ($results as $result) {
+            echo "<tr id=\"record_" . $result->id . "\">";
+            echo "<td class='chat_id column-chat_d'>" . $result->timestamp . "</td>";
+            echo "<td class='chat_name column_chat_name' id='chat_name_" . $result->id . "'><img src=\"http://www.gravatar.com/avatar/" . md5($result->email) . "?s=30\" /> " . $result->name . "</td>";
+            echo "<td class='chat_email column_chat_email' id='chat_email_" . $result->id . "'><a href='mailto:" . $result->email . "' title='Email " . ".$result->email." . "'>" . $result->email . "</a></td>";
+            echo "<td class='chat_name column_chat_url' id='chat_url_" . $result->id . "'>" . $result->url . "</td>";
+            echo "</tr>";
+        }
+    }
+
+    echo "
+            </tbody>
+        </table>";
 }

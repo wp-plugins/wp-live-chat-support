@@ -4,7 +4,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.8
-Tested up to: 4.0.1
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2
 
@@ -144,6 +144,14 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.5 2015-01-21 - Low Priority =
+* New Feature: You can now view any live chats you have missed
+* New Pro Feature: You can record offline messages when live chat is not online
+* Code Improvements: Labels added to buttons on live chat window
+* Code Improvements: PHP Errors fixed
+* Updated Translations:
+*  Italian (Thank You Angelo Giammarresi)
 
 = 4.2.4 2014-12-17 - Low Priority = 
 * New feature: The live chat window can be hidden when offline (Pro only)

@@ -3,13 +3,22 @@
 Plugin Name: WP Live Chat Support
 Plugin URI: http://www.wp-livechat.com
 Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-Version: 4.2.4
+Version: 4.2.5
 Author: WP-LiveChat
 Author URI: http://www.wp-livechat.com
 */
 
 
-/* 4.2.4 2014-12-17 - Low Priority
+/* 4.2.5 2015-01-21 - Low Priority
+ * New Feature: You can now view any live chats you have missed
+ * New Pro Feature: You can record offline messages when live chat is not online
+ * Code Improvements: Labels added to buttons
+ * Code Improvements: PHP Errors fixed
+ * 
+ * Updated Translations:
+ *  Italian (Thank You Angelo Giammarresi)
+ * 
+ * 4.2.4 2014-12-17 - Low Priority
  * New feature: The chat window can be hidden when offline (Pro only)
  * New feature: Desktop notifications added
  * Bug fix: Email address gave false validation error when not required.
@@ -105,6 +114,8 @@ Author URI: http://www.wp-livechat.com
  *  
  */
 
+
+
 //error_reporting(E_ERROR);
 global $wplc_version;
 global $wplc_p_version;
@@ -114,7 +125,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.2.4";
+$wplc_version = "4.2.5";
 
 define('WPLC_BASIC_PLUGIN_DIR',dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL',plugins_url()."/wp-live-chat-support/");
@@ -196,7 +207,6 @@ function wplc_action_callback() {
 
 }
 
-
 function wplc_feedback_page_include(){
     include 'includes/feedback-page.php';
 }
@@ -205,6 +215,7 @@ function wplc_admin_menu() {
     $wplc_mainpage = add_menu_page('WP Live Chat', __('Live Chat','wplivechat'), 'manage_options', 'wplivechat-menu', 'wplc_admin_menu_layout');
     add_submenu_page('wplivechat-menu', __('Settings','wplivechat'), __('Settings','wplivechat'), 'manage_options' , 'wplivechat-menu-settings', 'wplc_admin_settings_layout');
     add_submenu_page('wplivechat-menu', __('History','wplivechat'), __('History','wplivechat'), 'manage_options' , 'wplivechat-menu-history', 'wplc_admin_history_layout');
+    add_submenu_page('wplivechat-menu', __('Missed Chats','wplivechat'), __('Missed Chats','wplivechat'), 'manage_options' , 'wplivechat-menu-missed-chats', 'wplc_admin_missed_chats');
     add_submenu_page('wplivechat-menu', __('Feedback','wplivechat'), __('Feedback','wplivechat'), 'manage_options' , 'wplivechat-menu-feedback-page', 'wplc_feedback_page_include');
 }
 add_action('wp_head','wplc_user_top_js');
@@ -591,14 +602,14 @@ function wplc_admin_javascript() {
                                     wplc_title_alerts2 = setTimeout(function (){ document.title = "** CHAT REQUEST **"; }, 2000);
                                     wplc_title_alerts4 = setTimeout(function (){ document.title = orig_title; }, 4000);
 
-//                                    document.getElementById("wplc_sound").innerHTML="<embed src='<?php // echo plugins_url('/ring.wav', __FILE__); ?>' hidden=true autostart=true loop=false>";
+                                    document.getElementById("wplc_sound").innerHTML="<embed src='<?php echo plugins_url('/ring.wav', __FILE__); ?>' hidden=true autostart=true loop=false>";
                                     
-                                    var wplc_notify_sound = '<?php echo plugins_url('/ring.wav', __FILE__); ?>';
-                                    var wplc_notify_chat = new Audio(wplc_notify_sound);
-
-                                    if(ringer_cnt < 5){
-                                        wplc_notify_chat.play();
-                                    }
+//                                    var wplc_notify_sound = '<?php echo plugins_url('/ring.wav', __FILE__); ?>';
+//                                    var wplc_notify_chat = new Audio(wplc_notify_sound);
+//
+//                                    if(ringer_cnt < 5){
+//                                        wplc_notify_chat.play();
+//                                    }
                                     
                                 }, 5000); 
                             } else {
@@ -1133,7 +1144,7 @@ function wplc_add_user_stylesheet() {
     
 }
 function wplc_add_admin_stylesheet() {
-    if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings')) {
+    if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings' || $_GET['page'] == 'wplivechat-menu-offline-messages')) {
         wp_register_style( 'wplc-admin-style', plugins_url('/css/jquery-ui.css', __FILE__) );
         wp_enqueue_style( 'wplc-admin-style' );
         wp_register_style( 'wplc-chat-style', plugins_url('/css/chat-style.css', __FILE__) );
@@ -1175,6 +1186,26 @@ function wplc_admin_history_layout() {
     }
 }
 
+function wplc_admin_missed_chats() {
+    echo "<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Missed Chats","wplivechat")."</h2>";
+    if(function_exists('wplc_admin_display_missed_chats')){
+        wplc_admin_display_missed_chats();
+    } 
+}
+
+function wplc_admin_offline_messages(){
+    echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>".__("WP Live Chat Offline Messages","wplivechat")."</h2>";
+    if (function_exists("wplc_register_pro_version")) {
+        if(function_exists('wplc_pro_admin_display_offline_messages')){
+            wplc_pro_admin_display_offline_messages();
+        } else {
+            echo "<div class='updated'><p>".__('Please update to the latest version of WP Live Chat Support Pro to start recording any offline messages.', 'wplivechat')."</p></div>";
+        }
+    }
+    else {
+        echo "<br /><br >This option is only available in the <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=missed_chats1\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Pro Add-on</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=missed_chats2\" title=\"".__("Pro Add-on","wplivechat")."\" target=\"_BLANK\">Get it now for only $19.95 once off!</a>";
+    }
+}
 
 function wplc_settings_page_basic() {
     if(function_exists("wplc_register_pro_version")){

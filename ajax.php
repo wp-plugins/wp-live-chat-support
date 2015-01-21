@@ -159,10 +159,7 @@ if ($check == 1) {
             echo "There was an error sending your chat message. Please contact support";
         }
     }
-    
-    
-    
-    
+
     //User Ajax
     
     if($_POST['action'] == 'wplc_call_to_server_visitor'){
@@ -172,7 +169,8 @@ if ($check == 1) {
         
         while($i <= $iterations){
             
-            if($_POST['cid'] == null || $_POST['cid'] == "" || $_POST['cid'] == "null"){
+            if($_POST['cid'] == null || $_POST['cid'] == "" || $_POST['cid'] == "null" || $_POST['cid'] == 0){
+//                echo 1;
                 $user = "user".time();
                 $email = "no email set";
                 $cid = wplc_log_user_on_page($user,$email,$_POST['wplcsession']);
@@ -180,9 +178,10 @@ if ($check == 1) {
                 $array['status'] = wplc_return_chat_status($cid);
                 $array['wplc_name'] = $user;
                 $array['wplc_email'] = $email;
-                $array['check'] = true;
+                $array['check'] = true;        
                 
             } else {
+//                echo 2;
                 $new_status = wplc_return_chat_status($_POST['cid']);
                 $array['wplc_name'] = $_POST['wplc_name'];
                 $array['wplc_email'] = $_POST['wplc_email'];
@@ -305,6 +304,7 @@ if ($check == 1) {
         }
     }
     if ($_POST['action'] == "wplc_start_chat") {
+        
         if (isset($_POST['cid'])) {
             if ($_POST['name'] && $_POST['email']) {
                 echo wplc_user_initiate_chat(sanitize_text_field($_POST['name']),sanitize_email($_POST['email']),sanitize_text_field($_POST['cid']),$_POST['wplcsession']); // echo the chat session id

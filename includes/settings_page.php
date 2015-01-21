@@ -11,17 +11,16 @@
         if ($wplc_settings["wplc_settings_font"]) { $wplc_settings_font = $wplc_settings["wplc_settings_font"]; } else { $wplc_settings_font = "FFFFFF"; }
         if(get_option("WPLC_HIDE_CHAT") == true) { $wplc_hide_chat = "checked"; } else { $wplc_hide_chat = ""; };
         
-                
      ?>
     <form action='' name='wplc_settings' method='POST' id='wplc_settings'>
     
     <div id="wplc_tabs">
       <ul>
-          <li><a href="#tabs-1"><?php _e("General Settings","wplivechat")?></a></li>
-          <li><a href="#tabs-2"><?php _e("Chat Box","wplivechat")?></a></li>
-          <li><a href="#tabs-3"><?php _e("Offline Messages","wplivechat")?></a></li>
-          <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
-          <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
+        <li><a href="#tabs-1"><?php _e("General Settings","wplivechat")?></a></li>
+        <li><a href="#tabs-2"><?php _e("Chat Box","wplivechat")?></a></li>
+        <li><a href="#tabs-3"><?php _e("Offline Messages","wplivechat")?></a></li>
+        <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
+        <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
       </ul>
       <div id="tabs-1">
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
