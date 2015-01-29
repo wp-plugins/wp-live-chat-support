@@ -79,7 +79,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 
 * English
 * German (Dennis Klinger)
-* Spanish (Sergio Castrillon & Ana Ayelén Martínez)
+* Spanish (Sergio Castrillon & Ana Ayelen Martinez)
 * Russian (Igor Butsky)
 * French (Marcello Cavallucci)
 * Brazilian (Gustavo Silva)
@@ -153,7 +153,7 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 * Code Improvement: jQuery Cookie updated to the latest version
 * Code Improvement: More Live Chat strings are now translatable 
 * New Live Chat Translation added:
-*  Spanish (Thank you Ana Ayelén Martínez)
+*  Spanish (Thank you Ana Ayelen Martinez)
 
 = 4.2.5 2015-01-21 - Low Priority =
 * New Feature: You can now view any live chats you have missed
