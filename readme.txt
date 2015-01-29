@@ -25,6 +25,8 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * No "Powered by" links on the live chat window
 * No monthly live chat subscriptions needed
 * Desktop Notifications when receiving new Live Chats
+* View any live chats you may have missed
+* A comprehensive list of live chat options
 
 
 = Pro Version Features =
@@ -42,15 +44,16 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Include/exclude the live chat from appearing on certain pages
 * World-class support
 * Fully customizable live chat experience
+* Offline messages are now stored (When Live Chat is switched off)
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
 = Coming soon =
-* (Nov 2014) (Free & Pro) Design update - New transitions (chat box slides up, fades, jumps, etc after x seconds)
-* (Nov 2014) (Free & Pro) Improvements - Better link and image handling within the live chat text area
-* (Nov 2014) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
-* (Nov 2014) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
-* (Jan 2015) (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
+* (March 2015) (Free & Pro) Design update - New transitions (chat box slides up, fades, jumps, etc after x seconds)
+* (March 2015) (Free & Pro) Improvements - Better link and image handling within the live chat text area
+* (March 2015) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
+* (March 2015) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
+* (March 2015) (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
 
 = 30 second live chat installation =
 
@@ -76,7 +79,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 
 * English
 * German (Dennis Klinger)
-* Spanish (Sergio Castrillon)
+* Spanish (Sergio Castrillon & Ana Ayelén Martínez)
 * Russian (Igor Butsky)
 * French (Marcello Cavallucci)
 * Brazilian (Gustavo Silva)
@@ -144,6 +147,13 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.6 2015-01-29 - Low Priority =
+* New feature: Live Chat dashboard has a new layout and design
+* Code Improvement: jQuery Cookie updated to the latest version
+* Code Improvement: More Live Chat strings are now translatable 
+* New Live Chat Translation added:
+*  Spanish (Thank you Ana Ayelén Martínez)
 
 = 4.2.5 2015-01-21 - Low Priority =
 * New Feature: You can now view any live chats you have missed

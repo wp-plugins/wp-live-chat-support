@@ -168,7 +168,6 @@ if ($check == 1) {
         $array = array("check" => false);
         
         while($i <= $iterations){
-            
             if($_POST['cid'] == null || $_POST['cid'] == "" || $_POST['cid'] == "null" || $_POST['cid'] == 0){
 //                echo 1;
                 $user = "user".time();
@@ -179,7 +178,7 @@ if ($check == 1) {
                 $array['wplc_name'] = $user;
                 $array['wplc_email'] = $email;
                 $array['check'] = true;        
-                
+
             } else {
 //                echo 2;
                 $new_status = wplc_return_chat_status($_POST['cid']);
@@ -199,8 +198,8 @@ if ($check == 1) {
                                 die();
                             }
                         }
-                        
-                        
+
+
                         if ($i == 1) {
                             wplc_update_user_on_page(sanitize_text_field($_POST['cid']), sanitize_text_field($_POST['status']),$_POST['wplcsession']);
                         }
@@ -219,7 +218,7 @@ if ($check == 1) {
                             $array['check'] = true;
                         }
                     } 
-                    
+
                 } else { // statuses do not match
                     $array['status'] = $new_status;
                     if($new_status == 1){ // completed
@@ -263,7 +262,6 @@ if ($check == 1) {
                         }
                     }
                 }
-                
             }
             if($array['check'] == true){
                 echo json_encode($array);

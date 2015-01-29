@@ -27,6 +27,12 @@ jQuery(document).ready(function() {
     
     wplc_cid = jQuery.cookie('wplc_cid');
     
+    if(typeof wplc_cid === 'undefined'){
+        wplc_cid = null;
+    } else {
+        wplc_cid = jQuery.cookie('wplc_cid');
+    }
+    
     wplc_check_hide_cookie = jQuery.cookie('wplc_hide');
     wplc_check_minimize_cookie = jQuery.cookie('wplc_minimize');
     wplc_chat_status = jQuery.cookie('wplc_chat_status');
@@ -356,8 +362,9 @@ jQuery(document).ready(function() {
             else if (wplc_chat_status == 5 || wplc_chat_status == 9 || wplc_chat_status == 8){
                
                 if(jQuery("#wp-live-chat-2").is(":visible") === false && jQuery("#wp-live-chat-4").is(":visible") === false){
-                    jQuery("#wp-live-chat-2").show();
-                    if(jQuery.cookie('wplc_email') !== "no email set"){
+                    jQuery("#wp-live-chat-2").show();         
+                    var wplc_visitor_name = jQuery.cookie('wplc_name');            
+                    if(jQuery.cookie('wplc_email') !== "no email set" && wplc_visitor_name.indexOf("user") >= 0){
                         jQuery("#wplc_name").val(jQuery.cookie('wplc_name'));
                         jQuery("#wplc_email").val(jQuery.cookie('wplc_email'));
                     }
@@ -483,9 +490,8 @@ jQuery(document).ready(function() {
                     //console.log("wplc_user_send_msg");
             });
 
-        });
-
-    
+        });      
+        
     });
 
 

@@ -286,7 +286,7 @@
                     <?php _e("Offline text","wplivechat")?>:
                 </td>
                 <td>
-                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='Chat offline. Leave a message' />
+                    <input type='text' size='50' maxlength='50' class='regular-text' readonly value='<?php _e('Chat offline. Leave a message', 'wplivechat'); ?>' />
                     <small>
                         <i> <?php _e("Edit these text fields using the ","wplivechat")?> 
                             <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=textfields4" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a>

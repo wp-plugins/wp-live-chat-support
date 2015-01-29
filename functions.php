@@ -165,23 +165,12 @@ function wplc_list_chats() {
 	"
     );
     
-    $table = "<table class=\"wp-list-table widefat fixed \" cellspacing=\"0\">"
-                . "<thead>"
-                    . "<tr>"
-                        . "<th scope='col' id='wplc_id_colum' class='manage-column column-id sortable desc'  style=''><i class=\"fa fa-globe\"> </i> <span>".__("User Data","wplivechat")."</span></th>"
-                        . "<th scope='col' id='wplc_name_colum' class='manage-column column-name_title sortable desc'  style=''><i class=\"fa fa-user\"> </i> <span>".__("Name","wplivechat")."</span></th>"
-                        . "<th scope='col' id='wplc_email_colum' class='manage-column column-email' style=\"\"><i class=\"fa fa-envelope\"> </i> ".__("Email","wplivechat")."</th>"
-                        . "<th scope='col' id='wplc_url_colum' class='manage-column column-url' style=\"\"><i class=\"fa fa-link\"> </i> ".__("URL","wplivechat")."</th>"
-                        . "<th scope='col' id='wplc_status_colum' class='manage-column column-status'  style=\"\"><i class=\"fa fa-cog\"> </i> ".__("Status","wplivechat")."</th>"
-                        . "<th scope='col' id='wplc_action_colum' class='manage-column column-action sortable desc'  style=\"\"><i class=\"fa fa-rocket\"> </i> <span>".__("Action","wplivechat")."</span></th>"
-                    . "</tr>"
-                . "</thead>"
-            . "<tbody id=\"the-list\" class='list:wp_list_text_link'>";
-
+        $table = "<div class='wplc_chats_container'>";    
+            
     if (!$results) {
-        $table .= "<tr><td></td><td>".__("No chat sessions available at the moment","wplivechat")."</td></tr>";
-    }
-    else {
+        $table.= "<p>".__("No chat sessions available at the moment","wplivechat")."</p>";
+    } else {
+        $table .= "<h2>".__('Active Chats', 'wplivechat')."</h2>";
         
         foreach ($results as $result) {
             unset($trstyle);
@@ -199,26 +188,56 @@ function wplc_list_chats() {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
                 $actions = "<a href=\"".$url."\" class=\"wplc_open_chat button button-primary\" window-title=\"WP_Live_Chat_".$result->id."\">".__("Accept Chat","wplivechat")."</a>";
                 $trstyle = "style='background-color:#FFFBE4; height:30px;'";
+                $icon = "<i class=\"fa fa-phone wplc_pending\" title='".__('Incoming Chat', 'wplivechat')."' alt='".__('Incoming Chat', 'wplivechat')."'></i><div class='wplc_icon_message'>".__('You have an incoming chat.', 'wplivechat')."</div>";
             }
             if ($result->status == 3) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
                 $actions = "<a href=\"".$url."\" class=\"wplc_open_chat button button-primary\" window-title=\"WP_Live_Chat_".$result->id."\">".__("Open Chat Window","wplivechat")."</a>";
                 $trstyle = "style='background-color:#F7FCFE; height:30px;'";
+                $icon = "<i class=\"fa fa-check-circle wplc_active\" title='".__('Chat Active', 'wplivechat')."' alt='".__('Chat Active', 'wplivechat')."'></i><div class='wplc_icon_message'>".__('This chat is active', 'wplivechat')."</div>";                        
             }
             if ($wplc_c>1) { $actions = wplc_get_msg(); }
-            $table .= "<tr id=\"record_".$result->id."\" $trstyle>"
-                        . "<td class='chat_id column-chat_d'><img src='".$wplc_basic_plugin_url."/images/$browser_image' alt='$browser' title='$browser' /> ".$user_ip."</td>"
-                        . "<td class='chat_name column_chat_name' id='chat_name_".$result->id."'><img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=40\" /> ".$result->name."</td>"
-                        . "<td class='chat_email column_chat_email' id='chat_email_".$result->id."'>".$result->email."</td>"
-                        . "<td class='chat_name column_chat_url' id='chat_url_".$result->id."'>".$result->url."</td>"
-                        . "<td class='chat_status column_chat_status' id='chat_status_".$result->id."'><strong>".wplc_return_status($result->status)."</strong></td>"
-                        . "<td class='chat_action column-chat_action' id='chat_action_".$result->id."'>$actions</td>"
-                    . "</tr>";
+            
+           $trstyle = "";
+            
+            $table .= "
+                <div class='wplc_single_chat' id='record_'".$result->id." $trstyle> 
+                    <div class='wplc_chat_section'>
+                        <div class='wplc_user_image' id='chat_image_".$result->id."'>
+                            <img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=100&d=mm\" />
+                        </div>
+                        <div class='wplc_user_meta_data'>
+                            <div class='wplc_user_name' id='chat_name_".$result->id."'>
+                                <h3>".$result->name.$icon."</h3>
+                                ".$result->email."
+                            </div>                                
+                        </div>    
+                    </div>
+                    <div class='wplc_chat_section'>
+                        <div class='admin_visitor_advanced_info'>
+                            <strong>" . __("Site Info", "wplivechat") . "</strong>
+                            <hr />
+                            <span class='part1'>" . __("Chat initiated on:", "wplivechat") . "</span> <span class='part2'>" . $result->url . "</span>
+                        </div>
 
+                        <div class='admin_visitor_advanced_info'>
+                            <strong>" . __("Advanced Info", "wplivechat") . "</strong>
+                            <hr />
+                            <span class='part1'>" . __("Browser:", "wplivechat") . "</span><span class='part2'> $browser <img src='" . $wplc_basic_plugin_url . "/images/$browser_image' alt='$browser' title='$browser' /><br />
+                            <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> <a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='Whois for " . $user_ip . "'>" . $user_ip . "</a>
+                        </div>
+                    </div>
+                    <div class='wplc_chat_section'>
+                        <div class='wplc_agent_actions'>
+                            $actions
+                        </div>
+                    </div>
+                </div>
+                    ";
         }
     }
-    $table .= "</table><br /><br />";
-    
+    $table .= "</div>";
+
     return $table;
 }
 

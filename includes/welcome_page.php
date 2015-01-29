@@ -3,11 +3,11 @@
     <h1 style="font-weight: 300; font-size: 50px; line-height: 50px;">
         <?php _e("Welcome to ",'wplivechat'); ?> 
         <strong style='color: #ec822c;'>WP Live Chat Support</strong> 
-        <small>Version 4</small>
+        <small><?php _e('Version 4', 'wplivechat'); ?></small>
     </h1>
-    <div class="about-text" style="margin: 0;">Provide Instant Live Chat Support!</div>
+    <div class="about-text" style="margin: 0;"><?php _e('Provide Instant Live Chat Support!', 'wplivechat'); ?></div>
 
-    <h2 style="font-size: 25px;">How did you find us?</h2>
+    <h2 style="font-size: 25px;"><?php _e('How did you find us?', 'wplivechat'); ?></h2>
     <form method="post" name="wplc_find_us_form" style="font-size: 16px;">
         <div  style="text-align: left; width:275px;">
             <input type="radio" name="wplc_find_us" id="wordpress" value='repository'>
