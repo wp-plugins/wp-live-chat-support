@@ -92,6 +92,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Danish (Mikkel Jeppesen Juhl)
 * Italian (Angelo Giammarresi)
 * Dutch (Elsy Aelvoet)
+* Greek (Peter Stavropoulos)
 * Chinese - Simplified^
 * Chinese - Traditional^
 
@@ -118,6 +119,24 @@ No. WP Live Chat Support was developed to specifically create and manage live ch
 
 = What are desktop notifications? =
 Desktop notifications are notifications that will appear on the bottom right of your screen when a new live chat is received. This feature is supported in all browsers except Internet Explorer.
+
+= Can my visitors start a live chat without entering their name and email address? =
+Yes. This option is available on the live chat settings page.
+
+= Can I disable the live chat window on mobile devices? =
+Yes. You can show or hide the live chat window on mobile devices. This includes mobile phones and tablets.
+
+= How does WP Live Chat Support notify me of an incoming live chat? =
+You will be notificed of a new live chat by means of email, audio and desktop notifications.
+
+= Can I show the live chat window to registered users only? =
+Yes. You can limit the live chat window to show to users that are registered and logged in to your site. 
+
+= Can I specify a user role to my live chat agent? =
+Unfortunately not. The administrator of the site is the default live chat agent. The Pro add-on allows for an unlimited number of live chat agents.
+
+= Can I see if I missed any live chats that I may not have answered in time? =
+Yes. To view the list of live chats you missed, go to 'Live Chat' -> 'Missed Chats'
 
 = Troubleshooting =
 If you're experiencing issues running WP Live Chat Support, please take note of the following:
@@ -147,6 +166,10 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.7 2015-02-10 - Low Priority =
+* New Live Chat Translation added:
+*  Greek (Thank you Peter Stavropoulos)
 
 = 4.2.6 2015-01-29 - Low Priority =
 * New feature: Live Chat dashboard has a new layout and design
