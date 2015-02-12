@@ -21,6 +21,7 @@
         <li><a href="#tabs-3"><?php _e("Offline Messages","wplivechat")?></a></li>
         <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
         <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
+        <li><a href="#tabs-6"><?php _e("Animations", "wplivechat") ?></a></li>
       </ul>
       <div id="tabs-1">
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
@@ -301,8 +302,34 @@
       
       
       <div id="tabs-4">
+          <style>
+            .wplc_theme_block img{
+                border: 1px solid #CCC;
+                border-radius: 5px;
+                padding: 5px;
+                margin: 5px;
+                box-shadow: 1px 1px 1px #CCC;
+            }
+          </style>
           <h3><?php _e("Styling",'wplivechat')?></h3>
           <table class='form-table' width='700'>
+              
+              <tr>
+                  <td><label for=""><?php _e('Choose a colour scheme. Only available in the', 'sola_t'); ?> <a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=themes' target='_BLANK'><?php _e('Pro add-on', 'wplivechat'); ?></a></label></td>
+                    <td>    
+                        <div class='wplc_theme_block'>
+                            <div class='wplc_theme_image' id=''>
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-1.png"; ?>' title="<?php _e('Colour Scheme 1', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 1', 'wplivechat'); ?>" />
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-2.png"; ?>' title="<?php _e('Colour Scheme 2', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 2', 'wplivechat'); ?>" />
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-3.png"; ?>' title="<?php _e('Colour Scheme 3', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 3', 'wplivechat'); ?>" />
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-4.png"; ?>' title="<?php _e('Colour Scheme 4', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 4', 'wplivechat'); ?>" />
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-5.png"; ?>' title="<?php _e('Colour Scheme 5', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 5', 'wplivechat'); ?>" />
+                                <img src='<?php echo plugins_url()."/wp-live-chat-support/images/themes/theme-6.png"; ?>' title="<?php _e('Colour Scheme 6', 'wplivechat'); ?>" alt="<?php _e('Colour Scheme 6', 'wplivechat'); ?>" />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
               <tr>
                   <td width='200' valign='top'><?php _e("Chat box fill color","wplivechat")?>:</td>
                   <td>
@@ -352,6 +379,60 @@
         <div id="tabs-5">
             <h3><?php _e("Multiple Agents", "wplivechat") ?></h3>
             <p><?php _e("Get","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents" target="_BLANK"><?php _e("Multiple agent support", "wplivechat") ?></a></p>
+        </div>
+        <div id="tabs-6">
+            <style>
+                .wplc_animation_block div{
+                    display: inline-block;
+                    width: 150px;
+                    height: 150px;
+                    border: 1px solid #CCC;
+                    border-radius: 5px;
+                    text-align: center;  
+                    margin: 10px;
+                }
+                .wplc_animation_block i{
+                    font-size: 3em;
+                    line-height: 150px;
+                }
+                .wplc_animation_block .wplc_red{
+                    color: #E31230;
+                }
+                .wplc_animation_block .wplc_orange{
+                    color: #EB832C;
+                }
+                .wplc_animation_active{
+                    box-shadow: 2px 2px 2px #CCC;
+                }
+            </style>
+            <h3><?php _e("Animations", "wplivechat") ?></h3>
+            <p><?php _e("Get a variety of animations in the ","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=animations" target="_BLANK"><?php _e("Pro add-on", "wplivechat") ?></a></p>
+            <table class='form-table'>
+                <tr>
+                    <th><label for=""><?php _e('Choose an animation (Pro Only)', 'sola_t'); ?></label></th>
+                
+                    <td>    
+                        <div class='wplc_animation_block'>
+                            <div class='wplc_animation_image'>
+                                <i class="fa fa-arrow-circle-up wplc_orange"></i>
+                                <p><?php _e('Slide Up', 'wplivechat'); ?></p>
+                            </div>
+                            <div class='wplc_animation_image'>
+                                <i class="fa fa-arrows-h wplc_red"></i>
+                                <p><?php _e('Slide From The Side', 'wplivechat'); ?></p>
+                            </div>
+                            <div class='wplc_animation_image'>
+                                <i class="fa fa-arrows-alt wplc_orange"></i>
+                                <p><?php _e('Fade In', 'wplivechat'); ?></p>
+                            </div>
+                            <div class='wplc_animation_image'>
+                                <i class="fa fa-thumb-tack wplc_red"></i>
+                                <p><?php _e('No Animation', 'wplivechat'); ?></p>
+                            </div>
+                        </div>  
+                    </td>
+                </tr>
+            </table>       
         </div>
     </div>
     <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='<?php _e("Save Settings","wplivechat")?>' /></p>

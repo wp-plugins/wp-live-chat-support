@@ -1,4 +1,3 @@
-
 === WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
@@ -45,11 +44,11 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * World-class support
 * Fully customizable live chat experience
 * Offline messages are now stored (When Live Chat is switched off)
+* Apply animations to the chat window
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
 = Coming soon =
-* (March 2015) (Free & Pro) Design update - New transitions (chat box slides up, fades, jumps, etc after x seconds)
 * (March 2015) (Free & Pro) Improvements - Better link and image handling within the live chat text area
 * (March 2015) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
 * (March 2015) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
@@ -166,6 +165,14 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.8 2015-02-12 - Low Priority =
+* New Feature: You can now apply an animation to the chat window on page load
+* New Feature: You can now choose from 5 colour schemes for the chat window
+* Enhancement: Aesthetic Improvement to list of agents (Pro)
+* Code Improvement: PHP error fixed
+* Updated Translations:
+*  German (Thank you Dennis Klinger) 
 
 = 4.2.7 2015-02-10 - Low Priority =
 * New Live Chat Translation added:
