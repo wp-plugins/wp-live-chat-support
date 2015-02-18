@@ -36,6 +36,21 @@
                   </td>
               </tr>
               <tr>
+                  <td width='200' valign='top'><?php _e("Choose when I want to be online","wplivechat")?>:
+                    <p class="description"><?php _e('Checking this will allow you to change your status to "Online" or "Offline" on the "Live Chat" page.', 'wplivechat'); ?></p>
+                  </td>                  
+                  <td>
+                      <input type="checkbox" name="wplc_auto_online" disabled readonly="readonly"/>      
+                      <small>
+                        <i> 
+                            <?php _e("available in the","wplivechat")?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=change_status" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
+                            <?php _e("only","wplivechat")?>
+                        </i>
+                    </small>
+                  </td>
+              </tr>
+              <tr>
                   <td width='200' valign='top'>
                       <?php _e("Hide Chat","wplivechat")?>:
                       <p class="description"><?php _e("Hides chat for 24hrs when user clicks X", "wplivechat") ?> </p>
@@ -86,6 +101,15 @@
                   </td>
                   <td valign='top'>
                       <input type="checkbox" value="1" name="wplc_enabled_on_mobile" <?php if(isset($wplc_settings['wplc_enabled_on_mobile'])  && $wplc_settings['wplc_enabled_on_mobile'] == 1 ) { echo "checked"; } ?> />                      
+                  </td>
+              </tr>
+              <tr>
+                  <td width='200' valign='top'>
+                      <?php _e("Record a visitor's IP Address","wplivechat"); ?>
+                      <p class="description"><?php _e("Disable this to enable anonymity for your visitors", "wplivechat") ?></p>
+                  </td>
+                  <td valign='top'>
+                      <input type="checkbox" value="1" name="wplc_record_ip_address" <?php if(isset($wplc_settings['wplc_record_ip_address'])  && $wplc_settings['wplc_record_ip_address'] == 1 ) { echo "checked"; } ?> />                      
                   </td>
               </tr>
               <tr>

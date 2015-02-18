@@ -45,6 +45,8 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Fully customizable live chat experience
 * Offline messages are now stored (When Live Chat is switched off)
 * Apply animations to the chat window
+* Anonymity for your visitors
+* Choose when to accept chats
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
@@ -165,6 +167,11 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.9 2015-02-18 - Low Priority =
+* New Feature: You can now choose to record your visitors IP address or not
+* New Feature: You can now send an offline message to more than one email address (Pro)
+* New Feature: You can now specify if you want to be online or not (Pro)
 
 = 4.2.8 2015-02-12 - Low Priority =
 * New Feature: You can now apply an animation to the chat window on page load

@@ -3,13 +3,19 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.2.8
+  Version: 4.2.9
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.2.8 2015-02-12 - Low Priority
+/* 4.2.9 2015-02-18 - Low Priority
+ * New Feature: You can now choose to record your visitors IP address or not
+ * New Feature: You can now send an offline message to more than one email address (Pro)
+ * New Feature: You can now specify if you want to be online or not (Pro)
+ * 
+ * 
+ * 4.2.8 2015-02-12 - Low Priority
  * New Feature: You can now apply an animation to the chat window on page load
  * New Feature: You can now choose from 5 colour schemes for the chat window
  * Enhancement: Aesthetic Improvement to list of agents (Pro)
@@ -143,7 +149,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.2.8";
+$wplc_version = "4.2.9";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -213,6 +219,9 @@ function wplc_version_control() {
         }
         if (!isset($wplc_settings['wplc_enabled_on_mobile'])) {
             $wplc_settings['wplc_enabled_on_mobile'] = "1";
+        }
+        if(!isset($wplc_settings['wplc_record_ip_address'])){
+            $wplc_settings['wplc_record_ip_address'] = "1";
         }
         update_option("WPLC_SETTINGS", $wplc_settings);
     }
@@ -927,6 +936,12 @@ function wplc_draw_chat_area($cid) {
             $status = __("Active", "wplivechat");
         }
 
+        if($user_ip == ""){
+            $user_ip = __('IP Address not recorded', 'wplivechat');
+        } else {
+            $user_ip = "<a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='".__('Whois for' ,'wplivechat')." ".$user_ip."'>".$user_ip."</a>";
+        } 
+        
         echo "<h2>$status " . __('Chat with', 'wplivechat') . " " . $result->name . "</h2>";
         echo "<style>#adminmenuwrap { display:none; } #adminmenuback { display:none; } #wpadminbar { display:none; } #wpfooter { display:none; } .update-nag { display:none; }</style>";
 
@@ -955,7 +970,7 @@ function wplc_draw_chat_area($cid) {
         echo "      <strong>" . __("Advanced Info", "wplivechat") . "</strong>";
         echo "      <hr />";
         echo "      <span class='part1'>" . __("Browser:", "wplivechat") . "</span><span class='part2'> $browser <img src='" . $wplc_basic_plugin_url . "/images/$browser_image' alt='$browser' title='$browser' /><br />";
-        echo "      <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> <a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='" . __('Whois for', 'wplivechat') . " " . $user_ip . "'>" . $user_ip . "</a>";
+        echo "      <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> ".$user_ip;
         echo "</div>";
 
         echo "  <div id=\"wplc_sound_update\"></div>";
@@ -1245,7 +1260,8 @@ function wplc_activate() {
             "wplc_loggedin_user_info" => '1',
             "wplc_user_alternative_text" => $wplc_alt_text,
             "wplc_enabled_on_mobile" => '1',
-            "wplc_display_name" => '1'
+            "wplc_display_name" => '1',
+            "wplc_record_ip_address" => '1'
         ));
     }
     add_option("WPLC_HIDE_CHAT", "true");
@@ -1413,6 +1429,10 @@ function wplc_head_basic() {
         if (isset($_POST['wplc_display_to_loggedin_only'])) {
             $wplc_data['wplc_display_to_loggedin_only'] = esc_attr($_POST['wplc_display_to_loggedin_only']);
         }
+        
+        if(isset($_POST['wplc_record_ip_address'])){
+            $wplc_data['wplc_record_ip_address'] = esc_attr($_POST['wplc_record_ip_address']);
+        }
 
         update_option('WPLC_SETTINGS', $wplc_data);
         if (isset($_POST['wplc_hide_chat'])) {
@@ -1485,31 +1505,24 @@ function wplc_get_home_path() {
 }
 
 /* Error Checks */
-//if(!function_exists('set_time_limit')){    
-//    if(is_admin()){
-//        echo "
-//        <div class='error'>
-//            <p>".__("WPLC: set_time_limit() is not enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please get in contact your host to get this function enabled.", "wplivechat")."</p>
-//        </div>";
-//    }
-//}
-//if(defined('WP_MEMORY_LIMIT')){    
-//    $wplc_memory_limit = strtr(WP_MEMORY_LIMIT, array('M' => ""));    
-//    $wplc_memory_limit = intval($wplc_memory_limit);
-//    if($wplc_memory_limit < 40){
-//        if(is_admin()){
-//            echo "
-//            <div class='error'>
-//                <p>".__("WPLC: Your WordPress install currently only has ".WP_MEMORY_LIMIT. " available to it. You may experience issues while using WP Live Chat Support as a result of this. For assistance in increasing your memory limit, please contact support.", "wplivechat")."</p>
-//            </div>";        
-//        }
-//    }
-//} 
-//if(ini_get('safe_mode')){
-//    if(is_admin()){
-//        echo "
-//        <div class='error'>
-//            <p>".__("WPLC: Safe mode is enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please contact your host to get safe mode disabled.", "wplivechat")."</p>
-//        </div>";
-//    }
-//}
+if(is_admin()){
+    $wplc_error_count = 0;
+    $wplc_admin_warnings = "<div class='error'>";
+    if(!function_exists('set_time_limit')){    
+        $wplc_admin_warnings .= "
+            <p>".__("WPLC: set_time_limit() is not enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please get in contact your host to get this function enabled.", "wplivechat")."</p>
+        ";
+        $wplc_error_count++;        
+    }
+    if(ini_get('safe_mode')){
+        $wplc_admin_warnings .= "
+            <p>".__("WPLC: Safe mode is enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please contact your host to get safe mode disabled.", "wplivechat")."</p>
+        ";
+        $wplc_error_count++;
+    }
+    $wplc_admin_warnings .= "</div>";
+    if($wplc_error_count > 0){
+        echo $wplc_admin_warnings;
+    }
+}
+

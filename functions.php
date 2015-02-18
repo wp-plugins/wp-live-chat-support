@@ -4,12 +4,22 @@ $wplc_basic_plugin_url = get_option('siteurl')."/wp-content/plugins/wp-live-chat
 function wplc_log_user_on_page($name,$email,$session) {
     global $wpdb;
     global $wplc_tblname_chats;
-
     
-    $user_data = array(
-        'ip' => $_SERVER['REMOTE_ADDR'],
-        'user_agent' => $_SERVER['HTTP_USER_AGENT']
-    );
+    $wplc_settings = get_option('WPLC_SETTINGS');
+    
+    if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
+        $user_data = array(
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+    } else {
+        $user_data = array(
+            'ip' => "",
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+    }
+    
+    
     
     
     $ins_array = array(
@@ -34,12 +44,19 @@ function wplc_log_user_on_page($name,$email,$session) {
 function wplc_update_user_on_page($cid, $status = 5,$session) {
     global $wpdb;
     global $wplc_tblname_chats;
-
+    $wplc_settings = get_option('WPLC_SETTINGS');
      
-    $user_data = array(
-        'ip' => $_SERVER['REMOTE_ADDR'],
-        'user_agent' => $_SERVER['HTTP_USER_AGENT']
-    );
+    if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
+        $user_data = array(
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+    } else {
+        $user_data = array(
+            'ip' => "",
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+    }
     
     $query =
         "
@@ -184,6 +201,12 @@ function wplc_list_chats() {
             $browser = wplc_return_browser_string($user_data['user_agent']);
             $browser_image = wplc_return_browser_image($browser,"16");
             
+            if($user_ip == ""){
+                $user_ip = __('IP Address not recorded', 'wplivechat');
+            } else {
+                $user_ip = "<a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='".__('Whois for' ,'wplivechat')." ".$user_ip."'>".$user_ip."</a>";
+            } 
+            
             if ($result->status == 2) {
                 $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
                 $actions = "<a href=\"".$url."\" class=\"wplc_open_chat button button-primary\" window-title=\"WP_Live_Chat_".$result->id."\">".__("Accept Chat","wplivechat")."</a>";
@@ -224,7 +247,7 @@ function wplc_list_chats() {
                             <strong>" . __("Advanced Info", "wplivechat") . "</strong>
                             <hr />
                             <span class='part1'>" . __("Browser:", "wplivechat") . "</span><span class='part2'> $browser <img src='" . $wplc_basic_plugin_url . "/images/$browser_image' alt='$browser' title='$browser' /><br />
-                            <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> <a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='Whois for " . $user_ip . "'>" . $user_ip . "</a>
+                            <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> ".$user_ip."
                         </div>
                     </div>
                     <div class='wplc_chat_section'>
@@ -576,10 +599,19 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
 
     if ($cid != null) { /* change from a visitor to a chat */                
         
-        $user_data = array(
-            'ip' => $_SERVER['REMOTE_ADDR'],
-            'user_agent' => $_SERVER['HTTP_USER_AGENT']
-        );
+        $wplc_settings = get_option('WPLC_SETTINGS');
+        
+        if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
+            $user_data = array(
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'user_agent' => $_SERVER['HTTP_USER_AGENT']
+            );
+        } else {
+            $user_data = array(
+                'ip' => "",
+                'user_agent' => $_SERVER['HTTP_USER_AGENT']
+            );
+        }
 
         $query =
             "
@@ -602,10 +634,19 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
     }
     else { // create new ID for the chat
         
-        $user_data = array(
-            'ip' => $_SERVER['REMOTE_ADDR'],
-            'user_agent' => $_SERVER['HTTP_USER_AGENT']
-        );
+        $wplc_settings = get_option('WPLC_SETTINGS');
+        
+        if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
+            $user_data = array(
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'user_agent' => $_SERVER['HTTP_USER_AGENT']
+            );
+        } else {
+            $user_data = array(
+                'ip' => "",
+                'user_agent' => $_SERVER['HTTP_USER_AGENT']
+            );
+        }
         
         $ins_array = array(
             'status' => '2',
