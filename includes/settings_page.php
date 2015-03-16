@@ -22,6 +22,7 @@
         <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
         <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
         <li><a href="#tabs-6"><?php _e("Animations", "wplivechat") ?></a></li>
+        <li><a href="#tabs-7"><?php _e("Blocked Visitors", "wplivechat") ?></a></li>
       </ul>
       <div id="tabs-1">
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
@@ -457,6 +458,13 @@
                     </td>
                 </tr>
             </table>       
+        </div>
+        <div id="tabs-7">            
+            <h3><?php _e("Blocked Visitors - Based on IP Address", "wplivechat") ?></h3>
+            <small><i> <?php _e("Block visitors from chatting to you based on their IP address using the ","wplivechat")?><a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=blocked_visitors" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a></i></small>
+            <br/><br/>
+            <textarea name="wplc_ban_users_ip" style="width: 50%; min-height: 200px;" placeholder="<?php _e('Enter each IP Address you would like to block on a new line', 'wplivechat'); ?>" autocomplete="false" disabled readonly></textarea>  
+            <p class="description"><?php _e('Blocking a user\'s IP Address here will hide the chat window from them, preventing them from chatting with you. Each IP Address must be on a new line', 'wplivechat'); ?></p>
         </div>
     </div>
     <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='<?php _e("Save Settings","wplivechat")?>' /></p>

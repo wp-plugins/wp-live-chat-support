@@ -47,6 +47,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Apply animations to the chat window
 * Anonymity for your visitors
 * Choose when to accept chats
+* Ban visitors from chatting to you based on IP Address
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
@@ -94,6 +95,9 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Italian (Angelo Giammarresi)
 * Dutch (Elsy Aelvoet)
 * Greek (Peter Stavropoulos)
+* Norwegian (Robert Nilsen)
+* Hungarian (GInception)
+* Indonesian (Andrie Willyanta)
 * Chinese - Simplified^
 * Chinese - Traditional^
 
@@ -167,6 +171,22 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.2.10 2015-03-16 - Low Priority =
+* Bug Fix: Mobile Detect class caused Fatal error on some websites
+* Bug Fix: PHP Errors when editing user page
+* Bug Fix: Including and Excluding the chat window caused issues on some websites
+* Bug Fix: Online/Offline Toggle Switch did not work in some browsers (Pro)
+* New Feature: You can now Ban visitors from chatting with you based on IP Address (Pro)
+* New Feature: You can now choose if you want users to make themselves an agent (Pro) 
+* Bug Fix: Chat window would not hide when selecting the option to not accept offline messages (Pro) 
+* Enhancement: Support page added 
+* Updated Translations:
+*  French (Thank you Marcello Cavallucci)
+* New Translations added:
+*  Norwegian (Thank you Robert Nilsen)
+*  Hungarian (Thank you GInception)
+*  Indonesian (Thank you Andrie Willyanta)
 
 = 4.2.9 2015-02-18 - Low Priority =
 * New Feature: You can now choose to record your visitors IP address or not
