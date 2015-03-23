@@ -3,13 +3,20 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.2.10
+  Version: 4.2.11
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.2.10 2015-03-16 - Low Priority
+/* 4.2.11 2015-03-23 - Low Priority
+ * Bug Fix: Bug in the banned user functionality
+ * Enhancement: Stying improvement on the Live Chat dashboard
+ * Enhancement: Strings are handled better for localization plugins (Pro)
+ * Updated Translation Files:
+ *  Spanish (Thank you Ana Ayelen Martinez)
+ * 
+ * 4.2.10 2015-03-16 - Low Priority
  * Bug Fix: Mobile Detect class caused Fatal error on some websites
  * Bug Fix: PHP Errors when editing user page
  * Bug Fix: Including and Excluding the chat window caused issues on some websites
@@ -164,7 +171,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.2.10";
+$wplc_version = "4.2.11";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -537,7 +544,7 @@ function wplc_display_box() {
     } else {
         $user_banned = 0;
     }
-    if($display_contents >= 1 && $user_banned == 0){  
+    if($display_contents && $user_banned == 0){  
         $wplc_is_admin_logged_in = get_transient("wplc_is_admin_logged_in");
         if ($wplc_is_admin_logged_in != 1) {
             echo "<!-- wplc a-n-c -->";
