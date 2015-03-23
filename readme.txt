@@ -177,7 +177,7 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 * Enhancement: Stying improvement on the Live Chat dashboard
 * Enhancement: Strings are handled better for localization plugins (Pro)
 * Updated Translation Files:
-*  Spanish (Thank you Ana Ayelen Martinez)
+* Spanish (Thank you Ana Ayelen Martinez)
 
 = 4.2.10 2015-03-16 - Low Priority =
 * Bug Fix: Mobile Detect class caused Fatal error on some websites
