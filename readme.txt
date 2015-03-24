@@ -172,6 +172,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.2.12 2015-03-24 - Low Priority =
+* Bug Fix: Warning to update showing erroneously 
+
 = 4.2.11 2015-03-23 - Low Priority =
 * Bug Fix: Bug in the banned user functionality
 * Enhancement: Stying improvement on the Live Chat dashboard
