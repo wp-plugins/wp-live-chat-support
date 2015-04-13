@@ -592,27 +592,36 @@ function wplc_return_status($status) {
 function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
     global $wpdb;
     global $wplc_tblname_chats;
-
+  
     if (function_exists("wplc_list_chats_pro")) { /* check if functions-pro is around */
         wplc_pro_notify_via_email();
     }
 
+    $wplc_settings = get_option('WPLC_SETTINGS');
+        
+    if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
+        $user_data = array(
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+        $wplc_ce_ip = $_SERVER['REMOTE_ADDR'];
+    } else {
+        $user_data = array(
+            'ip' => "",
+            'user_agent' => $_SERVER['HTTP_USER_AGENT']
+        );
+        $wplc_ce_ip = null;
+    }
+    
+    if(function_exists('wplc_ce_activate')){
+        /* Log the chat for statistical purposes as well */
+        if(function_exists('wplc_ce_record_initial_chat')){
+            wplc_ce_record_initial_chat($name, $email, $cid, $wplc_ce_ip, $_SERVER['HTTP_REFERER']);
+        }                    
+    }
+    
     if ($cid != null) { /* change from a visitor to a chat */                
         
-        $wplc_settings = get_option('WPLC_SETTINGS');
-        
-        if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
-            $user_data = array(
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'user_agent' => $_SERVER['HTTP_USER_AGENT']
-            );
-        } else {
-            $user_data = array(
-                'ip' => "",
-                'user_agent' => $_SERVER['HTTP_USER_AGENT']
-            );
-        }
-
         $query =
             "
         UPDATE $wplc_tblname_chats
@@ -634,19 +643,7 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
     }
     else { // create new ID for the chat
         
-        $wplc_settings = get_option('WPLC_SETTINGS');
         
-        if(isset($wplc_settings['wplc_record_ip_address']) && $wplc_settings['wplc_record_ip_address'] == 1){
-            $user_data = array(
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'user_agent' => $_SERVER['HTTP_USER_AGENT']
-            );
-        } else {
-            $user_data = array(
-                'ip' => "",
-                'user_agent' => $_SERVER['HTTP_USER_AGENT']
-            );
-        }
         
         $ins_array = array(
             'status' => '2',
@@ -927,4 +924,24 @@ function wplc_admin_display_missed_chats() {
     echo "
             </tbody>
         </table>";
+}
+
+function wplc_is_user_banned_basic(){
+    $banned_ip = get_option('WPLC_BANNED_IP_ADDRESSES');
+    if($banned_ip){
+        $banned_ip = maybe_unserialize($banned_ip);
+        $banned = 0;
+        foreach($banned_ip as $ip){
+            if(isset($_SERVER['REMOTE_ADDR'])){
+                if($ip == $_SERVER['REMOTE_ADDR']){
+                    $banned++;
+                }
+            } else {
+                $banned = 0;
+            }
+        }
+    } else {
+        $banned = 0;
+    }
+    return $banned;
 }

@@ -338,3 +338,10 @@
 .wplc-user-message hr, .wplc-admin-message hr{
     margin-bottom: 0px !important;
 }
+
+/* MOVE TO CHAT EXPERIENCE PLUGIN */
+
+#wplc_star_rating{
+    text-align: center;
+    padding: 10px;
+}

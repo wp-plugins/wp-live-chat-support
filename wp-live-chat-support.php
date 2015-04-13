@@ -3,13 +3,19 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.2.12
+  Version: 4.3.0
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.2.12 2015-03-24 - Low Priority
+/* 4.3.0 2015-04-13 - Low Priority
+ * Enhancement: Animations settings have been moved to the 'Styling' tab.
+ * New Feature: Blocked User functionality has been moved to the Free version
+ * Enhancement: All descriptions have been put into tooltips for a cleaner page
+ * New Feature: Functionality added in to handle Chat Experience Ratings (Premium Add-on)
+ * 
+ * 4.2.12 2015-03-24 - Low Priority
  * Bug Fix: Warning to update showing erroneously 
  * 
  * 4.2.11 2015-03-23 - Low Priority
@@ -174,7 +180,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.2.12";
+$wplc_version = "4.3.00";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -437,99 +443,99 @@ function wplc_output_box() {
     ?>    
     <div id="wp-live-chat" wplc_animation='<?php echo $wplc_animation; ?>' style="<?php echo $wplc_starting_point." ".$wplc_box_align; ?>; " class="<?php echo $wplc_class; ?> wplc_close" original_pos="<?php echo $original_pos; ?>" wplc-auto-pop-up="<?php if (isset($wplc_settings['wplc_auto_pop_up'])) { echo $wplc_settings['wplc_auto_pop_up']; } ?>" > 
     <?php
-    if (function_exists("wplc_register_pro_version")) {
-         wplc_pro_output_box();
-    } else {
-        ?>
-        <div class="wp-live-chat-wraper">
-            <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important; ">
-                <i id="wp-live-chat-minimize" class="fa fa-minus" style="display:none;" ></i>
-                <i id="wp-live-chat-close" class="fa fa-times" style="display:none;" ></i>
+        if (function_exists("wplc_register_pro_version")) {
+             wplc_pro_output_box();
+        } else {
+            ?>
+            <div class="wp-live-chat-wraper">
+                <div id="wp-live-chat-header" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important; ">
+                    <i id="wp-live-chat-minimize" class="fa fa-minus" style="display:none;" ></i>
+                    <i id="wp-live-chat-close" class="fa fa-times" style="display:none;" ></i>
 
-                <div id="wp-live-chat-1" >
-                    <div style="display:block; ">
-                        <strong><?php _e("Questions?", "wplivechat") ?></strong> <?php _e("Chat with us", "wplivechat") ?>
+                    <div id="wp-live-chat-1" >
+                        <div style="display:block; ">
+                            <strong><?php _e("Questions?", "wplivechat") ?></strong> <?php _e("Chat with us", "wplivechat") ?>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="wp-live-chat-2" style="display:none;">
-                <div id="wp-live-chat-2-info">
-                    <strong><?php _e('Start Live Chat', 'wplivechat'); ?></strong> 
+                <div id="wp-live-chat-2" style="display:none;">
+                    <div id="wp-live-chat-2-info">
+                        <strong><?php _e('Start Live Chat', 'wplivechat'); ?></strong> 
+                    </div>
+                    <?php
+                    $wplc_settings = get_option("WPLC_SETTINGS");
+
+                    if (isset($wplc_settings['wplc_loggedin_user_info']) && $wplc_settings['wplc_loggedin_user_info'] == 1) {
+                        $wplc_use_loggedin_user_details = 1;
+                    } else {
+                        $wplc_use_loggedin_user_details = 0;
+                    }
+
+                    $wplc_loggedin_user_name = "";
+                    $wplc_loggedin_user_email = "";
+
+                    if ($wplc_use_loggedin_user_details == 1) {
+                        global $current_user;
+
+                        if ($current_user->data != null) {
+                            //Logged in. Get name and email
+                            $wplc_loggedin_user_name = $current_user->user_nicename;
+                            $wplc_loggedin_user_email = $current_user->user_email;
+                        }
+                    } else {
+                        $wplc_loggedin_user_name = '';
+                        $wplc_loggedin_user_email = '';
+                    }
+
+                    if (isset($wplc_settings['wplc_require_user_info']) && $wplc_settings['wplc_require_user_info'] == 1) {
+                        $wplc_ask_user_details = 1;
+                    } else {
+                        $wplc_ask_user_details = 0;
+                    }
+
+                    if ($wplc_ask_user_details == 1) {
+                        //Ask the user to enter name and email
+                        ?>
+                        <input type="text" name="wplc_name" id="wplc_name" value="<?php echo $wplc_loggedin_user_name; ?>" placeholder="<?php _e("Name", "wplivechat"); ?>" />
+                        <input type="text" name="wplc_email" id="wplc_email" wplc_hide="0" value="<?php echo $wplc_loggedin_user_email; ?>" placeholder="<?php _e("Email", "wplivechat"); ?>"  />
+                        <?php
+                    } else {
+                        //Dont ask the user
+                        echo '<div style="padding: 7px; text-align: center;">';
+                        if (isset($wplc_settings['wplc_user_alternative_text'])) {
+                            echo stripslashes($wplc_settings['wplc_user_alternative_text']);
+                        }
+                        echo '</div>';
+
+                        $wplc_random_user_number = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+                        //$wplc_loggedin_user_email = $wplc_random_user_number."@".$wplc_random_user_number.".com";
+                        ?>
+                        <input type="hidden" name="wplc_name" id="wplc_name" value="<?php if ($wplc_loggedin_user_name != '') { echo $wplc_loggedin_user_name; } else { echo 'user' . $wplc_random_user_number; } ?>" />
+                        <input type="hidden" name="wplc_email" id="wplc_email" wplc_hide="1" value="<?php if ($wplc_loggedin_user_email != '' && $wplc_loggedin_user_email != null) { echo $wplc_loggedin_user_email; } else { echo $wplc_random_user_number . '@' . $wplc_random_user_number . '.com'; } ?>" />
+                        <?php
+                    }   
+                    ?>
+                    <input id="wplc_start_chat_btn" type="button" value="<?php _e("Start Chat", "wplivechat"); ?>" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
                 </div>
-                <?php
-                $wplc_settings = get_option("WPLC_SETTINGS");
-
-                if (isset($wplc_settings['wplc_loggedin_user_info']) && $wplc_settings['wplc_loggedin_user_info'] == 1) {
-                    $wplc_use_loggedin_user_details = 1;
-                } else {
-                    $wplc_use_loggedin_user_details = 0;
-                }
-
-                $wplc_loggedin_user_name = "";
-                $wplc_loggedin_user_email = "";
-
-                if ($wplc_use_loggedin_user_details == 1) {
-                    global $current_user;
-
-                    if ($current_user->data != null) {
-                        //Logged in. Get name and email
-                        $wplc_loggedin_user_name = $current_user->user_nicename;
-                        $wplc_loggedin_user_email = $current_user->user_email;
-                    }
-                } else {
-                    $wplc_loggedin_user_name = '';
-                    $wplc_loggedin_user_email = '';
-                }
-
-                if (isset($wplc_settings['wplc_require_user_info']) && $wplc_settings['wplc_require_user_info'] == 1) {
-                    $wplc_ask_user_details = 1;
-                } else {
-                    $wplc_ask_user_details = 0;
-                }
-
-                if ($wplc_ask_user_details == 1) {
-                    //Ask the user to enter name and email
-                    ?>
-                    <input type="text" name="wplc_name" id="wplc_name" value="<?php echo $wplc_loggedin_user_name; ?>" placeholder="<?php _e("Name", "wplivechat"); ?>" />
-                    <input type="text" name="wplc_email" id="wplc_email" wplc_hide="0" value="<?php echo $wplc_loggedin_user_email; ?>" placeholder="<?php _e("Email", "wplivechat"); ?>"  />
-                    <?php
-                } else {
-                    //Dont ask the user
-                    echo '<div style="padding: 7px; text-align: center;">';
-                    if (isset($wplc_settings['wplc_user_alternative_text'])) {
-                        echo stripslashes($wplc_settings['wplc_user_alternative_text']);
-                    }
-                    echo '</div>';
-
-                    $wplc_random_user_number = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
-                    //$wplc_loggedin_user_email = $wplc_random_user_number."@".$wplc_random_user_number.".com";
-                    ?>
-                    <input type="hidden" name="wplc_name" id="wplc_name" value="<?php if ($wplc_loggedin_user_name != '') { echo $wplc_loggedin_user_name; } else { echo 'user' . $wplc_random_user_number; } ?>" />
-                    <input type="hidden" name="wplc_email" id="wplc_email" wplc_hide="1" value="<?php if ($wplc_loggedin_user_email != '' && $wplc_loggedin_user_email != null) { echo $wplc_loggedin_user_email; } else { echo $wplc_random_user_number . '@' . $wplc_random_user_number . '.com'; } ?>" />
-                    <?php
-                }   
-                ?>
-                <input id="wplc_start_chat_btn" type="button" value="<?php _e("Start Chat", "wplivechat"); ?>" style="background-color: <?php echo $wplc_settings_fill; ?> !important; color: <?php echo $wplc_settings_font; ?> !important;"/>
-            </div>
-            <div id="wp-live-chat-3" style="display:none;">
-                <p><?php _e("Connecting you to a sales person. Please be patient.", "wplivechat") ?></p>
-            </div>
-            <div id="wp-live-chat-react" style="display:none;">
-                <p><?php _e("Reactivating your previous chat...", "wplivechat") ?></p>
-            </div>
-            <div id="wp-live-chat-4" style="display:none;">
-                <div id="wplc_sound_update" style='height:0; width:0; display:none; border:0;'></div>
-                <div id="wplc_chatbox"></div>
-                <p style="text-align:center; font-size:11px;"><?php _e("Press ENTER to send your message", "wplivechat") ?></p>
-                <p>
-                    <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
-                    <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
-                    <input id="wplc_send_msg" type="button" value="<?php _e("Send", "wplivechat"); ?>" style="display:none;" />
-                </p>
-            </div>
-        </div>    
-    <?php } ?>
+                <div id="wp-live-chat-3" style="display:none;">
+                    <p><?php _e("Connecting you to a sales person. Please be patient.", "wplivechat") ?></p>
+                </div>
+                <div id="wp-live-chat-react" style="display:none;">
+                    <p><?php _e("Reactivating your previous chat...", "wplivechat") ?></p>
+                </div>
+                <div id="wp-live-chat-4" style="display:none;">
+                    <div id="wplc_sound_update" style='height:0; width:0; display:none; border:0;'></div>
+                    <div id="wplc_chatbox"></div>
+                    <p style="text-align:center; font-size:11px;"><?php _e("Press ENTER to send your message", "wplivechat") ?></p>
+                    <p>
+                        <input type="text" name="wplc_chatmsg" id="wplc_chatmsg" value="" />
+                        <input type="hidden" name="wplc_cid" id="wplc_cid" value="" />
+                        <input id="wplc_send_msg" type="button" value="<?php _e("Send", "wplivechat"); ?>" style="display:none;" />
+                    </p>
+                </div>
+            </div>    
+        <?php } ?>
 </div> 
 <?php
 
@@ -544,6 +550,8 @@ function wplc_display_box() {
 
     if(function_exists('wplc_is_user_banned')){
         $user_banned = wplc_is_user_banned();
+    } else if (function_exists('wplc_is_user_banned')){
+        $user_banned = wplc_is_user_banned_basic();
     } else {
         $user_banned = 0;
     }
@@ -572,14 +580,14 @@ function wplc_display_box() {
             if ($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile']) && $wplc_settings['wplc_enabled_on_mobile'] != 1) {
                 return;
             }
-            if(function_exists('wplc_hide_chat_when_offline')){                
+            if (function_exists('wplc_hide_chat_when_offline')) {
                 $wplc_hide_chat = wplc_hide_chat_when_offline();
-                if(!$wplc_hide_chat){
+                if (!$wplc_hide_chat) {
                     wplc_pro_draw_user_box();
                 }
             } else {
                 wplc_pro_draw_user_box();
-            }                        
+            }
         } else {
             wplc_draw_user_box();
         }
@@ -607,6 +615,7 @@ function wplc_admin_display_chat($cid) {
 }
 
 function wplc_admin_accept_chat($cid) {
+    
     wplc_change_chat_status($cid, 3);
     return true;
 }
@@ -1354,6 +1363,11 @@ function wplc_add_user_stylesheet() {
         wp_register_style('wplc-style', plugins_url('/css/wplcstyle.css', __FILE__));
         wp_enqueue_style('wplc-style');
     }
+    if(function_exists('wplc_ce_activate')){
+        if(function_exists('wplc_ce_load_user_styles')){
+            wplc_ce_load_user_styles();
+        }
+    }
 }
 
 function wplc_add_admin_stylesheet() {
@@ -1382,7 +1396,7 @@ function wplc_admin_scripts_basic() {
     if (isset($_GET['page']) && $_GET['page'] == "wplivechat-menu-settings") {
         wp_enqueue_script('jquery');
         wp_enqueue_script('jquery-ui-core');
-
+        wp_enqueue_script('jquery-ui-tooltip');	
         wp_register_script('my-wplc-color', plugins_url('js/jscolor.js', __FILE__), false, '1.4.1', false);
         wp_enqueue_script('my-wplc-color');
         wp_enqueue_script('jquery-ui-tabs');
@@ -1397,7 +1411,10 @@ function wplc_admin_settings_layout() {
 
 function wplc_admin_history_layout() {
     echo"<div class=\"wrap\"><div id=\"icon-edit\" class=\"icon32 icon32-posts-post\"><br></div><h2>" . __("WP Live Chat History", "wplivechat") . "</h2>";
-    if (function_exists("wplc_register_pro_version")) {
+    
+    if(function_exists("wplc_ce_activate")){
+        wplc_ce_admin_display_history();
+    } else if (function_exists("wplc_register_pro_version")) {
         wplc_pro_admin_display_history();
     } else {
         echo "<br /><br >" . __('This option is only available in the ', 'wplivechat') . "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Pro Add-on', 'wplivechat') . "</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Get it now for only $19.95 once off!', 'wplivechat') . "</a>";
@@ -1475,6 +1492,16 @@ function wplc_head_basic() {
         
         if(isset($_POST['wplc_record_ip_address'])){
             $wplc_data['wplc_record_ip_address'] = esc_attr($_POST['wplc_record_ip_address']);
+        }
+        
+        if(isset($_POST['wplc_ban_users_ip'])){
+            $wplc_banned_ip_addresses = explode('<br />', nl2br($_POST['wplc_ban_users_ip']));
+            foreach($wplc_banned_ip_addresses as $key => $value) {
+                $data[$key] = trim($value);
+            }
+            $wplc_banned_ip_addresses = maybe_serialize($data);
+
+            update_option('WPLC_BANNED_IP_ADDRESSES', $wplc_banned_ip_addresses);
         }
 
         update_option('WPLC_SETTINGS', $wplc_data);

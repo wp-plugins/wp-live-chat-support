@@ -26,6 +26,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Desktop Notifications when receiving new Live Chats
 * View any live chats you may have missed
 * A comprehensive list of live chat options
+* Ban visitors from chatting to you based on IP Address
 
 
 = Pro Version Features =
@@ -47,7 +48,6 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Apply animations to the chat window
 * Anonymity for your visitors
 * Choose when to accept chats
-* Ban visitors from chatting to you based on IP Address
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
@@ -171,6 +171,12 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.3.0 2015-04-13 - Low Priority =
+* Enhancement: Animations settings have been moved to the 'Styling' tab.
+* New Feature: Blocked User functionality has been moved to the Free version
+* Enhancement: All descriptions have been put into tooltips for a cleaner page
+* New Feature: Functionality added in to handle Chat Experience Ratings (Premium Add-on)
 
 = 4.2.12 2015-03-24 - Low Priority =
 * Bug Fix: Warning to update showing erroneously 

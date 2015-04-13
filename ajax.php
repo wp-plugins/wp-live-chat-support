@@ -13,7 +13,9 @@ define('SHORTINIT', true);
 require_once( '../../../wp-load.php' );
 
 
-define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailing slash
+if (!defined('WP_PLUGIN_DIR')) {
+    define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' ); // full path, no trailing slash
+}
 
 $iterations = 55; 
 /* time in microseconds between updating the user on the page within the DB  (lower number = higher resource usage) */
@@ -146,8 +148,8 @@ if ($check == 1) {
     }
     if ($_POST['action'] == "wplc_admin_close_chat") {
         $chat_id = sanitize_text_field($_POST['cid']);
-        wplc_change_chat_status($chat_id,1);
-        echo 'done';
+        wplc_change_chat_status($chat_id,1);        
+        echo 'done';        
     }
     if ($_POST['action'] == "wplc_admin_send_msg") {
         $chat_id = sanitize_text_field($_POST['cid']);
