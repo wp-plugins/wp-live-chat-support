@@ -3,7 +3,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
 Requires at least: 3.8
-Tested up to: 4.1
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2
 
@@ -52,10 +52,10 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
 
 = Coming soon =
-* (March 2015) (Free & Pro) Improvements - Better link and image handling within the live chat text area
-* (March 2015) (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
-* (March 2015) (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
-* (March 2015) (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
+* (Free & Pro) Improvements - Better link and image handling within the live chat text area
+* (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
+* (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
+* (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
 
 = 30 second live chat installation =
 
@@ -98,6 +98,8 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Norwegian (Robert Nilsen)
 * Hungarian (GInception)
 * Indonesian (Andrie Willyanta)
+* Finnish (Arttu Piipponen)
+* Dutch (Niek Groot Bleumink) 
 * Chinese - Simplified^
 * Chinese - Traditional^
 
@@ -171,6 +173,14 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.3.1 2015-05-22 - Low Priority =
+* New Translations:
+*  Finnish (Thank you Arttu Piipponen)
+* Translations Updated:
+*  French (Thank you Marcello Cavalucci)
+*  Dutch (Thank you Niek Groot Bleumink) 
+* Bug Fix: Exclude Functionality (Pro)
 
 = 4.3.0 2015-04-13 - Low Priority =
 * Enhancement: Animations settings have been moved to the 'Styling' tab.
