@@ -174,6 +174,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.3.2 2015-05-28 - Medium Priority =
+* Bug Fix: Fixed PHP error
+
 = 4.3.1 2015-05-22 - Low Priority =
 * New Translations:
 *  Finnish (Thank you Arttu Piipponen)
