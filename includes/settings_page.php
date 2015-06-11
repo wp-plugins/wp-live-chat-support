@@ -65,8 +65,8 @@
                         <i> 
                             <?php _e("available in the","wplivechat")?> 
                             <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=name" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a> 
-                            <?php _e("only","wplivechat")?>.
-                            $19.95 <?php _e(" once off. Updates included forever.","wplivechat"); ?>
+                            <?php _e("only","wplivechat")?>
+                            $19.95. <?php _e(" Updates included forever.","wplivechat"); ?>
                         </i>
                     </small>
                   </td>

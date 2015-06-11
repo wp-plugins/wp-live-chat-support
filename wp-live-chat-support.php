@@ -3,13 +3,18 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.3.2
+  Version: 4.3.3
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.3.2 2015-05-28 - Medium Priority
+/* 4.3.3 2015-06-11 - Low Priority
+ * Security enhancements
+ * New Translations:
+ *  Polish (Thank you Sebastian Kajzer)
+ * 
+ * 4.3.2 2015-05-28 - Medium Priority
  * Bug Fix: Fixed PHP error
  * 
  * 4.3.1 2015-05-22 - Low Priority
@@ -193,7 +198,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.3.02";
+$wplc_version = "4.3.03";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -356,7 +361,7 @@ function wplc_draw_user_box() {
     wp_localize_script('wplc-user-script', 'wplc_display_name', $wplc_display);
 
     if (isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != "") {
-        $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email'])));
+        $wplc_user_gravatar = sanitize_text_field(md5(strtolower(trim($_COOKIE['wplc_email']))));
     } else {
         $wplc_user_gravatar = "";
     }
@@ -916,8 +921,6 @@ function wplc_admin_menu_layout_display() {
         </div>
         <div id="wplc_sound"></div>
 
-        <!----->
-
         <div class="wplc_admin_dashboard_container">
             <div id="wplc_sound"></div>
             <div id="wplc_admin_chat_area">
@@ -936,9 +939,9 @@ function wplc_admin_menu_layout_display() {
                     <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
                         <?php _e("see who's online and initiate chats", "wplivechat"); ?>
                     </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
-                    <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95 once off. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
+                    <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
                         <strong>
-                            <?php _e("Buy the Pro add-on now for only $19.95 once off. Free Updates Forever.", "wplivechat"); ?>
+                            <?php _e("Buy the Pro add-on now for only $19.95. Free Updates Forever.", "wplivechat"); ?>
                         </strong>
                     </a>
                 </p>
@@ -1073,7 +1076,7 @@ function wplc_return_admin_chat_javascript($cid) {
         $display_name = 'hide';
     }
     if (isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != "") {
-        $wplc_user_email_address = $_COOKIE['wplc_email'];
+        $wplc_user_email_address = sanitize_text_field($_COOKIE['wplc_email']);
     } else {
         $wplc_user_email_address = "";
     }
@@ -1437,7 +1440,7 @@ function wplc_admin_history_layout() {
     } else if (function_exists("wplc_register_pro_version")) {
         wplc_pro_admin_display_history();
     } else {
-        echo "<br /><br >" . __('This option is only available in the ', 'wplivechat') . "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Pro Add-on', 'wplivechat') . "</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Get it now for only $19.95 once off!', 'wplivechat') . "</a>";
+        echo "<br /><br >" . __('This option is only available in the ', 'wplivechat') . "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Pro Add-on', 'wplivechat') . "</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history2\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Get it now for only $19.95', 'wplivechat') . "</a>";
     }
 }
 
@@ -1457,7 +1460,7 @@ function wplc_admin_offline_messages() {
             echo "<div class='updated'><p>" . __('Please update to the latest version of WP Live Chat Support Pro to start recording any offline messages.', 'wplivechat') . "</p></div>";
         }
     } else {
-        echo "<br /><br >" . _('This option is only available in the ', 'wplivechat') . "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Pro Add-on', 'wplivechat') . "</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=missed_chats2\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Get it now for only $19.95 once off!', 'wplivechat') . "</a>";
+        echo "<br /><br >" . _('This option is only available in the ', 'wplivechat') . "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=history1\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Pro Add-on', 'wplivechat') . "</a> of WP Live Chat. <a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=missed_chats2\" title=\"" . __("Pro Add-on", "wplivechat") . "\" target=\"_BLANK\">" . __('Get it now for only $19.95.', 'wplivechat') . "</a>";
     }
 }
 

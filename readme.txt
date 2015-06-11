@@ -11,7 +11,7 @@ Fully functional Live Chat plugin. Chat with your visitors for free! No need for
 
 == Description ==
 
-The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party connections or subscriptions required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so using WP Live Chat Support.
+The most cost effective Live Chat plugin. Chat with your visitors for free! WP Live Chat Support is perfect for small businesses. No third party connections required. There's no need to pay for live chat monthly subscriptions in order to better understand your visitors. This is a fully functional live chat plugin. Increase your conversion rates by communicating directly with your visitors when they're ready to do so using WP Live Chat Support.
 
 = Free Version Features =
 
@@ -31,7 +31,6 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 
 = Pro Version Features =
 
-* Pay once and never again for WP Live Chat Support Pro
 * Unlimited live chat agents
 * Initiate live chats with online visitors
 * Chat to more than one visitor at a time
@@ -49,7 +48,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Anonymity for your visitors
 * Choose when to accept chats
 
-Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95 once off!
+Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95!
 
 = Coming soon =
 * (Free & Pro) Improvements - Better link and image handling within the live chat text area
@@ -71,7 +70,7 @@ One of the most important tasks of your website is to educate potential customer
 * Live chat is convenient for customers
 * Live chat builds trust with your potential customers
 * Increase sales by using live chat
-* Take advantage of a fully functional live chat plugin for free. Get Pro features for a once off fee
+* Take advantage of a fully functional live chat plugin for free. Get Pro features for only $29.95!
 * Reduce costs by using live chat on your website with minimum staff
 * Learn to understand the pain points of your customers
 
@@ -100,6 +99,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Indonesian (Andrie Willyanta)
 * Finnish (Arttu Piipponen)
 * Dutch (Niek Groot Bleumink) 
+* Polish (Sebastian Kajzer)
 * Chinese - Simplified^
 * Chinese - Traditional^
 
@@ -173,6 +173,11 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.3.3 2015-06-11 - Low Priority =
+* Security enhancements
+* New Translations:
+*  Polish (Thank you Sebastian Kajzer)
 
 = 4.3.2 2015-05-28 - Medium Priority =
 * Bug Fix: Fixed PHP error
