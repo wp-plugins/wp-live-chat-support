@@ -308,7 +308,7 @@ function wplc_return_user_chat_messages($cid) {
         } else {
             $class = "wplc-user-message";
             
-            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim(sanitize_text_field($_COOKIE['wplc_email'])))); } else { $wplc_user_gravatar = ""; }
         
             if($wplc_user_gravatar != ""){
                 $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
@@ -397,7 +397,7 @@ function wplc_return_chat_messages($cid) {
         } else {
             $class = "wplc-user-message";
             
-            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim(sanitize_text_field($_COOKIE['wplc_email'])))); } else { $wplc_user_gravatar = ""; }
         
             if($wplc_user_gravatar != ""){
                 $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";

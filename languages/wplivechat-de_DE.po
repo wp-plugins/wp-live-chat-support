@@ -535,7 +535,7 @@ msgstr "Benutzer hat das Chat-Fenster maximiert"
 #: wp-live-chat-support.php:1140
 #@ wplivechat
 msgid "User has closed and ended the chat"
-msgstr "Benutzer hat das Chat-Fenster geschossen und den Chat beendet"
+msgstr "Benutzer hat das Chat-Fenster geschlossen und den Chat beendet"
 
 #: wp-live-chat-support.php:258
 #@ wplivechat

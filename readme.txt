@@ -74,6 +74,9 @@ One of the most important tasks of your website is to educate potential customer
 * Reduce costs by using live chat on your website with minimum staff
 * Learn to understand the pain points of your customers
 
+= Have the choice to use your website or our server to host your live chat =
+
+You now have the choice to host your live chat on either your own website (using your own resources) or our live chat server (using our resources). Making use of our live chat server will improve your chat's performance by up to 300% and reduce the load on your host. Although we initially built our live chat plugin to be used on your own website and for you to host your own live chat server, we now offer you the ability to make use of an offsite live chat server - this is perfect for users that are on low-level hosting packages, or users that are more concerned about live chat performance and chat security.
 
 = Translations =
 Get a free copy of the WP Live Chat Support Pro version in exchange for translating our plugin!
@@ -173,6 +176,10 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.3.4 Ristretto - 2015-06-26 - Low Priority =
+* Improvement: 404 errors for images in admin panel fixed
+* Translation Fix: Mistakes fixed in German Translation file.
 
 = 4.3.3 2015-06-11 - Low Priority =
 * Security enhancements
