@@ -47,6 +47,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Apply animations to the chat window
 * Anonymity for your visitors
 * Choose when to accept chats
+* Encrypt your live chat conversations
 
 Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95!
 
@@ -98,7 +99,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Dutch (Elsy Aelvoet)
 * Greek (Peter Stavropoulos)
 * Norwegian (Robert Nilsen)
-* Hungarian (GInception)
+* Hungarian (GInception & Andor Molnar)
 * Indonesian (Andrie Willyanta)
 * Finnish (Arttu Piipponen)
 * Dutch (Niek Groot Bleumink) 
@@ -176,6 +177,11 @@ If the live chat box still does not appear on your website, please go through th
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.3.5 Espresso - 2015-07-03 - Low Priority =
+* Enhancement: Provision made for live chat encryption in the Pro version (compatibility)
+* Updated Translations:
+*  Hungarian (Thank you Andor Molnar)
 
 = 4.3.4 Ristretto - 2015-06-26 - Low Priority =
 * Improvement: 404 errors for images in admin panel fixed

@@ -7,7 +7,6 @@
     <div id="icon-edit" class="icon32 icon32-posts-post">
         <br>
     </div>
-    <!--<i class="fa fa-question-circle wplc_light_grey wplc_settings_tooltip" title=""></i>-->
     <h2><?php _e("WP Live Chat Support Settings","wplivechat")?></h2>
     <?php
         $wplc_settings = get_option("WPLC_SETTINGS");
@@ -22,12 +21,13 @@
     
     <div id="wplc_tabs">
       <ul>
-        <li><a href="#tabs-1"><?php _e("General Settings","wplivechat")?></a></li>
-        <li><a href="#tabs-2"><?php _e("Chat Box","wplivechat")?></a></li>
-        <li><a href="#tabs-3"><?php _e("Offline Messages","wplivechat")?></a></li>
-        <li><a href="#tabs-4"><?php _e("Styling","wplivechat")?></a></li>
-        <li><a href="#tabs-5"><?php _e("Agents", "wplivechat") ?></a></li>
-        <li><a href="#tabs-7"><?php _e("Blocked Visitors", "wplivechat") ?></a></li>
+        <li><a href="#tabs-1"><i class="fa fa-gear"></i> <?php _e("General Settings","wplivechat")?></a></li>
+        <li><a href="#tabs-2"><i class="fa fa-envelope"></i> <?php _e("Chat Box","wplivechat")?></a></li>
+        <li><a href="#tabs-3"><i class="fa fa-book"></i> <?php _e("Offline Messages","wplivechat")?></a></li>
+        <li><a href="#tabs-4"><i class="fa fa-pencil"></i> <?php _e("Styling","wplivechat")?></a></li>
+        <li><a href="#tabs-5"><i class="fa fa-users"></i> <?php _e("Agents", "wplivechat") ?></a></li>
+        <li><a href="#tabs-7"><i class="fa fa-gavel"></i> <?php _e("Blocked Visitors", "wplivechat") ?></a></li>
+        <li><a href="#tabs-8"><i class="fa fa-lock"></i> <?php _e("Encryption", "wplivechat") ?></a></li>
       </ul>
       <div id="tabs-1">
           <h3><?php _e("Main Settings",'wplivechat')?></h3>
@@ -458,6 +458,23 @@
                 }
             ?></textarea>  
             <p class="description"><?php _e('Blocking a user\'s IP Address here will hide the chat window from them, preventing them from chatting with you. Each IP Address must be on a new line', 'wplivechat'); ?></p>
+        </div>
+        <div id="tabs-8">
+            <h3><?php _e("Chat Encryption", "wplivechat") ?></h3>
+            <table class='form-table' width='700'>
+                <tr>
+                    <td width='200' valign='top'><?php _e("Enable Encryption", "wplivechat") ?>: <i class="fa fa-question-circle wplc_light_grey wplc_settings_tooltip" title="<?php _e('All messages will be encrypted when being sent to and from the user and agent.', 'wplivechat'); ?>"></i></td> 
+                    <td>
+                        <input type="checkbox" disabled readonly/>
+                        <small>
+                            <i> <?php _e("Encrypt your chat messages in the ","wplivechat")?> 
+                                <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=encryption" title="<?php _e("Pro Add-on","wplivechat")?>" target="_BLANK"><?php _e("Pro Add-on","wplivechat")?></a>
+                            </i>
+                        </small>
+                    </td>
+                </tr>
+                
+            </table>
         </div>
     </div>
     <p class='submit'><input type='submit' name='wplc_save_settings' class='button-primary' value='<?php _e("Save Settings","wplivechat")?>' /></p>

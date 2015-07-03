@@ -3,13 +3,18 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.3.4
+  Version: 4.3.5
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.3.4 Ristretto - 2015-06-26 - Low Priority
+/* 4.3.5 Espresso - 2015-07-03 - Low Priority
+ * Enhancement: Provision made for live chat encryption in the Pro version (compatibility)
+ * Updated Translations:
+ *  Hungarian (Thank you Andor Molnar)
+ * 
+ * 4.3.4 Ristretto - 2015-06-26 - Low Priority
  * Improvement: 404 errors for images in admin panel fixed
  * Translation Fix: Mistakes fixed in German Translation file.
  * 
@@ -202,7 +207,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.3.04";
+$wplc_version = "4.3.05";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -704,9 +709,9 @@ function wplc_superadmin_javascript() {
                 if (Notification.permission !== "granted")
                     Notification.requestPermission();
 
-                var wplc_desktop_notification = new Notification('New chat received', {
+                var wplc_desktop_notification = new Notification('<?php _e('New chat received', 'wplivechat'); ?>', {
                     icon: wplc_notification_icon_url,
-                    body: "A new chat has been received. Please go the 'Live Chat' page to accept the chat"
+                    body: "<?php _e("A new chat has been received. Please go the 'Live Chat' page to accept the chat", "wplivechat"); ?>"
                 });
                 //Notification.close()
             }
