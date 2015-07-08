@@ -452,6 +452,13 @@ jQuery(document).ready(function() {
             str=str.replace(/<p.*>/gi, "\n");
             str=str.replace(/<a.*href="(.*?)".*>(.*?)<\/a>/gi, " $2 ($1) ");
             str=str.replace(/<(?:.|\s)*?>/g, "");
+
+            str=str.replace('iframe', "");    
+            str=str.replace('src', "");    
+            str=str.replace('href', "");  
+            str=str.replace('<', "");  
+            str=str.replace('>', "");  
+
             return str;
         }
 

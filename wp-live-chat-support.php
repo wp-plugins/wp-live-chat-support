@@ -3,13 +3,16 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.3.5
+  Version: 4.4.0
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.3.5 Espresso - 2015-07-03 - Low Priority
+/* 4.4.0 - 2015-07-08 - Critical Priority
+ * Major security update. Please ensure you update to this version to eliminate previous vulnerabilities.
+ * 
+ * 4.3.5 Espresso - 2015-07-03 - Low Priority
  * Enhancement: Provision made for live chat encryption in the Pro version (compatibility)
  * Updated Translations:
  *  Hungarian (Thank you Andor Molnar)
@@ -207,12 +210,13 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.3.05";
+$wplc_version = "4.4.00";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
 global $wplc_basic_plugin_url;
 $wplc_basic_plugin_url = get_option('siteurl') . "/wp-content/plugins/wp-live-chat-support/";
+
 require_once (plugin_dir_path(__FILE__) . "functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
 add_action('init', 'wplc_version_control');
@@ -247,7 +251,9 @@ function wplc_basic_check() {
 
 function wplc_init() {
     $plugin_dir = basename(dirname(__FILE__)) . "/languages/";
-    load_plugin_textdomain('wplivechat', false, $plugin_dir);           
+    load_plugin_textdomain('wplivechat', false, $plugin_dir);        
+    
+
 }
 
 function wplc_version_control() {
@@ -648,9 +654,8 @@ function wplc_admin_display_chat($cid) {
     echo $msg_hist;
 }
 
-function wplc_admin_accept_chat($cid) {
-    
-    wplc_change_chat_status($cid, 3);
+function wplc_admin_accept_chat($cid) {   
+    wplc_change_chat_status(sanitize_text_field($cid), 3);
     return true;
 }
 
@@ -669,9 +674,9 @@ function wplc_superadmin_javascript() {
         } // main page
         else if (isset($_GET['action'])) {
             if (function_exists("wplc_register_pro_version")) {
-                wplc_return_pro_admin_chat_javascript($_GET['cid']);
+                wplc_return_pro_admin_chat_javascript(sanitize_text_field($_GET['cid']));
             } else {
-                wplc_return_admin_chat_javascript($_GET['cid']);
+                wplc_return_admin_chat_javascript(sanitize_text_field($_GET['cid']));
             }
         }
     }
@@ -912,62 +917,65 @@ function wplc_admin_menu_layout() {
 }
 
 function wplc_admin_menu_layout_display() {
-    if (!isset($_GET['action'])) {
-        ?>
-        <div style='float:right; display:block; width:450px;  padding:10px; text-align:center; background-color: #EEE; border: 1px solid #E6DB55; margin:10px;'>
-            <strong><?php _e("Experiencing problems with the plugin?", "wplivechat") ?></strong>
-            <br />
-            <a href='http://wp-livechat.com/documentation/' title='WP Live Chat Support Documentation' target='_BLANK'><?php _e("Review the documentation.", "wplivechat") ?></a> 
-        <?php _e("Or ask a question on our", "wplivechat") ?>  <a href='http://wp-livechat.com/forums/forum/support/' title='WP Live Chat Support Forum' target='_BLANK'><?php _e('Support forum.', 'wplivechat'); ?></a>
-        </div>
-        <br/>
-        <br/>
-        <br/>
-        <div class='wplc_page_title'>
-            <h1><?php _e("Chat sessions", "wplivechat"); ?></h1>
+    if(current_user_can('wplc_ma_agent') || current_user_can('manage_options')){
+        
+        if (!isset($_GET['action'])) {
+            ?>
+            <div style='float:right; display:block; width:450px;  padding:10px; text-align:center; background-color: #EEE; border: 1px solid #E6DB55; margin:10px;'>
+                <strong><?php _e("Experiencing problems with the plugin?", "wplivechat") ?></strong>
+                <br />
+                <a href='http://wp-livechat.com/documentation/' title='WP Live Chat Support Documentation' target='_BLANK'><?php _e("Review the documentation.", "wplivechat") ?></a> 
+            <?php _e("Or ask a question on our", "wplivechat") ?>  <a href='http://wp-livechat.com/forums/forum/support/' title='WP Live Chat Support Forum' target='_BLANK'><?php _e('Support forum.', 'wplivechat'); ?></a>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div class='wplc_page_title'>
+                <h1><?php _e("Chat sessions", "wplivechat"); ?></h1>
 
-            <p><?php _e("Please note: This window must be open in order to receive new chat notifications.", "wplivechat"); ?></p>
-        </div>
-        <div id="wplc_sound"></div>
-
-        <div class="wplc_admin_dashboard_container">
+                <p><?php _e("Please note: This window must be open in order to receive new chat notifications.", "wplivechat"); ?></p>
+            </div>
             <div id="wplc_sound"></div>
-            <div id="wplc_admin_chat_area">
-        <?php
-        if (function_exists("wplc_register_pro_version")) {
-            echo wplc_list_chats_pro();
-        } else {
-            echo wplc_list_chats();
-        }
-        ?>
-            </div>
-            <div id="wplc_admin_visitor_area">
-                <h1><?php _e("Visitors on site", "wplivechat") ?></h1>    
-                <p>
-                    <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
-                    <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
-                        <?php _e("see who's online and initiate chats", "wplivechat"); ?>
-                    </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
-                    <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
-                        <strong>
-                            <?php _e("Buy the Pro add-on now for only $19.95. Free Updates Forever.", "wplivechat"); ?>
-                        </strong>
-                    </a>
-                </p>
-            </div>
-        </div>
 
-        <?php
-    } else {
-        if ($_GET['action'] == 'ac') {
-            wplc_change_chat_status($_GET['cid'], 3);
-            if (function_exists('wplc_ma_register')) {
-                wplc_ma_update_agent_id($_GET['cid'], $_GET['agent_id']);
-            }
+            <div class="wplc_admin_dashboard_container">
+                <div id="wplc_sound"></div>
+                <div id="wplc_admin_chat_area">
+            <?php
             if (function_exists("wplc_register_pro_version")) {
-                wplc_pro_draw_chat_area($_GET['cid']);
+                echo wplc_list_chats_pro();
             } else {
-                wplc_draw_chat_area($_GET['cid']);
+                echo wplc_list_chats();
+            }
+            ?>
+                </div>
+                <div id="wplc_admin_visitor_area">
+                    <h1><?php _e("Visitors on site", "wplivechat") ?></h1>    
+                    <p>
+                        <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
+                        <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
+                            <?php _e("see who's online and initiate chats", "wplivechat"); ?>
+                        </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
+                        <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
+                            <strong>
+                                <?php _e("Buy the Pro add-on now for only $19.95. Free Updates Forever.", "wplivechat"); ?>
+                            </strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <?php
+        } else {
+            if ($_GET['action'] == 'ac') {
+                wplc_change_chat_status(sanitize_text_field($_GET['cid']), 3);
+                if (function_exists('wplc_ma_register')) {
+                    wplc_ma_update_agent_id(sanitize_text_field($_GET['cid']), sanitize_text_field($_GET['agent_id']));
+                }
+                if (function_exists("wplc_register_pro_version")) {
+                    wplc_pro_draw_chat_area(sanitize_text_field($_GET['cid']));
+                } else {
+                    wplc_draw_chat_area(sanitize_text_field($_GET['cid']));
+                }
             }
         }
     }
@@ -1267,12 +1275,20 @@ function wplc_return_admin_chat_javascript($cid) {
             });
 
             function wplc_strip(str) {
-                str = str.replace(/<br>/gi, "\n");
-                str = str.replace(/<p.*>/gi, "\n");
-                str = str.replace(/<a.*href="(.*?)".*>(.*?)<\/a>/gi, " $2 ($1) ");
-                str = str.replace(/<(?:.|\s)*?>/g, "");
+                str=str.replace(/<br>/gi, "\n");
+                str=str.replace(/<p.*>/gi, "\n");
+                str=str.replace(/<a.*href="(.*?)".*>(.*?)<\/a>/gi, " $2 ($1) ");
+                str=str.replace(/<(?:.|\s)*?>/g, "");
+
+                str=str.replace('iframe', "");    
+                str=str.replace('src', "");    
+                str=str.replace('href', "");  
+                str=str.replace('<', "");  
+                str=str.replace('>', "");  
+
                 return str;
             }
+            
             jQuery("#wplc_admin_send_msg").on("click", function () {
                 var wplc_cid = jQuery("#wplc_admin_cid").val();
                 var wplc_chat = wplc_strip(document.getElementById('wplc_admin_chatmsg').value);
@@ -1531,14 +1547,14 @@ function wplc_head_basic() {
             foreach($wplc_banned_ip_addresses as $key => $value) {
                 $data[$key] = trim($value);
             }
-            $wplc_banned_ip_addresses = maybe_serialize($data);
+            $wplc_banned_ip_addresses = maybe_serialize(sanitize_text_field($data));
 
             update_option('WPLC_BANNED_IP_ADDRESSES', $wplc_banned_ip_addresses);
         }
 
         update_option('WPLC_SETTINGS', $wplc_data);
         if (isset($_POST['wplc_hide_chat'])) {
-            update_option("WPLC_HIDE_CHAT", $_POST['wplc_hide_chat']);
+            update_option("WPLC_HIDE_CHAT", esc_attr($_POST['wplc_hide_chat']));
         }
 
 

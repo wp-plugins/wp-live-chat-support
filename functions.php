@@ -18,23 +18,44 @@ function wplc_log_user_on_page($name,$email,$session) {
             'user_agent' => $_SERVER['HTTP_USER_AGENT']
         );
     }
-    
-    
-    
-    
-    $ins_array = array(
-        'status' => '5',
-        'timestamp' => date("Y-m-d H:i:s"),
-        'name' => $name,
-        'email' => $email,
-        'session' => $session,
-        'ip' => maybe_serialize($user_data),
-        'url' => $_SERVER['HTTP_REFERER'],
-        'last_active_timestamp' => date("Y-m-d H:i:s")
+
+//    $ins_array = array(
+//        'status' => '5',
+//        'timestamp' => date("Y-m-d H:i:s"),
+//        'name' => $name,
+//        'email' => $email,
+//        'session' => $session,
+//        'ip' => maybe_serialize($user_data),
+//        'url' => $_SERVER['HTTP_REFERER'],
+//        'last_active_timestamp' => date("Y-m-d H:i:s")
+//    );
+//
+//    $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
+
+    $wpdb->insert( 
+	$wplc_tblname_chats, 
+	array( 
+            'status' => '5', 
+            'timestamp' => current_time('mysql'),
+            'name' => $name,
+            'email' => $email,
+            'session' => $session,
+            'ip' => maybe_serialize($user_data),
+            'url' => $_SERVER['HTTP_REFERER'],
+            'last_active_timestamp' => current_time('mysql')
+	), 
+	array( 
+            '%s', 
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s'
+	) 
     );
-
-    $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
-
+    
     $lastid = $wpdb->insert_id;
 
 
@@ -42,6 +63,7 @@ function wplc_log_user_on_page($name,$email,$session) {
 
 }
 function wplc_update_user_on_page($cid, $status = 5,$session) {
+
     global $wpdb;
     global $wplc_tblname_chats;
     $wplc_settings = get_option('WPLC_SETTINGS');
@@ -58,22 +80,43 @@ function wplc_update_user_on_page($cid, $status = 5,$session) {
         );
     }
     
-    $query =
-        "
-    UPDATE $wplc_tblname_chats
-        SET
-            `url` = '".$_SERVER['HTTP_REFERER']."',
-            `last_active_timestamp` = '".date("Y-m-d H:i:s")."',
-            `ip` = '".maybe_serialize($user_data)."',
-            `status` = '$status',
-            `session` = '$session'
+//    $query =
+//        "
+//    UPDATE $wplc_tblname_chats
+//        SET
+//            `url` = '".$_SERVER['HTTP_REFERER']."',
+//            `last_active_timestamp` = '".date("Y-m-d H:i:s")."',
+//            `ip` = '".maybe_serialize($user_data)."',
+//            `status` = '$status',
+//            `session` = '$session'
+//
+//        WHERE `id` = '$cid'
+//        LIMIT 1
+//    ";
+//    $results = $wpdb->query($query);
+    
+    $query = $wpdb->update( 
+        $wplc_tblname_chats, 
+        array( 
+            'url' => $_SERVER['HTTP_REFERER'],
+            'last_active_timestamp' => current_time('mysql'),
+            'ip' => maybe_serialize($user_data),
+            'status' => $status,
+            'session' => $session,
+        ), 
+        array('id' => $cid), 
+        array( 
+            '%s',
+            '%s',
+            '%s',
+            '%d',
+            '%s'
+        ), 
+        array('%d') 
+    );
 
-        WHERE `id` = '$cid'
-        LIMIT 1
-    ";
-    $results = $wpdb->query($query);
+
     return $query;
-
 
 
 }
@@ -85,7 +128,7 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     global $wplc_tblname_msgs;
 
     if ($from == "1") {
-        $fromname = wplc_return_chat_name($cid);
+        $fromname = wplc_return_chat_name(sanitize_text_field($cid));
         //$fromemail = wplc_return_chat_email($cid);
         $orig = '2';
     }
@@ -96,42 +139,66 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     }
     
    
-    $ins_array = array(
-        'chat_sess_id' => $cid,
-        'timestamp' => date("Y-m-d H:i:s"),
-        'from' => $fromname,
-        'msg' => $msg,
-        'status' => 0,
-        'originates' => $orig
+//    $ins_array = array(
+//        'chat_sess_id' => $cid,
+//        'timestamp' => date("Y-m-d H:i:s"),
+//        'from' => $fromname,
+//        'msg' => $msg,
+//        'status' => 0,
+//        'originates' => $orig
+//    );
+//
+//    $rows_affected = $wpdb->insert( $wplc_tblname_msgs, $ins_array );
+
+    $wpdb->insert( 
+	$wplc_tblname_msgs, 
+	array( 
+            'chat_sess_id' => $cid, 
+            'timestamp' => current_time('mysql'),
+            'from' => $fromname,
+            'msg' => $msg,
+            'status' => 0,
+            'originates' => $orig
+	), 
+	array( 
+            '%s', 
+            '%s',
+            '%s',
+            '%s',
+            '%d',
+            '%s'
+	) 
     );
-
-    $rows_affected = $wpdb->insert( $wplc_tblname_msgs, $ins_array );
-
-    wplc_update_active_timestamp($cid);
-    wplc_change_chat_status($cid,3);
     
-    
-    
-
-    
+    wplc_update_active_timestamp(sanitize_text_field($cid));
+    wplc_change_chat_status(sanitize_text_field($cid),3);
     
     return true;
-
 
 }
 
 function wplc_update_active_timestamp($cid) {
     global $wpdb;
     global $wplc_tblname_chats;
-    $results = $wpdb->get_results(
-        "
-        UPDATE $wplc_tblname_chats
-        SET `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
-        WHERE `id` = '$cid'
-        LIMIT 1
-        "
+//    $results = $wpdb->get_results(
+//        "
+//        UPDATE $wplc_tblname_chats
+//        SET `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
+//        WHERE `id` = '$cid'
+//        LIMIT 1
+//        "
+//    );
+    $wpdb->update( 
+        $wplc_tblname_chats, 
+        array( 
+            'last_active_timestamp' => current_time('mysql')
+        ), 
+        array('id' => $cid), 
+        array('%s'), 
+        array('%d') 
     );
-    wplc_change_chat_status($cid,3);
+    
+    wplc_change_chat_status(sanitize_text_field($cid),3);
     return true;
 
 }
@@ -350,6 +417,15 @@ function wplc_change_chat_status($id,$status) {
         LIMIT 1
         "
     );
+    $wpdb->update( 
+        $wplc_tblname_chats, 
+        array( 
+            'status' => $status
+        ), 
+        array('id' => $id), 
+        array('%d'), 
+        array('%d') 
+    );
     return true;
 
 }
@@ -444,15 +520,27 @@ function wplc_mark_as_read_user_chat_messages($cid) {
 
     foreach ($results as $result) {
         $id = $result->id;
-        $check = $wpdb->query(
-            "
-            UPDATE $wplc_tblname_msgs
-            SET `status` = 1
-            WHERE `id` = '$id'
-            LIMIT 1
-
-	"
+//        $check = $wpdb->query(
+//            "
+//            UPDATE $wplc_tblname_msgs
+//            SET `status` = 1
+//            WHERE `id` = '$id'
+//            LIMIT 1
+//
+//	"
+//        );
+        
+        $wpdb->update( 
+            $wplc_tblname_msgs, 
+            array( 
+                'status' => 1
+            ), 
+            array('id' => $id), 
+            array('%d'), 
+            array('%d') 
         );
+        
+        
     }
     return "ok";
 
@@ -467,6 +555,7 @@ function wplc_return_admin_chat_messages($cid) {
             
     global $wpdb;
     global $wplc_tblname_msgs;
+        
     $results = $wpdb->get_results(
         "
             SELECT *
@@ -476,10 +565,10 @@ function wplc_return_admin_chat_messages($cid) {
 
         "
     );
-    
+
     $msg_hist = "";
     foreach ($results as $result) {
-        
+
         $id = $result->id;
         $from = $result->from;
         wplc_mark_as_read_admin_chat_messages($id);    
@@ -497,16 +586,16 @@ function wplc_return_admin_chat_messages($cid) {
             }
         } else {
             $class = "wplc-user-message";
-            
+
             if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
-        
+
             if($wplc_user_gravatar != ""){
                 $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
             } else {
                 $image = "";
             }
         }
-        
+
         if(function_exists('wplc_decrypt_msg')){
             $msg = wplc_decrypt_msg($msg);
         }
@@ -526,15 +615,26 @@ function wplc_mark_as_read_admin_chat_messages($mid) {
     global $wpdb;
     global $wplc_tblname_msgs;
         
-    $check = $wpdb->query(
-        "
-        UPDATE $wplc_tblname_msgs
-        SET `status` = 1
-        WHERE `id` = '$mid'
-        LIMIT 1
-
-    "
+//    $check = $wpdb->query(
+//        "
+//        UPDATE $wplc_tblname_msgs
+//        SET `status` = 1
+//        WHERE `id` = '$mid'
+//        LIMIT 1
+//
+//    "
+//    );
+    
+    $wpdb->update( 
+        $wplc_tblname_msgs, 
+        array( 
+            'status' => 1
+        ), 
+        array('id' => $mid), 
+        array('%d'), 
+        array('%d') 
     );
+
 
 }
 
@@ -636,40 +736,94 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
     
     if ($cid != null) { /* change from a visitor to a chat */                
         
-        $query =
-            "
-        UPDATE $wplc_tblname_chats
-            SET
-                `status` = '2',
-                `timestamp` = '".date("Y-m-d H:i:s")."',
-                `name` = '$name',
-                `email` = '$email',
-                `session` = '$session',
-                `ip` = '".maybe_serialize($user_data)."',
-                `url` = '".$_SERVER['HTTP_REFERER']."',
-                `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
-
-            WHERE `id` = '$cid'
-            LIMIT 1
-        ";
-        $results = $wpdb->query($query);
+//        $query =
+//            "
+//        UPDATE $wplc_tblname_chats
+//            SET
+//                `status` = '2',
+//                `timestamp` = '".date("Y-m-d H:i:s")."',
+//                `name` = '$name',
+//                `email` = '$email',
+//                `session` = '$session',
+//                `ip` = '".maybe_serialize($user_data)."',
+//                `url` = '".$_SERVER['HTTP_REFERER']."',
+//                `last_active_timestamp` = '".date("Y-m-d H:i:s")."'
+//
+//            WHERE `id` = '$cid'
+//            LIMIT 1
+//        ";
+//        $results = $wpdb->query($query);
+        
+        $wpdb->update( 
+            $wplc_tblname_chats, 
+            array( 
+                'status' => 2,
+                'timestamp' => current_time('mysql'),
+                'name' => $name,
+                'email' => $email,
+                'session' => $session,
+                'ip' => maybe_serialize($user_data),
+                'url' => $_SERVER['HTTP_REFERER'],
+                'last_active_timestamp' => current_time('mysql')
+            ), 
+            array('id' => $cid), 
+            array( 
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            ), 
+            array('%d') 
+        );
+        
         return $cid;
     }
     else { // create new ID for the chat
         
         
         
-        $ins_array = array(
-            'status' => '2',
-            'timestamp' => date("Y-m-d H:i:s"),
-            'name' => $name,
-            'email' => $email,
-            'session' => $session,
-            'ip' => maybe_serialize($user_data),
-            'url' => $_SERVER['HTTP_REFERER'],
-            'last_active_timestamp' => date("Y-m-d H:i:s")
+//        $ins_array = array(
+//            'status' => '2',
+//            'timestamp' => date("Y-m-d H:i:s"),
+//            'name' => $name,
+//            'email' => $email,
+//            'session' => $session,
+//            'ip' => maybe_serialize($user_data),
+//            'url' => $_SERVER['HTTP_REFERER'],
+//            'last_active_timestamp' => date("Y-m-d H:i:s")
+//        );
+//        $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
+        
+        
+        $wpdb->insert( 
+            $wplc_tblname_chats, 
+            array( 
+                'status' => '2', 
+                'timestamp' => current_time('mysql'),
+                'name' => $name,
+                'email' => $email,
+                'session' => $session,
+                'ip' => maybe_serialize($user_data),
+                'url' => $_SERVER['HTTP_REFERER'],
+                'last_active_timestamp' => current_time('mysql')
+            ), 
+            array( 
+                '%s', 
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%s'
+            ) 
         );
-        $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
+        
+        
         $lastid = $wpdb->insert_id;
         return $lastid;
     }
@@ -876,7 +1030,7 @@ function wplc_get_memory_usage() {
 }
 function wplc_record_mem() {
     $data = array(
-        'date' => date('Y-m-d H:i:s'),
+        'date' => current_time('mysql'),
         'php_mem' => wplc_get_memory_usage()
     );
     $fp = @fopen(ABSPATH.'/wp-content/uploads/wp-live-chat-support'."/mem_usag.csv","a+");

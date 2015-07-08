@@ -1,7 +1,7 @@
 === WP Live Chat Support ===
 Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
-Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget, customer help
+Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget
 Requires at least: 3.8
 Tested up to: 4.2.2
 Stable tag: trunk
@@ -35,6 +35,7 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Initiate live chats with online visitors
 * Chat to more than one visitor at a time
 * Quick Responses (insert a predefined response to your live chat box)
+* Encrypt your live chat conversations
 * Access historical live chat records
 * Set up your user profile
 * Add your company logo to the live chat window
@@ -47,9 +48,8 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Apply animations to the chat window
 * Anonymity for your visitors
 * Choose when to accept chats
-* Encrypt your live chat conversations
 
-Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $29.95!
+Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $19.95!
 
 = Coming soon =
 * (Free & Pro) Improvements - Better link and image handling within the live chat text area
@@ -173,10 +173,17 @@ If the live chat box still does not appear on your website, please go through th
 
 == Upgrade Notice ==
 
+= 4.4.0 =
+It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 for security reasons.
+
+
 = 4.1.4 =
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.4.0 - 2015-07-08 - Critical Priority =
+* Major security update. Please ensure you update to this version to eliminate previous vulnerabilities.
 
 = 4.3.5 Espresso - 2015-07-03 - Low Priority =
 * Enhancement: Provision made for live chat encryption in the Pro version (compatibility)
