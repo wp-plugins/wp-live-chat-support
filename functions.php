@@ -127,6 +127,10 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     global $wpdb;
     global $wplc_tblname_msgs;
 
+    if ($from == "2") {
+        if (!current_user_can("manage_options")) { die(); }
+    }
+
     if ($from == "1") {
         $fromname = wplc_return_chat_name(sanitize_text_field($cid));
         //$fromemail = wplc_return_chat_email($cid);
@@ -549,7 +553,9 @@ function wplc_mark_as_read_user_chat_messages($cid) {
 //here
 function wplc_return_admin_chat_messages($cid) {
     
+    if (!current_user_can("manage_options")) { die(); }
     $wplc_settings = get_option("WPLC_SETTINGS");
+
 
     if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
             
@@ -607,11 +613,15 @@ function wplc_return_admin_chat_messages($cid) {
         }
     }
 
+
+
     return $msg_hist;
 
 
 }
 function wplc_mark_as_read_admin_chat_messages($mid) {
+    if (!current_user_can("manage_options")) { die(); }
+
     global $wpdb;
     global $wplc_tblname_msgs;
         

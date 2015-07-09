@@ -173,7 +173,7 @@ If the live chat box still does not appear on your website, please go through th
 
 == Upgrade Notice ==
 
-= 4.4.0 =
+= 4.4.1 =
 It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 for security reasons.
 
 
@@ -181,6 +181,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.4.1 - 2015-07-09 - Critical Priority =
+* Further security enhancements
 
 = 4.4.0 - 2015-07-08 - Critical Priority =
 * Major security update. Please ensure you update to this version to eliminate previous vulnerabilities.

@@ -3,13 +3,13 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.4.0
+  Version: 4.4.1
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.4.0 - 2015-07-08 - Critical Priority
+/* 4.4.1 - 2015-07-08 - Critical Priority
  * Major security update. Please ensure you update to this version to eliminate previous vulnerabilities.
  * 
  * 4.3.5 Espresso - 2015-07-03 - Low Priority
@@ -217,6 +217,9 @@ define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
 global $wplc_basic_plugin_url;
 $wplc_basic_plugin_url = get_option('siteurl') . "/wp-content/plugins/wp-live-chat-support/";
 
+
+
+require_once (plugin_dir_path(__FILE__) . "ajax_new.php");
 require_once (plugin_dir_path(__FILE__) . "functions.php");
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
 add_action('init', 'wplc_version_control');
@@ -336,8 +339,8 @@ function wplc_user_top_js() {
 
         <script type="text/javascript">
         <?php if (!function_exists("wplc_register_pro_version")) { ?>
-                var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
-
+                /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+            var wplc_ajaxurl = ajaxurl;
         <?php } ?>
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
         </script>
@@ -731,7 +734,8 @@ function wplc_admin_javascript() {
     ?>
 
     <script type="text/javascript">
-        var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+        /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+        var wplc_ajaxurl = ajaxurl;
         var data = {
             action: 'wplc_admin_long_poll',
             security: '<?php echo $ajax_nonce; ?>',
@@ -1099,7 +1103,8 @@ function wplc_return_admin_chat_javascript($cid) {
     }
     ?>
     <script type="text/javascript">
-        var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+        /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+        var wplc_ajaxurl = ajaxurl;
         var chat_status = 3;
         var cid = <?php echo $cid; ?>;
         var data = {
@@ -1116,6 +1121,7 @@ function wplc_return_admin_chat_javascript($cid) {
             jQuery.ajax({
                 url: wplc_ajaxurl,
                 data: data,
+                security: '<?php echo $ajax_nonce; ?>',
                 type: "POST",
                 success: function (response) {
                     if (response) {
@@ -1216,7 +1222,8 @@ function wplc_return_admin_chat_javascript($cid) {
     } else {
         echo "";
     } ?>";
-            var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>';
+            /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+            var wplc_ajaxurl = ajaxurl;
 
 
             jQuery("#wplc_admin_chatmsg").focus();
