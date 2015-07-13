@@ -3,13 +3,20 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.4.1
+  Version: 4.4.2
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.4.1 - 2015-07-08 - Critical Priority
+/* 4.4.2 - 2015-07-13 - Low Priority
+ * Improvement: Gravatar images will load on sites using SSL without any issues
+ * Improvement: Hungarian live chat translation file name fixed
+ * Improvement: Styling improvements on the live chat dashboard
+ * New Translations:
+ *  Turkish (Thank you Yavuz Aksu)
+ * 
+ * 4.4.1 - 2015-07-08 - Critical Priority
  * Major security update. Please ensure you update to this version to eliminate previous vulnerabilities.
  * 
  * 4.3.5 Espresso - 2015-07-03 - Low Priority
@@ -210,7 +217,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.4.00";
+$wplc_version = "4.4.02";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -385,7 +392,7 @@ function wplc_draw_user_box() {
     }
 
     if ($wplc_user_gravatar != "") {
-        $wplc_grav_image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+        $wplc_grav_image = "<img src='//www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
     } else {
         $wplc_grav_image = "";
     }
@@ -939,32 +946,34 @@ function wplc_admin_menu_layout_display() {
 
                 <p><?php _e("Please note: This window must be open in order to receive new chat notifications.", "wplivechat"); ?></p>
             </div>
+            
             <div id="wplc_sound"></div>
 
             <div class="wplc_admin_dashboard_container">
-                <div id="wplc_sound"></div>
                 <div id="wplc_admin_chat_area">
-            <?php
-            if (function_exists("wplc_register_pro_version")) {
-                echo wplc_list_chats_pro();
-            } else {
-                echo wplc_list_chats();
-            }
-            ?>
+                    <?php
+                    if (function_exists("wplc_register_pro_version")) {
+                        echo wplc_list_chats_pro();
+                    } else {
+                        echo wplc_list_chats();
+                    }
+                    ?>                    
                 </div>
                 <div id="wplc_admin_visitor_area">
-                    <h1><?php _e("Visitors on site", "wplivechat") ?></h1>    
-                    <p>
-                        <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
-                        <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
-                            <?php _e("see who's online and initiate chats", "wplivechat"); ?>
-                        </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
-                        <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
-                            <strong>
-                                <?php _e("Buy the Pro add-on now for only $19.95. Free Updates Forever.", "wplivechat"); ?>
-                            </strong>
-                        </a>
-                    </p>
+                    <div class="wplc_visitor_container">
+                        <h1><?php _e("Visitors on site", "wplivechat") ?></h1>    
+                        <p>
+                            <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
+                                <?php _e("see who's online and initiate chats", "wplivechat"); ?>
+                            </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
+                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
+                                <strong>
+                                    <?php _e("Buy the Pro add-on now for only $19.95.", "wplivechat"); ?>
+                                </strong>
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -1034,7 +1043,7 @@ function wplc_draw_chat_area($cid) {
 
         echo"<div class='admin_chat_box'><div class='admin_chat_box_inner' id='admin_chat_box_area_" . $result->id . "'>" . wplc_return_chat_messages($cid) . "</div><div class='admin_chat_box_inner_bottom'>" . wplc_return_chat_response_box($cid) . "</div></div>";
         echo "<div class='admin_visitor_info'>";
-        echo "  <div style='float:left; width:100px;'><img src=\"http://www.gravatar.com/avatar/" . md5($result->email) . "\" class=\"admin_chat_img\" /></div>";
+        echo "  <div style='float:left; width:100px;'><img src=\"//www.gravatar.com/avatar/" . md5($result->email) . "\" class=\"admin_chat_img\" /></div>";
         echo "  <div style='float:left;'>";
 
         echo "      <div class='admin_visitor_info_box1'>";

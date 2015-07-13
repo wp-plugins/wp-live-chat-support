@@ -16,9 +16,6 @@ function wplc_init_ajax_callback() {
 
     $check = check_ajax_referer( 'wplc', 'security' );
 
-
-    
-
     if ($check == 1) {
 
 

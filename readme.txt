@@ -7,7 +7,7 @@ Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2
 
-Fully functional Live Chat plugin. Chat with your visitors for free! No need for third party connections or monthly payments.
+Fully functional Live Chat plugin. Chat with your visitors for free! No need for monthly payments. Add live chat support to your site now.
 
 == Description ==
 
@@ -104,6 +104,7 @@ Get a free copy of the WP Live Chat Support Pro version in exchange for translat
 * Finnish (Arttu Piipponen)
 * Dutch (Niek Groot Bleumink) 
 * Polish (Sebastian Kajzer)
+* Turkish (Yavuz Aksu)
 * Chinese - Simplified^
 * Chinese - Traditional^
 
@@ -181,6 +182,13 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 4.4.2 - 2015-07-13 - Low Priority =
+* Improvement: Gravatar images will load on sites using SSL without any issues
+* Improvement: Hungarian live chat translation file name fixed
+* Improvement: Styling improvements on the live chat dashboard
+* New Translations:
+*  Turkish (Thank you Yavuz Aksu)
 
 = 4.4.1 - 2015-07-09 - Critical Priority =
 * Further security enhancements
@@ -374,3 +382,106 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 * Fixed Visitor pending forever - Now Shown a message that admin is away
 * Fixed many small bugs
 * Added Multiple Live Chat Agents support (Add On)
+
+= 3.08 =
+
+* Fixed Languages not been translated
+* Fixed 500 Error from ajax call
+* Email validation bug fixed
+
+= 3.07 =
+
+* Fixed height issues with input boxes
+* Fixed Input that was showing half over chat area
+* Fixed Endless Connecting
+
+= 3.06 =
+
+* Fixed Placeholder text not showing in input on IE
+
+= 3.05 =
+
+* Low priority update 
+
+= 3.04 =
+
+* Fixed Close & Minimixe Button Styling Issues
+* Fixed bug where text was not hidden when offline message was sent
+* Fixed bug that would hide text behind image if text was 2 lines
+* Fixed bug that continuesly scrolled chat down
+* Fixed styling of inputs on some themes (overlaps chat box)
+* Set CSS color for inputs
+* Fixed bug that wasn't alerting admin in wp-admin to chat if Alert via email was set (Pro)
+* Fixed Double opening bug if chat was moved
+* Fixed Bug to inform admin and user either or has ended the chat
+* Fixed other small bugs
+
+= 3.03 =
+
+* Fixed Text Area CSS Bug
+
+= 3.02 =
+
+* Fixed CSS Box Border Issue 
+
+= 3.01 =
+
+* Fixed CSS bug with icons
+* Fixed CSS bug with inputs
+
+= 3.0 =
+* Improved chat UI
+* Chat Box is draggable
+
+= 2.9 =
+* Added comprehensive documentation
+
+= 2.8 =
+* Fixed bug that stopped dynamic css loading in some themes
+
+= 2.7 =
+* Fixed the live chat initiation bug
+* Fixed the style bug
+* Added support to email for proper smtp (pro)
+* Fixed cookie bugs
+* Add delete live chat history option (pro)
+* Added UTF8 character support for the live chat
+* Added error reporting (pro)
+
+= 2.6 =
+* Fixed a bug that showed 'page not found' when saving the live chat settings
+* Better UI
+* Added the ability to end live chats
+
+= 2.5 =
+* Major performance improvements
+* Small UI improvements
+
+= 2.4 =
+* You now have full control of the fill and font color of your live chat box
+* Added the ability to turn live chat on and off
+* Better notification of incoming live chats.
+* Added more localization support
+* Plugin should now be compatible with caching plugins.
+
+= 2.3 =
+* Fixed another small bug
+
+= 2.2 =
+* Fixed a small bug
+
+= 2.1 =
+* More precise functionality to handle if you are online or offline
+* Fixed a bug that recorded visitors when offline
+* Neatened up some code
+* Fixed some small bugs
+
+= 2.0 =
+* Bug fixes
+* Better front-end UI (Basic + Pro)
+* You can now get an email notification when a visitor wants to chat (Pro)
+* Allow your visitors to leave messages when you are offline (Pro)
+* More text fields can be customized
+
+= 1.0 =
+* Launch! 

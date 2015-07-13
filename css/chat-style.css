@@ -133,12 +133,12 @@
     clear:both;
 
 }
-.admin_visitor_advanced_info {
+/*.admin_visitor_advanced_info {
     clear:both;
     font-size:0.9em;
     margin-top:20px;
 
-}
+}*/
 .admin_visitor_advanced_info .part1 {
     color:#3b3b3b;
 }
@@ -164,12 +164,12 @@
     width: 80%;
     margin: 0 auto;
 }
-.wplc_chats_container{
+#wplc_admin_chat_area{
     width: 65%;
     display: inline-block;
     background-color: #FFF;
     float: left;
-    padding: 10px;
+    /*padding: 10px;*/
     box-shadow: 1px 1px 3px #ccc;
 }
 
@@ -178,8 +178,29 @@
     display: inline-block;
     background-color: #FFF;
     float: right;
-    padding: 10px;
     box-shadow: 1px 1px 3px #ccc;
+}
+
+.wplc_visitor_container{
+    padding: 10px;
+}
+.wplc_visitor_container h1{
+    text-align: center;
+    line-height: 22px;
+}
+
+.wplc_chats_container h2{
+    padding: 10px;
+}
+
+.wplc_chat_section {
+    width: 33.33%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.wplc_agent_actions{
+    text-align: center;
 }
 
 .wplc_single_chat{
@@ -189,85 +210,21 @@
     border-radius: 5px;
     box-shadow: 1px 1px 21px #EEE;
     margin: 8px auto;
+    padding: 10px;
 }
-
-.wplc_single_chat .wplc_chat_status{
-
-}
-
 .wplc_single_chat .wplc_user_image {
-    width: 100px;
+    width: 30%;
+    display: inline-block;
+    float: left;
+}
+.wplc_user_meta_data {
+    width: 70%;
     display: inline-block;
 }
-
 .wplc_single_chat .wplc_user_image img{
     border-radius: 100px;
 }
 
-.wplc_single_chat .wplc_user_meta_data{
-    font-size: 0.9em;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.wplc_single_chat .wplc_chat_section{
-    display: inline-block;
-    vertical-align: top;
-    width: 29%;
-    border-left: 1px solid #eee;
-    padding: 13px;    
-    height: 100px;
-}
-
-.wplc_single_chat .wplc_chat_section .wplc_agent_actions{
-    text-align: center;
-    vertical-align: middle;
-}
-
-.wplc_single_chat .wplc_chat_section .admin_visitor_advanced_info{
-    margin-top: -3px;
-}
-
-.wplc_single_chat .wplc_chat_section .admin_visitor_advanced_info hr{
-    margin: 3px 0;
-}
-
-.wplc_single_chat .wplc_user_name {    
-}
-
-.wplc_single_chat .wplc_user_name h3{
-    margin: 0;
-}
-.wplc_single_chat .wplc_user_name h3 i{
-    padding: 0 10px;
-}
-.wplc_single_chat h3 .active{
-    color: green;
-}
-
-.wplc_single_chat h3 .pending{
-    color: orange;
-}
-
-.wplc_single_chat h3 .closed{
-    color: red;
-}
-
-.wplc_single_chat .wplc_user_email{
-
-}
-
-.wplc_single_chat .wplc_user_ip{
-
-}
-
-.wplc_single_chat .wplc_current_page a{
-    width: 100%;
-}
-
-.wplc_single_chat .wplc_actions{
-
-}
 
 .wplc_single_visitor{
     border-bottom: 1px solid #ccc;
@@ -294,7 +251,7 @@
 }
 
 .wplc_single_visitor .wplc_user_name {
-    
+
 }
 
 .wplc_single_visitor .wplc_user_name h3{
@@ -335,7 +292,7 @@
 }
 
 .wplc_single_visitor .wplc_actions{
-    
+
 }
 
 .wplc_icon_message{
@@ -353,5 +310,50 @@
 
 .wplc_visitor_icon{
     padding-right: 10px;
-    
+
+}
+
+@media all and (max-width: 550px) {
+    #wplc_admin_chat_area{
+        width: 100%;
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+    #wplc_admin_visitor_area{
+        width: 100%;
+    }
+    #wplc_admin_chat_area p{
+        padding: 10px
+    }
+}
+@media all and (max-width: 1440px) {
+    .wplc_single_chat .wplc_user_image {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+    .wplc_user_meta_data {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+}
+
+@media all and (max-width: 1200px) {
+    .wplc_chat_section.section_1 {
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+@media all and (max-width: 850px) {
+    .wplc_chat_section.section_2 {
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+    }
+    .admin_visitor_advanced_info{
+        width: 93%;
+    }
 }

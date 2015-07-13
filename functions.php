@@ -247,7 +247,7 @@ function wplc_list_chats() {
         "
 	SELECT *
 	FROM $wplc_tblname_chats
-        WHERE `status` = 3 OR `status` = 2
+        WHERE `status` = 3 OR `status` = 2 OR `status` = 10
         ORDER BY `timestamp` ASC
 
 	"
@@ -295,23 +295,23 @@ function wplc_list_chats() {
            $trstyle = "";
             
             $table .= "
-                <div class='wplc_single_chat' id='record_'".$result->id." $trstyle> 
-                    <div class='wplc_chat_section'>
+                <div class='wplc_single_chat' id='record_".$result->id."' $trstyle> 
+                    <div class='wplc_chat_section section_1'>
                         <div class='wplc_user_image' id='chat_image_".$result->id."'>
-                            <img src=\"http://www.gravatar.com/avatar/".md5($result->email)."?s=100&d=mm\" />
+                            <img src=\"//www.gravatar.com/avatar/".md5($result->email)."?s=60&d=mm\" />
                         </div>
                         <div class='wplc_user_meta_data'>
                             <div class='wplc_user_name' id='chat_name_".$result->id."'>
                                 <h3>".$result->name.$icon."</h3>
-                                ".$result->email."
+                                <a href='mailto:".$result->email."' target='_BLANK'>".$result->email."</a>
                             </div>                                
                         </div>    
                     </div>
-                    <div class='wplc_chat_section'>
+                    <div class='wplc_chat_section section_2'>
                         <div class='admin_visitor_advanced_info'>
                             <strong>" . __("Site Info", "wplivechat") . "</strong>
                             <hr />
-                            <span class='part1'>" . __("Chat initiated on:", "wplivechat") . "</span> <span class='part2'>" . $result->url . "</span>
+                            <span class='part1'>" . __("Chat initiated on:", "wplivechat") . "</span> <span class='part2'> <a href='".$result->url."' target='_BLANK'>" . $result->url . "</a></span>
                         </div>
 
                         <div class='admin_visitor_advanced_info'>
@@ -321,7 +321,7 @@ function wplc_list_chats() {
                             <span class='part1'>" . __("IP Address:", "wplivechat") . "</span><span class='part2'> ".$user_ip."
                         </div>
                     </div>
-                    <div class='wplc_chat_section'>
+                    <div class='wplc_chat_section section_3'>
                         <div class='wplc_agent_actions'>
                             $actions
                         </div>
@@ -485,7 +485,7 @@ function wplc_return_chat_messages($cid) {
             if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim(sanitize_text_field($_COOKIE['wplc_email'])))); } else { $wplc_user_gravatar = ""; }
         
             if($wplc_user_gravatar != ""){
-                $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+                $image = "<img src='//www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
             } else {
                 $image = "";
             }
@@ -596,7 +596,7 @@ function wplc_return_admin_chat_messages($cid) {
             if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
 
             if($wplc_user_gravatar != ""){
-                $image = "<img src='http://www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+                $image = "<img src='//www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
             } else {
                 $image = "";
             }
@@ -1092,7 +1092,7 @@ function wplc_admin_display_missed_chats() {
         foreach ($results as $result) {
             echo "<tr id=\"record_" . $result->id . "\">";
             echo "<td class='chat_id column-chat_d'>" . $result->timestamp . "</td>";
-            echo "<td class='chat_name column_chat_name' id='chat_name_" . $result->id . "'><img src=\"http://www.gravatar.com/avatar/" . md5($result->email) . "?s=30\" /> " . $result->name . "</td>";
+            echo "<td class='chat_name column_chat_name' id='chat_name_" . $result->id . "'><img src=\"//www.gravatar.com/avatar/" . md5($result->email) . "?s=30\" /> " . $result->name . "</td>";
             echo "<td class='chat_email column_chat_email' id='chat_email_" . $result->id . "'><a href='mailto:" . $result->email . "' title='Email " . ".$result->email." . "'>" . $result->email . "</a></td>";
             echo "<td class='chat_name column_chat_url' id='chat_url_" . $result->id . "'>" . $result->url . "</td>";
             echo "</tr>";
