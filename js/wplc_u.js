@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
             success: function(response) {
                 
                 if(response){
-//                    console.log(response);
+                    console.log(response);
                     response = JSON.parse(response);
 //                    console.log(response);
                     // set vars and cookies

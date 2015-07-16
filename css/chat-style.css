@@ -357,3 +357,7 @@
         width: 93%;
     }
 }
+
+.wplc_admin_dashboard_container p {
+  padding: 0 5px;
+}

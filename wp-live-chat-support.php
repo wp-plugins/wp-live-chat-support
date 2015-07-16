@@ -3,13 +3,18 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.4.2
+  Version: 4.4.3
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.4.2 - 2015-07-13 - Low Priority
+/* 4.4.3 - 2015-07-16 - Low Priority
+ * Bug Fix: Ajax URL undefined in some versions of WordPress
+ * Improvement: Warning messages limited to the Settings page only
+ * 
+ * 
+ * 4.4.2 - 2015-07-13 - Low Priority
  * Improvement: Gravatar images will load on sites using SSL without any issues
  * Improvement: Hungarian live chat translation file name fixed
  * Improvement: Styling improvements on the live chat dashboard
@@ -217,18 +222,21 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.4.02";
+$wplc_version = "4.4.03";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
 global $wplc_basic_plugin_url;
 $wplc_basic_plugin_url = get_option('siteurl') . "/wp-content/plugins/wp-live-chat-support/";
 
+if(!function_exists('wplc_pro_activate')){
+    require_once (plugin_dir_path(__FILE__) . "ajax_new.php");
+}
 
-
-require_once (plugin_dir_path(__FILE__) . "ajax_new.php");
 require_once (plugin_dir_path(__FILE__) . "functions.php");
+
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
+
 add_action('init', 'wplc_version_control');
 
 add_action('wp_footer', 'wplc_display_box');
@@ -251,8 +259,6 @@ if (function_exists('wplc_admin_menu_pro')) {
 }
 add_action('admin_head', 'wplc_superadmin_javascript');
 register_activation_hook(__FILE__, 'wplc_activate');
-
-
 
 
 function wplc_basic_check() {
@@ -347,6 +353,7 @@ function wplc_user_top_js() {
         <script type="text/javascript">
         <?php if (!function_exists("wplc_register_pro_version")) { ?>
                 /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
             var wplc_ajaxurl = ajaxurl;
         <?php } ?>
             var wplc_nonce = '<?php echo $ajax_nonce; ?>';
@@ -1435,7 +1442,7 @@ function wplc_add_user_stylesheet() {
 }
 
 function wplc_add_admin_stylesheet() {
-    if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings' || $_GET['page'] == 'wplivechat-menu-offline-messages')) {
+    if (isset($_GET['page']) && ($_GET['page'] == 'wplivechat-menu' || $_GET['page'] == 'wplivechat-menu-settings' || $_GET['page'] == 'wplivechat-menu-offline-messages' || $_GET['page'] == 'wplivechat-menu-history')) {
         wp_register_style('wplc-admin-style', plugins_url('/css/jquery-ui.css', __FILE__));
         wp_enqueue_style('wplc-admin-style');
         wp_register_style('wplc-chat-style', plugins_url('/css/chat-style.css', __FILE__));
@@ -1639,24 +1646,26 @@ function wplc_get_home_path() {
 }
 
 /* Error Checks */
-if(is_admin()){
-    $wplc_error_count = 0;
-    $wplc_admin_warnings = "<div class='error'>";
-    if(!function_exists('set_time_limit')){    
-        $wplc_admin_warnings .= "
-            <p>".__("WPLC: set_time_limit() is not enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please get in contact your host to get this function enabled.", "wplivechat")."</p>
-        ";
-        $wplc_error_count++;        
-    }
-    if(ini_get('safe_mode')){
-        $wplc_admin_warnings .= "
-            <p>".__("WPLC: Safe mode is enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please contact your host to get safe mode disabled.", "wplivechat")."</p>
-        ";
-        $wplc_error_count++;
-    }
-    $wplc_admin_warnings .= "</div>";
-    if($wplc_error_count > 0){
-        echo $wplc_admin_warnings;
+if(isset($_GET['page']) && $_GET['page'] == 'wplivechat-menu-settings'){
+    if(is_admin()){
+        $wplc_error_count = 0;
+        $wplc_admin_warnings = "<div class='error'>";
+        if(!function_exists('set_time_limit')){    
+            $wplc_admin_warnings .= "
+                <p>".__("WPLC: set_time_limit() is not enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please get in contact your host to get this function enabled.", "wplivechat")."</p>
+            ";
+            $wplc_error_count++;        
+        }
+        if(ini_get('safe_mode')){
+            $wplc_admin_warnings .= "
+                <p>".__("WPLC: Safe mode is enabled on this server. You may experience issues while using WP Live Chat Support as a result of this. Please contact your host to get safe mode disabled.", "wplivechat")."</p>
+            ";
+            $wplc_error_count++;
+        }
+        $wplc_admin_warnings .= "</div>";
+        if($wplc_error_count > 0){
+            echo $wplc_admin_warnings;
+        }
     }
 }
 

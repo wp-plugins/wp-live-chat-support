@@ -361,7 +361,7 @@ function wplc_return_user_chat_messages($cid) {
         $id = $result->id;
         $from = $result->from;
 
-        $msg = stripslashes($result->msg);
+        $msg = $result->msg;
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
         if($result->originates == 1){
@@ -578,7 +578,7 @@ function wplc_return_admin_chat_messages($cid) {
         $id = $result->id;
         $from = $result->from;
         wplc_mark_as_read_admin_chat_messages($id);    
-        $msg = stripslashes($result->msg);
+        $msg = $result->msg;
         //$timestamp = strtotime($result->timestamp);
         //$timeshow = date("H:i",$timestamp);
         $image = "";        

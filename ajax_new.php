@@ -11,9 +11,15 @@ add_action('wp_ajax_wplc_user_minimize_chat', 'wplc_init_ajax_callback');
 add_action('wp_ajax_wplc_user_maximize_chat', 'wplc_init_ajax_callback');
 add_action('wp_ajax_wplc_user_send_msg', 'wplc_init_ajax_callback');
 add_action('wp_ajax_wplc_start_chat', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_start_chat', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_call_to_server_visitor', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_user_close_chat', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_user_minimize_chat', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_user_maximize_chat', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_user_send_msg', 'wplc_init_ajax_callback');
 
 function wplc_init_ajax_callback() {
-
+    @ob_start();
     $check = check_ajax_referer( 'wplc', 'security' );
 
     if ($check == 1) {
