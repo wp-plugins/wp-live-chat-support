@@ -865,7 +865,7 @@ function wplc_update_chat_statuses() {
             }
         }
         else if ($result->status == 3) {
-            if ((time() -  $timestamp) >= 30) { // 30 seconds
+            if ((time() -  $timestamp) >= 300) { // 30 seconds
                 wplc_change_chat_status($id,1);
             }
         }

@@ -183,10 +183,12 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 4.4.4 - 2015-07-20 - Low Priority =
+* Bug Fix: Big fixed that would cause the live chat to timeout during a conversation
+
 = 4.4.3 - 2015-07-16 - Low Priority =
 * Bug Fix: Ajax URL undefined in some versions of WordPress
 * Improvement: Warning messages limited to the Settings page only
-
 
 = 4.4.2 - 2015-07-13 - Low Priority =
 * Improvement: Gravatar images will load on sites using SSL without any issues
