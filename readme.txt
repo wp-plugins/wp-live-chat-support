@@ -3,7 +3,7 @@ Contributors: WP-LiveChat
 Donate link: http://www.wp-livechat.com
 Tags: live chat, live support, chat plugin, live help, wordpress chat, customer support, chat, live chat plugin, live support plugin, live chat support plugin, chat plugin, support plugin, support, chat software, chat online, visitor chat, chat, free chat, free live chat, customer support, online support, live help, chat widget
 Requires at least: 3.8
-Tested up to: 4.2.2
+Tested up to: 4.2.3
 Stable tag: trunk
 License: GPLv2
 
@@ -20,13 +20,19 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Easy to use interface for both the admin and the visitor
 * Users can drag the live chat box around their page
 * Change the colors of the live chat box
+* Fully responsive admin chat dashboard
 * No advertising or links
 * No "Powered by" links on the live chat window
 * No monthly live chat subscriptions needed
-* Desktop Notifications when receiving new Live Chats
+* Desktop Notifications when receiving new live chats
 * View any live chats you may have missed
-* A comprehensive list of live chat options
+* Set the starting position of your chat box
+* Comprehensive list of live chat options
 * Ban visitors from chatting to you based on IP Address
+* Allow the live chat box to automatically pop up
+* Limit the live chat box to only show to registered users
+* Select whether Name and Email is required when users initiate a chat
+* Enable/Disable the chat box on mobile devices
 
 
 = Pro Version Features =
@@ -36,6 +42,8 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Chat to more than one visitor at a time
 * Quick Responses (insert a predefined response to your live chat box)
 * Encrypt your live chat conversations
+* Fully responsive admin chat dashboard
+* Desktop Notifications when receiving new live chats
 * Access historical live chat records
 * Set up your user profile
 * Add your company logo to the live chat window
@@ -48,14 +56,18 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Apply animations to the chat window
 * Anonymity for your visitors
 * Choose when to accept chats
+* Allow the live chat box to automatically pop up
+* Limit the live chat box to only show to registered users
+* Select whether Name and Email is required when users initiate a chat
+* Enable/Disable the chat box on mobile devices
 
-Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $19.95!
+
+Get the [WP Live Chat Support Pro Add-on](http://wp-livechat.com/purchase-pro/?utm_source=readme&utm_medium=wordpress&utm_campaign=buy) for only $19.95 once off!
 
 = Coming soon =
 * (Free & Pro) Improvements - Better link and image handling within the live chat text area
 * (Pro) New feature - Triggers - Build custom live chat triggers. For example, if a user has been idle for more than 2 minutes, initiate a live chat and send a response.
-* (Free & Pro) New feature - XMP notifications - Get notified about new live chats in Gtalk, ICQ, Yahoo! messenger, etc.
-* (Pro+) New feature - Full XMP support (chat through Skype, Gtalk, ICQ, Yahoo! messenger, etc)
+* (Pro) Chat App - We're currently building an Android App that will allow you to accept chat requests from anywhere.
 
 = 30 second live chat installation =
 
@@ -177,11 +189,19 @@ If the live chat box still does not appear on your website, please go through th
 = 4.4.1 =
 It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 for security reasons.
 
-
 = 4.1.4 =
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 5.0.0 - Doppio Update - 2015-07-29 - Medium Priority =
+* New, modern chat dashboard 
+* Better user handling (chat long polling)
+* Added a welcome page to the live chat dashboard
+* The live hat dashboard is now fully responsive
+* You are now able to see who is a new visitor and who is a returning visitor
+* Bug fixes in the javascript that handles the live chat controls
+* Fixed the bug that stopped the chats from timing out after a certain amount of time
 
 = 4.4.4 - 2015-07-20 - Low Priority =
 * Bug Fix: Big fixed that would cause the live chat to timeout during a conversation

@@ -3,13 +3,23 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 4.4.4
+  Version: 5.0.0
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 4.4.4 - 2015-07-20 - Low Priority
+/* 5.0.0
+ * New, modern chat dashboard
+ * Better user handling (chat long polling)
+ * Added a welcome page to the live chat dashboard
+ * The live hat dashboard is now fully responsive
+ * You are now able to see who is a new visitor and who is a returning visitor
+ * Bug fixes in the javascript that handles the live chat controls
+ * Fixed the bug that stopped the chats from timing out after a certain amount of time
+ * 
+ * 
+ * 4.4.4 - 2015-07-20 - Low Priority
  * Bug Fix: Big fixed that would cause the live chat to timeout during a conversation
  * 
  * 4.4.3 - 2015-07-16 - Low Priority
@@ -224,7 +234,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "4.4.04";
+$wplc_version = "5.0.0";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -238,7 +248,7 @@ if(!function_exists('wplc_pro_activate')){
 require_once (plugin_dir_path(__FILE__) . "functions.php");
 
 add_action('wp_ajax_wplc_admin_set_transient', 'wplc_action_callback');
-
+add_action('wp_ajax_wplc_hide_ftt','wplc_action_callback');
 add_action('init', 'wplc_version_control');
 
 add_action('wp_footer', 'wplc_display_box');
@@ -312,6 +322,9 @@ function wplc_action_callback() {
     if ($check == 1) {
         if ($_POST['action'] == "wplc_admin_set_transient") {
             set_transient("wplc_is_admin_logged_in", "1", 70);
+        }
+        if ($_POST['action'] == 'wplc_hide_ftt') {
+            update_option("WPLC_FIRST_TIME_TUTORIAL",true);
         }
     }
     die(); // this is required to return a proper result
@@ -759,13 +772,61 @@ function wplc_admin_javascript() {
             wplc_update_admin_chat_table: false
         };
         var wplc_pending_refresh = null;
-
+        var current_chat_ids = new Object();
+        var chat_count = 0;
         var wplc_run = true;
-
+        var ringer_cnt = 0;
+        var orig_title = document.getElementsByTagName("title")[0].innerHTML;
+        
         var wplc_notification_icon_url = '<?php echo plugins_url('/images/wplc_notification_icon.png', __FILE__); ?>';
 
+        Object.size = function(obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
+        function wplc_notify_agent() {
+            
+            var wplc_sounder = document.createElement("embed");
+            wplc_sounder.src = '<?php echo plugins_url('/ring.wav', __FILE__); ?>';
+            wplc_sounder.hidden = 'true';
+            wplc_sounder.autostart = 'true';
+            wplc_sounder.loop = 'false';
+            wplc_sounder.type = 'audio/x-wav';
+            var seconds = new Date().getTime() / 1000;
+            wplc_sounder.id = 'wplc_s_'+seconds;
+
+            
+            document.body.appendChild(wplc_sounder);  
+            
+            if (ringer_cnt <= 0) {
+                wplc_desktop_notification();
+            }
+            ringer_cnt++;
+
+            if (ringer_cnt > 1) {
+                clearInterval(wplc_pending_refresh);
+                wplc_title_alerts4 = setTimeout(function () {
+                    document.title = orig_title;
+                }, 4000);
+                return;
+            }
+
+            document.title = "** CHAT REQUEST **";
+            wplc_title_alerts2 = setTimeout(function () {
+                document.title = "** CHAT REQUEST **";
+            }, 2000);
+            wplc_title_alerts4 = setTimeout(function () {
+                document.title = orig_title;
+            }, 4000);
 
 
+                
+            
+
+        }
         function wplc_call_to_server(data) {
 
 
@@ -782,7 +843,22 @@ function wplc_admin_javascript() {
                         //console.log(response);
                         data["wplc_update_admin_chat_table"] = response['wplc_update_admin_chat_table'];
                         //console.log(response['visitors']);
-
+                        
+                        if (response['action'] === "wplc_update_chat_list") {
+                            wplc_handle_chat_output(response['wplc_update_admin_chat_table']);
+                            if (response['pending'] === true) {
+                                
+                                wplc_notify_agent();
+                                wplc_pending_refresh = setInterval(function () {
+                                    
+                                    wplc_notify_agent();
+                                }, 5000);
+                            } else {
+                                //console.log("end");
+                                clearInterval(wplc_pending_refresh);
+                                ringer_cnt = 0;
+                            }
+                        }
                         if (response['action'] === "wplc_update_admin_chat") {
                             jQuery("#wplc_admin_chat_area").html(response['wplc_update_admin_chat_table']);
                             if (response['pending'] === true) {
@@ -834,19 +910,19 @@ function wplc_admin_javascript() {
                 },
                 error: function (jqXHR, exception) {
                     if (jqXHR.status == 404) {
-                        console.log('Requested page not found. [404]');
+                        if( window.console ) { console.log('Requested page not found. [404]'); }
                         wplc_run = false;
                     } else if (jqXHR.status == 500) {
-                        console.log('Internal Server Error [500].');
+                        if( window.console ) { console.log('Internal Server Error [500].'); }
                         wplc_run = false;
                     } else if (exception === 'parsererror') {
-                        console.log('Requested JSON parse failed.');
+                        if( window.console ) { console.log('Requested JSON parse failed.'); }
                         wplc_run = false;
                     } else if (exception === 'abort') {
-                        console.log('Ajax request aborted.');
+                        if( window.console ) { console.log('Ajax request aborted.'); }
                         wplc_run = false;
                     } else {
-                        console.log('Uncaught Error.\n' + jqXHR.responseText);
+                        if( window.console ) { console.log('Uncaught Error.\n' + jqXHR.responseText); }
                         wplc_run = false;
                     }
                 },
@@ -860,9 +936,201 @@ function wplc_admin_javascript() {
                 },
                 timeout: 120000
             });
-        }
-        ;
+        };
 
+
+    function wplc_handle_chat_output(response) {
+        var obj = jQuery.parseJSON(response);
+        if (obj === false || obj === null) {
+                jQuery("#wplc_chat_ul").html("");
+                current_chat_ids = {};
+                wplc_handle_count_change(0);
+                
+        } else {
+            var size = Object.size(current_chat_ids);
+            wplc_handle_count_change(size);
+            if (size < 1) {
+                /* no prior visitor information, update without any checks */
+                current_chat_ids = obj["ids"];
+                wplc_update_chat_list(false,obj);
+            } else {
+                /* we have had visitor information prior to this call, update systematically */
+                if (obj === null) {
+                    jQuery("#wplc_chat_ul").html("");
+                } else {
+                    current_chat_ids = obj["ids"];
+                    wplc_update_chat_list(true,obj);
+                }
+            }
+
+        
+        }
+        var size = Object.size(current_chat_ids);
+        wplc_handle_count_change(size);
+        
+    
+
+    }
+    function wplc_handle_count_change(qty) {
+        if (qty > chat_count) {
+            jQuery(".wplc_chat_vis_count_box").animate({backgroundColor: '#B3D24B'}, 300);
+            jQuery(".wplc_vis_online").html(qty);
+            jQuery(".wplc_chat_vis_count_box").animate({backgroundColor: 'white'}, 200);
+        } else if (qty === chat_count) {
+            jQuery(".wplc_vis_online").html(qty);
+        } else {
+            jQuery(".wplc_chat_vis_count_box").animate({backgroundColor: '#E1734A'}, 300);
+            jQuery(".wplc_vis_online").html(qty);
+            jQuery(".wplc_chat_vis_count_box").animate({backgroundColor: 'white'}, 200);
+        }
+        chat_count = qty;
+        
+    }
+    
+    
+    function wplc_get_status_name(status) {
+        if (status === 1) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>complete</span>";
+        }
+        if (status === 2) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>pending</span>";
+        }
+        if (status === 3) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>active</span>";
+        }
+        if (status === 4) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>deleted</span>";
+        }
+        if (status === 5) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>browsing</span>";
+        }
+        if (status === 6) {
+            return "<span class='wplc_status_box wplc_status_"+status+"'>requesting chat</span>";
+        }
+        if (status === 8){
+            return "<span class='wplc_status_box wplc_status_"+status+"'>chat ended</span></span>";
+        }
+        if (status === 9){
+            return "<span class='wplc_status_box wplc_status_"+status+"'>chat closed</span>";
+        }
+    }
+    function wplc_get_type_box(type) {
+        if (type === "New") {
+            return "<span class='wplc_status_box wplc_type_new'>New</span>";
+        }
+        if (type === "Returning") {
+            return "<span class='wplc_status_box wplc_type_returning'>Returning</span>";
+        }
+    }
+    
+    function wplc_create_chat_ul_element_after_eating_vindaloo(obj,key) {
+        var v_img = obj[key]['image'];
+        var v_name = obj[key]['name'];
+        var v_email = obj[key]['email'];
+        var v_browser = obj[key]['data']['browser'];
+        var v_browsing = obj[key]['data']['browsing_nice_url'];
+        var v_browsing_url = obj[key]['data']['browsing'];
+        var v_status = obj[key]['status'];
+        var v_time = obj[key]['timestamp'];
+        var v_type = obj[key]['type'];
+        var v_action = obj[key]['action'];
+        var v_status_string = wplc_get_status_name(parseInt(v_status));
+
+        var v_vis_html = "<span class='wplc_headerspan_v'>"+v_name+"</span>";
+        var v_nr_html = "<span class='wplc_headerspan_nr'><span class='browser-tag'>"+v_browser+"</span> "+wplc_get_type_box(v_type)+"</span>";
+        var v_time_html = "<span class='wplc_headerspan_t'><span class='wplc_status_box wplc_status_1'>"+v_time+"</span></span>";
+        var v_nr_data = "<span class='wplc_headerspan_d'><span class='wplc-sub-item-header'>Page:</span> <a href='"+v_browsing_url+"' target='_BLANK'>"+v_browsing+"</a><br /><span class='wplc-sub-item-header'>Email:</span> <a href='mailto:"+v_email+"' target='_BLANK'>"+v_email+"</a></span>";
+        var v_nr_status_html = "<span class='wplc_headerspan_s'>"+v_status_string+"</span>";
+        var v_nr_action_html = "<span class='wplc_headerspan_a'>"+v_action+"</span>";
+
+        var wplc_v_html = "\
+            <ul id='wplc_p_ul_"+key+"' class='wplc_p_cul' cid='"+key+"'>\n\
+                    <li>"+v_vis_html+"</li>\n\
+                    <li>"+v_time_html+"</li>\n\
+                    <li>"+v_nr_html+"</li>\n\
+                    <li>"+v_nr_data+"</li>\n\
+                    <li>"+v_nr_status_html+"</li>\n\
+                    <li>"+v_nr_action_html+"</li>\n\
+            <ul>";
+    return wplc_v_html;
+
+        
+    }
+    
+    function wplc_update_chat_list(update,obj) {
+
+        /* first compare existing elements with the elements on the page */
+        if (update === false) {
+            jQuery( ".wplc_chat_ul" ).html("");
+
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key) && key !== "ids") {
+                    wplc_v_html = wplc_create_chat_ul_element_after_eating_vindaloo(obj,key);
+                    jQuery( "#wplc_chat_ul" ).append(wplc_v_html).hide().fadeIn(2000);
+                    
+                }
+            }
+            current_chat_ids = obj["ids"];
+
+        } else {
+            
+            for (var key in current_chat_ids) {
+                current_id = key;
+                if (document.getElementById("wplc_p_ul_"+current_id) !== null) {
+                    /* element is already there */
+                    /* update element */
+                    if (typeof obj[current_id] !== "undefined") { /* if this check isnt here, it will throw an error. This check is here incase the item has been deleted. If it has, it will be handled futher down */
+                        jQuery("#wplc_p_ul_"+current_id).remove();
+                        wplc_v_html = wplc_create_chat_ul_element_after_eating_vindaloo(obj,current_id);
+                        jQuery( "#wplc_chat_ul" ).append(wplc_v_html);
+                        //jQuery( ".wplc_chats_container" ).append(obj[current_id]['content']);
+                    }
+
+
+                } else {
+                    jQuery("#nifty_c_none").hide();
+                    /* new element to be created */
+                    if (typeof obj[current_id] !== "undefined") { /* if this check isnt here, it will throw an error. This check is here incase the item has been deleted. If it has, it will be handled futher down */
+                        
+                        wplc_v_html = wplc_create_chat_ul_element_after_eating_vindaloo(obj,current_id);
+                        jQuery( "#wplc_chat_ul" ).append(wplc_v_html);
+                        
+                        jQuery("#wplc_p_ul_"+current_id).hide().fadeIn(2000);
+                        
+                    }
+                }
+
+
+            }
+
+        }
+
+            /* compare new elements to old elements and delete where neccessary */
+
+
+            jQuery(".wplc_p_cul").each(function(n, i) {
+                var cid = jQuery(this).attr("cid");
+                if (typeof cid !== "undefined") {
+                    if (typeof current_chat_ids[cid] !== "undefined") { /* element still there dont delete */ }
+                    else {
+                        jQuery("#wplc_p_ul_"+cid).fadeOut(2000).delay(2000).remove();
+                        
+                    }
+                    var size = Object.size(current_chat_ids);
+                    wplc_handle_count_change(size);
+                }
+                // do something with it
+            });
+            if(jQuery('.wplc_p_cul').length < 1) {
+                wplc_handle_count_change(0);
+                current_chat_ids = {};
+            }
+
+
+
+
+
+    }
 
 
         jQuery(document).ready(function () {
@@ -875,6 +1143,37 @@ function wplc_admin_javascript() {
                     }
                     window.open(jQuery(this).attr("href"), jQuery(this).attr("window-title"), "width=800,height=600,scrollbars=yes", false);
                 }
+            });
+            
+            jQuery('body').on("click", "#wplc_close_ftt", function (event) {
+                jQuery("#wplcftt").fadeOut(1000);
+                var data = {
+                    action: 'wplc_hide_ftt',
+                    security: '<?php echo $ajax_nonce; ?>',
+                };
+                jQuery.ajax({
+                    url: wplc_ajaxurl,
+                    data: data,
+                    type: "POST",
+                    success: function (response) {
+
+                    }
+                });
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
             });
 
             wplc_call_to_server(data);
@@ -935,56 +1234,111 @@ function wplc_admin_menu_layout() {
         }
     }
 }
+function wplc_first_time_tutorial() {
+    if (!get_option('WPLC_FIRST_TIME_TUTORIAL')) {
+        
+        global $wplc_basic_plugin_url;
+        ?>
+
+
+        <div id="wplcftt" style='margin-top:30px; margin-bottom:20px; width: 65%; background-color: #FFF; box-shadow: 1px 1px 3px #ccc; display:block; padding:10px; text-align:center; margin-left:auto; margin-right:auto;'>
+            <img src='<?php echo $wplc_basic_plugin_url; ?>/images/wplc_notification_icon.png' width="130" align="center" />
+            <h1 style='font-weight: 300; font-size: 50px; line-height: 50px;'><strong style="color: #ec822c;"><?php _e("Congratulations","wplivechat"); ?></strong></h1>
+            <h2><strong><?php _e("You are now accepting live chat requests on your site.","wplivechat"); ?></strong></h2>
+            <p><?php _e("The live chat box has automatically been enabled on your website.","wplivechat"); ?></p>
+            <p><?php _e("Chat notifications will start appearing once visitors send a request.","wplivechat"); ?></p>
+            <p><?php _e("You may <a href='?page=wplivechat-menu-settings' target='_BLANK'>modify your chat box settings here.","wplivechat"); ?></a></p>
+            <p><?php _e("Experiencing issues?","wplivechat"); ?> <a href="http://wp-livechat.com/documentation/troubleshooting/" target="_BLANK" title=""><?php _e("Visit our troubleshooting section.","wplivechat"); ?></a></p>
+            
+            <p><button id="wplc_close_ftt" class="button button-secondary"><?php _e("Hide","wplivechat"); ?></button></p>
+            
+        </div>
+        
+    <?php }
+}
 
 function wplc_admin_menu_layout_display() {
     if(current_user_can('wplc_ma_agent') || current_user_can('manage_options')){
-        
+        global $wplc_basic_plugin_url;
         if (!isset($_GET['action'])) {
             ?>
-            <div style='float:right; display:block; width:450px;  padding:10px; text-align:center; background-color: #EEE; border: 1px solid #E6DB55; margin:10px;'>
-                <strong><?php _e("Experiencing problems with the plugin?", "wplivechat") ?></strong>
-                <br />
-                <a href='http://wp-livechat.com/documentation/' title='WP Live Chat Support Documentation' target='_BLANK'><?php _e("Review the documentation.", "wplivechat") ?></a> 
-            <?php _e("Or ask a question on our", "wplivechat") ?>  <a href='http://wp-livechat.com/forums/forum/support/' title='WP Live Chat Support Forum' target='_BLANK'><?php _e('Support forum.', 'wplivechat'); ?></a>
+        <style>
+                #wplc-support-tabs a.wplc-support-link {
+            background: url('<?php echo $wplc_basic_plugin_url; ?>/images/support.png');
+            right: 0px;
+            top: 250px;
+            height: 108px;
+            width: 45px;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            z-index: 9999;
+            display:block;
+        }
+        </style>
+
+            <div id="wplc-support-tabs">
+                <a class="wplc-support-link wplc-rotate" href="?page=wplivechat-menu-support-page"></a>
             </div>
-            <br/>
-            <br/>
-            <br/>
             <div class='wplc_page_title'>
-                <h1><?php _e("Chat sessions", "wplivechat"); ?></h1>
+                <h1><?php _e("Chat Dashboard", "wplivechat"); ?></h1>
+                <?php wplc_first_time_tutorial(); ?>
 
                 <p><?php _e("Please note: This window must be open in order to receive new chat notifications.", "wplivechat"); ?></p>
             </div>
             
             <div id="wplc_sound"></div>
 
-            <div class="wplc_admin_dashboard_container">
-                <div id="wplc_admin_chat_area">
-                    <?php
-                    if (function_exists("wplc_register_pro_version")) {
-                        echo wplc_list_chats_pro();
-                    } else {
-                        echo wplc_list_chats();
-                    }
-                    ?>                    
-                </div>
-                <div id="wplc_admin_visitor_area">
-                    <div class="wplc_visitor_container">
-                        <h1><?php _e("Visitors on site", "wplivechat") ?></h1>    
-                        <p>
-                            <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
-                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
-                                <?php _e("see who's online and initiate chats", "wplivechat"); ?>
-                            </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
-                            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95. Free Updates FOREVER.", "wplivechat"); ?>" target=\"_BLANK\">
-                                <strong>
-                                    <?php _e("Buy the Pro add-on now for only $19.95.", "wplivechat"); ?>
-                                </strong>
-                            </a>
+            <div id="wplc_admin_chat_holder">
+                <div id='wplc_admin_chat_info_new'>
+                    <div class='wplc_chat_vis_count_box'>
+                        <span class='wplc_vis_online'>0</span>
+                        <span style='text-transform:uppercase;'>
+                            <?php _e("Visitors online","wplivechat"); ?>
+                        </span>
+                        <hr />
+                        <p class='wplc-agent-info' id='wplc-agent-info'>
+                            <span class='wplc_agents_online'>1</span>
+                            <a href='javascript:void(0);'><?php _e("Agent(s) online","wplivechat"); ?></a>
                         </p>
+                        
                     </div>
+                    
                 </div>
+                
+                <div id="wplc_admin_chat_area_new">
+                    <div style="display:block;padding:10px;">
+                    <ul class='wplc_chat_ul_header'>
+                        <li><span class='wplc_header_vh wplc_headerspan_v'><?php _e("Visitor","wplivechat"); ?></span></li>
+                        <li><span class='wplc_header_vh wplc_headerspan_t'><?php _e("Time","wplivechat"); ?></span></li>
+                        <li><span class='wplc_header_vh wplc_headerspan_nr'><?php _e("Type","wplivechat"); ?></span></li>
+                        <li><span class='wplc_header_vh wplc_headerspan_d'><?php _e("Data","wplivechat"); ?></span></li>
+                        <li><span class='wplc_header_vh wplc_headerspan_s'><?php _e("Status","wplivechat"); ?></span></li>
+                        <li><span class='wplc_header_vh wplc_headerspan_a'><?php _e("Action","wplivechat"); ?></span></li>
+                    </ul>
+                    <ul id='wplc_chat_ul'>
+
+
+                    </ul>
+                        <p>
+            <?php _e("With the Pro add-on of WP Live Chat Support, you can", "wplivechat"); ?> 
+            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1" title="<?php _e("see who's online and initiate chats", "wplivechat"); ?>" target=\"_BLANK\">
+               <?php _e("initiate chats", "wplivechat"); ?>
+            </a> <?php _e("with your online visitors with the click of a button.", "wplivechat"); ?> 
+            <a href="http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2" title="<?php _e("Buy the Pro add-on now for only $19.95 once off.", "wplivechat"); ?>" target=\"_BLANK\">
+               <strong>
+                   <?php _e("Buy the Pro add-on now for only $19.95 once off.", "wplivechat"); ?>
+               </strong>
+            </a>
+            </p>
+                    </div>
+
+                </div>
+                
             </div>
+            
+            
+          
 
             <?php
         } else {
@@ -1145,7 +1499,6 @@ function wplc_return_admin_chat_javascript($cid) {
                     if (response) {
 
                         response = JSON.parse(response);
-    //                        console.log(response);
                         if (response['action'] === "wplc_update_chat_status") {
                             data['chat_status'] = response['chat_status'];
                             wplc_display_chat_status_update(response['chat_status'], cid);
@@ -1397,6 +1750,7 @@ function wplc_handle_db() {
           session varchar(100) NOT NULL,
           url varchar(700) NOT NULL,
           last_active_timestamp datetime NOT NULL,
+          other LONGTEXT NOT NULL,
           PRIMARY KEY  (id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
     ";
@@ -1451,6 +1805,11 @@ function wplc_add_admin_stylesheet() {
         wp_enqueue_style('wplc-chat-style');
         wp_register_style('wplc-font-awesome', plugins_url('/css/font-awesome.min.css', __FILE__));
         wp_enqueue_style('wplc-font-awesome');
+        wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script('jquery-effects-core');
+        
+        
+
     }
     if (isset($_GET['page']) && $_GET['page'] == "wplivechat-menu-support-page") {
         wp_register_style('fontawesome', plugins_url('css/font-awesome.min.css', __FILE__));
@@ -1681,25 +2040,19 @@ function wplc_support_menu() {
             <p><?php _e("Getting started? Read through some of these articles to help you along your way.","wplivechat"); ?></p>
             <p><strong><?php _e("Documentation:","wplivechat"); ?></strong></p>
             <ul>
-                <li><a href='http://wp-livechat.com/documentation/installing-the-wp-live-chat-support-pro-add-on/' target='_BLANK' title='<?php _e("Installing the WP Live Chat Support Pro add-on","wplivechat"); ?>'><?php _e("Installing the WP Live Chat Support Pro add-on","wplivechat"); ?></a></li>
-                <li><a href='http://wp-livechat.com/documentation/running-the-wp-live-chat-support-plugin-for-the-first-time/' target='_BLANK' title='<?php _e("Running the WP Live Chat Support plugin for the first time (Pro)","wplivechat"); ?>'><?php _e("Running the WP Live Chat Support plugin for the first time (Pro)","wplivechat"); ?></a></li>
-                <li><a href='http://wp-livechat.com/upgrading-your-licence/' target='_BLANK' title='<?php _e("Upgrading your licence (Pro)","wplivechat"); ?>'><?php _e("Upgrading your licence (Pro)","wplivechat"); ?></a></li>
                 <li><a href='http://wp-livechat.com/documentation/minimum-system-requirements/' target='_BLANK' title='<?php _e("Minimum System Requirements","wplivechat"); ?>'><?php _e("Minimum System Requirements","wplivechat"); ?></a></li>
-            </ul>
-            <p><strong><?php _e("FAQ's:","wplivechat"); ?></strong></p>
-            <ul>
-                <li><a href='http://wp-livechat.com/documentation/how-do-i-check-for-javascript-errors-on-my-site/' target='_BLANK' title='<?php _e("How do I check for JavaScript errors on my site?","wplivechat"); ?>'><?php _e("How do I check for JavaScript errors on my site?","wplivechat"); ?></a></li>
+                <li><a href='http://wp-livechat.com/documentation/do-i-have-to-be-logged-into-the-dashboard-to-chat-with-visitors/' target='_BLANK' title='<?php _e("Do I have to be logged into the dashboard to chat with visitors?","wplivechat"); ?>'><?php _e("Do I have to be logged into the dashboard to chat with visitors?","wplivechat"); ?></a></li>
                 <li><a href='http://wp-livechat.com/documentation/what-are-quick-responses/' target='_BLANK' title='<?php _e("What are Quick Responses?","wplivechat"); ?>'><?php _e("What are Quick Responses?","wplivechat"); ?></a></li>
                 <li><a href='http://wp-livechat.com/documentation/troubleshooting/is-this-plugin-multi-site-friendly/' target='_BLANK' title='<?php _e("Can I use this plugin on my multi-site?","wplivechat"); ?>'><?php _e("Can I use this plugin on my multi-site?","wplivechat"); ?></a></li>
                 <li><a href='http://wp-livechat.com/documentation/how-do-i-disable-apc-object-cache/' target='_BLANK' title='<?php _e("How do I disable APC Object Cache?","wplivechat"); ?>'><?php _e("How do I disable APC Object Cache?","wplivechat"); ?></a></li>
                 <li><a href='http://wp-livechat.com/documentation/do-you-have-a-mobile-app/' target='_BLANK' title='<?php _e("Do you have a mobile app?","wplivechat"); ?>'><?php _e("Do you have a mobile app?","wplivechat"); ?></a></li>
-                <li><a href='http://wp-livechat.com/documentation/do-i-have-to-be-logged-into-the-dashboard-to-chat-with-visitors/' target='_BLANK' title='<?php _e("Do I have to be logged into the dashboard to chat with visitors?","wplivechat"); ?>'><?php _e("Do I have to be logged into the dashboard to chat with visitors?","wplivechat"); ?></a></li>
+                <li><a href='http://wp-livechat.com/documentation/how-do-i-check-for-javascript-errors-on-my-site/' target='_BLANK' title='<?php _e("How do I check for JavaScript errors on my site?","wplivechat"); ?>'><?php _e("How do I check for JavaScript errors on my site?","wplivechat"); ?></a></li>
             </ul>
         </div>
         <div class='wplc_row_col' style='background-color:#FFF;'>
             <h2><i class="fa fa-exclamation-circle fa-2x"></i> <?php _e("Troubleshooting","wplivechat"); ?></h2>
             <hr />
-            <p><?php _e("WP Live Chat Support Pro has a diverse and wide range of features which may, from time to time, run into conflicts with the thousands of themes and other plugins on the market.", "wplivechat"); ?></p>
+            <p><?php _e("WP Live Chat Support  has a diverse and wide range of features which may, from time to time, run into conflicts with the thousands of themes and other plugins on the market.", "wplivechat"); ?></p>
             <p><strong><?php _e("Common issues:","wplivechat"); ?></strong></p>
             <ul>
                 <li><a href='http://wp-livechat.com/documentation/troubleshooting/the-chat-box-doesnt-show-up/' target='_BLANK' title='<?php _e("The chat box doesnt show up","wplivechat"); ?>'><?php _e("The chat box doesnt show up","wplivechat"); ?></a></li>
@@ -1722,3 +2075,25 @@ function wplc_support_menu() {
     </div>
 <?php
 }
+if (!function_exists("wplc_pro_version_control")) {
+    add_action('admin_enqueue_scripts', 'wp_button_pointers_load_scripts');
+}
+function wp_button_pointers_load_scripts($hook) {
+    
+    if( $hook != 'toplevel_page_wplivechat-menu') {return;}   // stop if we are not on the right page
+
+    
+    $pointer_localize_strings = array(
+      "initiate" => "<h3>".__("Initiate Chats","wplivechat")."</h3><p>".__("With the Pro add-on of WP Live Chat Support, you can", "wplivechat")." <a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate1_pointer' title='".__("see who's online and initiate chats", "wplivechat")."' target=\"_BLANK\">".__("initiate chats", "wplivechat")."</a> ".__("with your online visitors with the click of a button.", "wplivechat")." <br /><br /><a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=initiate2_pointer' title='".__("Buy the Pro add-on now for only $19.95 once off.", "wplivechat")."' target=\"_BLANK\"><strong>".__("Buy the Pro add-on now for only $19.95 once off.", "wplivechat")."</strong></a></p>",
+      "chats" => "<h3>".__("Multiple Chats","wplivechat")."</h3><p>".__("With the Pro add-on of WP Live Chat Support, you can", "wplivechat")." <a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=morechats1_pointer' title='".__("accept and handle multiple chats.", "wplivechat")."' target=\"_BLANK\">".__("accept and handle multiple chats.", "wplivechat")."</a><br /><br /><a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=morechats2_pointer' title='".__("Buy the Pro add-on now for only $19.95 once off.", "wplivechat")."' target=\"_BLANK\"><strong>".__("Buy the Pro add-on now for only $19.95 once off.", "wplivechat")."</strong></a></p>",
+      "agent_info" => "<h3>".__("Add unlimited agents","wplivechat")."</h3><p><a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=unlimited_agents1_pointer' title='".__("Add unlimited agents", "wplivechat")."' target=\"_BLANK\">".__("Add unlimited agents", "wplivechat")."</a> ".__(" with the Pro add-on of WP Live Chat Support","wplivechat")." "."<a href='http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=unlimited_agents2_pointer' target='_BLANK'>".__("for only $19.95 once off.","wplivechat")."</a></p>"
+    ); 
+    
+    
+    wp_enqueue_style( 'wp-pointer' );
+    wp_enqueue_script( 'wp-pointer' );
+    wp_register_script('wplc-user-admin-pointer', plugins_url('/js/wplc-admin-pointers.js', __FILE__), array('wp-pointer'));
+    wp_enqueue_script('wplc-user-admin-pointer');
+    wp_localize_script('wplc-user-admin-pointer', 'pointer_localize_strings', $pointer_localize_strings);
+    
+    }

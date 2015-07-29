@@ -69,10 +69,7 @@ jQuery(document).ready(function() {
             success: function(response) {
                 
                 if(response){
-                    console.log(response);
                     response = JSON.parse(response);
-//                    console.log(response);
-                    // set vars and cookies
                     data['wplc_name'] = response['wplc_name'];
                     data['wplc_email'] = response['wplc_email'];
                     data['action_2'] = "";
@@ -82,15 +79,9 @@ jQuery(document).ready(function() {
                     jQuery.cookie('wplc_email', response['wplc_email'], { expires: 1, path: '/' });
 
                     wplc_cid = jQuery.trim(response['cid']);
-//                    console.log(wplc_cid);
                     wplc_chat_status = response['status'];
-//                    console.log(wplc_chat_status);
-//                    console.log(jQuery.cookie('wplc_chat_status'));
-//                    console.log('1 setting wplc_chat_stauts to '+wplc_chat_status);
                     jQuery.cookie('wplc_chat_status', null, { path: '/' });
-//                    console.log(jQuery.cookie('wplc_chat_status'));
                     jQuery.cookie('wplc_chat_status', wplc_chat_status, { expires: 1, path: '/' });
-//                    console.log(jQuery.cookie('wplc_chat_status'));
                     // handle response
                     if(data['status'] == response['status']){
                         if(data['status'] == 5 && wplc_init_chat_box_check == true){ // open chat box on load
@@ -113,6 +104,7 @@ jQuery(document).ready(function() {
                             jQuery("#wp-live-chat-react").show().empty().append("<center>"+response['data']+"</center>");
                         }
                         else if(response['status'] == 8){ // chat has been ended by admin
+                            wplc_run = false;
                             var height = jQuery('#wplc_chatbox')[0].scrollHeight;
                             jQuery('#wplc_chatbox').scrollTop(height);
                             jQuery("#wp-live-chat-minimize").hide();
@@ -148,20 +140,20 @@ jQuery(document).ready(function() {
             },
             error: function(jqXHR, exception) {
                     if (jqXHR.status == 404) {
-                        console.log('Requested page not found. [404]');
-			wplc_run = false;
+                        if (window.console) { console.log('Requested page not found. [404]'); }
+            			wplc_run = false;
                     } else if (jqXHR.status == 500) {
-                        console.log('Internal Server Error [500].');
-			wplc_run = false;
+                        if (window.console) { console.log('Internal Server Error [500].'); }
+			            wplc_run = false;
                     } else if (exception === 'parsererror') {
-                        console.log('Requested JSON parse failed.');
-			wplc_run = false;
+                        if (window.console) { console.log('Requested JSON parse failed.'); }
+			            wplc_run = false;
                     } else if (exception === 'abort') {
-                        console.log('Ajax request aborted.');
-			wplc_run = false;
+                        if (window.console) { console.log('Ajax request aborted.'); }
+			            wplc_run = false;
                     } else {
-                        console.log('Uncaught Error.\n' + jqXHR.responseText);
-			wplc_run = false;
+                        if (window.console) { console.log('Uncaught Error.\n' + jqXHR.responseText); }
+			            wplc_run = false;
                     }                    
                 },
                 complete: function(response){
@@ -306,7 +298,10 @@ jQuery(document).ready(function() {
             jQuery("#wp-live-chat-4").hide();
             jQuery("#wp-live-chat-react").hide();
             jQuery("#wp-live-chat-minimize").hide();
-            jQuery.cookie('wplc_hide', wplc_hide_chat , { expires: 1, path: '/' });
+            var wplc_expire_date = new Date();
+            var minutes = 2;
+            wplc_expire_date.setTime(wplc_expire_date.getTime() + (minutes * 60 * 1000));
+            jQuery.cookie('wplc_hide', "yes" , { expires: wplc_expire_date , path: '/' });
             var data = {
                 action: 'wplc_user_close_chat',
                 security: wplc_nonce,

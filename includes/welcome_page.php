@@ -3,7 +3,7 @@
     <h1 style="font-weight: 300; font-size: 50px; line-height: 50px;">
         <?php _e("Welcome to ",'wplivechat'); ?> 
         <strong style='color: #ec822c;'>WP Live Chat Support</strong> 
-        <small><?php _e('Version 4', 'wplivechat'); ?></small>
+        <small><?php _e('Version 5', 'wplivechat'); ?></small>
     </h1>
     <div class="about-text" style="margin: 0;"><?php _e('Provide Instant Live Chat Support!', 'wplivechat'); ?></div>
 

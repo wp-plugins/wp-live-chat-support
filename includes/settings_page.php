@@ -275,14 +275,6 @@
           <h3><?php _e("Offline Messages",'wplivechat')?></h3>
           <table class='form-table' width='700'>
               <tr>
-                  <td>
-                      <?php _e("Do not allow users to send offline messages", "wplivechat") ?> <i class="fa fa-question-circle wplc_light_grey wplc_settings_tooltip" title="<?php _e("The chat window will be hidden when it is offline. Users will not be able to send offline messages to you", "wplivechat") ?>"></i>
-                  </td>
-                  <td>
-                      <input type="checkbox" name="wplc_hide_when_offline" value="1" readonly="readonly" disabled/>                      
-                  </td>
-              </tr>
-              <tr>
                 <td width='200' valign='top'>
                     <?php _e("Email Address","wplivechat")?>:
                 </td>
@@ -311,6 +303,14 @@
                     <br />
                 </td>
             </tr>
+              <tr>
+                  <td>
+                      <?php _e("Do not allow users to send offline messages", "wplivechat") ?> <i class="fa fa-question-circle wplc_light_grey wplc_settings_tooltip" title="<?php _e("The chat window will be hidden when it is offline. Users will not be able to send offline messages to you", "wplivechat") ?>"></i>
+                  </td>
+                  <td>
+                      <input type="checkbox" name="wplc_hide_when_offline" value="1" readonly="readonly" disabled/>                      
+                  </td>
+              </tr>
             
           </table>
       </div>
@@ -443,8 +443,96 @@
           </table>
       </div>
         <div id="tabs-5">
-            <h3><?php _e("Multiple Agents", "wplivechat") ?></h3>
-            <p><?php _e("Get","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents" target="_BLANK"><?php _e("Multiple agent support", "wplivechat") ?></a></p>
+
+
+        <style>
+            .wplc_agent_container ul { 
+                display:block;
+                overflow:auto;
+            }
+            .wplc_agent_container li{
+                display: block;
+                float: left;
+                text-align: center;
+                border: 1px solid #CCC;
+                width:150px;
+                height:310px;
+                padding: 10px;
+                border-radius: 5px;
+                margin: 10px;
+                box-shadow: 2px 2px 2px #CCC;
+                overflow: auto;
+
+            }
+            .wplc_agent_container img{
+                border-radius: 100px;
+            }
+            .wplc_agent_container h3 {
+                font: bold 12px/16px Arial;
+                padding: 0 0 0 0px;
+                color: #C2BBBE;
+                display: block;
+                height:40px;
+                text-transform: uppercase;
+            }
+            .wplc_agent_container small {  word-wrap: break-word; display:block; height:50px; }
+            .wplc_agent_container select { width: 120px; }
+            #wplc_add_agent { cursor: not-allowed;}
+        </style>
+        <h3><?php _e('Current Users that are Chat Agents', 'wplivechat'); ?></h3> 
+<?php
+$wplc_agents = "<div class='wplc_agent_container'><ul>";
+$user = wp_get_current_user();
+  $wplc_agents .= "<li id=\"wplc_agent_li_".$user->ID."\">";
+  $wplc_agents .= "<p><img src=\"//www.gravatar.com/avatar/" . md5($user->user_email) . "?s=80&d=mm\" /></p>";
+   $check = get_user_meta($user->ID,"wplc_chat_agent_online");
+  if ($check) {
+      $wplc_agents .= "<span class='wplc_status_box wplc_type_returning'>".__("Online","wplivechat")."</span>";
+  }
+  $wplc_agents .= "<h3>" . $user->display_name . "</h3>";
+ 
+  $wplc_agents .= "<small>" . $user->user_email . "</small>";
+
+  $wplc_agents .= "</li>";
+echo $wplc_agents;
+?>
+    <li style='width:150px;' id='wplc_add_new_agent_box'>
+        <p><i class='fa fa-plus-circle fa-4x' style='color:#ccc;' ></i></p>
+        <h3><?php _e("Add New Agent","wplivechat"); ?></h3>
+        <select id='wplc_agent_select'>
+            <option value=''><?php _e("Select","wplivechat"); ?></option>
+
+        <?php 
+            $blogusers = get_users( array( 'role' => 'administrator', 'fields' => array( 'display_name','id','user_email' ) ) );
+            // Array of stdClass objects.
+            foreach ( $blogusers as $user ) {
+                $is_agent = get_user_meta(esc_html( $user->ID ), 'wplc_ma_agent', true);            
+                if(!$is_agent){ echo '<option id="wplc_selected_agent_'. esc_html( $user->ID ) .'" value="' . esc_html( $user->ID ) . '">' . esc_html( $user->display_name ) . ' ('.__('Administrator','wplivechat').')</option>'; }
+            }
+            $blogusers = get_users( array( 'role' => 'editor', 'fields' => array( 'display_name','id','user_email' ) ) );
+            // Array of stdClass objects.
+            foreach ( $blogusers as $user ) {
+                $is_agent = get_user_meta(esc_html( $user->ID ), 'wplc_ma_agent', true);            
+                if(!$is_agent){ echo '<option id="wplc_selected_agent_'. esc_html( $user->ID ) .'" value="' . esc_html( $user->ID ) . '">' . esc_html( $user->display_name ) . ' ('.__('Editor','wplivechat').')</option>'; }
+            }
+            $blogusers = get_users( array( 'role' => 'author', 'fields' => array( 'display_name','id','user_email' ) ) );
+            // Array of stdClass objects.
+            foreach ( $blogusers as $user ) {
+                $is_agent = get_user_meta(esc_html( $user->ID ), 'wplc_ma_agent', true);            
+                if(!$is_agent){ echo '<option id="wplc_selected_agent_'. esc_html( $user->ID ) .'" value="' . esc_html( $user->ID ) . '">' . esc_html( $user->display_name ) . ' ('.__('Author','wplivechat').')</option>'; }
+            }
+        ?>
+        </select>
+        <p><button class='button button-secondary' id='wplc_add_agent' disabled style=><?php _e("Add Agent","wplivechat"); ?></button></p>
+        <p style='font-size:0.8em'><?php _e("Add as many agents as you need with the ","wplivechat") ?> <a href="http://wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=multipleAgents" target="_BLANK"><?php _e("Pro version for only $19.95 once off.", "wplivechat") ?></a></p>
+    </li>
+</ul>
+</div>
+    
+                <hr/>
+
+
+            
         </div>
         <div id="tabs-7">            
             <h3><?php _e("Blocked Visitors - Based on IP Address", "wplivechat") ?></h3>
@@ -452,8 +540,10 @@
                 $ip_addresses = get_option('WPLC_BANNED_IP_ADDRESSES'); 
                 if($ip_addresses){
                     $ip_addresses = maybe_unserialize($ip_addresses);
-                    foreach($ip_addresses as $ip){
-                        echo $ip."\n";
+                    if ($ip_addresses && is_array($ip_addresses)) {
+                        foreach($ip_addresses as $ip){
+                            echo $ip."\n";
+                        }
                     }
                 }
             ?></textarea>  

@@ -32,6 +32,16 @@ function wplc_log_user_on_page($name,$email,$session) {
 //
 //    $rows_affected = $wpdb->insert( $wplc_tblname_chats, $ins_array );
 
+    /* user types 
+     * 1 = new
+     * 2 = returning
+     * 3 = timed out
+     */
+    
+     $other = array(
+         "user_type" => 1
+     );
+    
     $wpdb->insert( 
 	$wplc_tblname_chats, 
 	array( 
@@ -42,10 +52,12 @@ function wplc_log_user_on_page($name,$email,$session) {
             'session' => $session,
             'ip' => maybe_serialize($user_data),
             'url' => $_SERVER['HTTP_REFERER'],
-            'last_active_timestamp' => current_time('mysql')
+            'last_active_timestamp' => current_time('mysql'),
+            'other' => maybe_serialize($other),
 	), 
 	array( 
             '%s', 
+            '%s',
             '%s',
             '%s',
             '%s',
@@ -290,7 +302,9 @@ function wplc_list_chats() {
                 $trstyle = "style='background-color:#F7FCFE; height:30px;'";
                 $icon = "<i class=\"fa fa-check-circle wplc_active\" title='".__('Chat Active', 'wplivechat')."' alt='".__('Chat Active', 'wplivechat')."'></i><div class='wplc_icon_message'>".__('This chat is active', 'wplivechat')."</div>";                        
             }
-            if ($wplc_c>1) { $actions = wplc_get_msg(); }
+            
+            
+            /* if ($wplc_c>1) { $actions = wplc_get_msg(); } */
             
            $trstyle = "";
             
@@ -335,6 +349,165 @@ function wplc_list_chats() {
     return $table;
 }
 
+function wplc_time_ago($time_ago)
+{
+    $time_ago = strtotime($time_ago);
+    $cur_time   = current_time('timestamp');
+    $time_elapsed   = $cur_time - $time_ago;
+    $seconds    = $time_elapsed ;
+    $minutes    = round($time_elapsed / 60 );
+    $hours      = round($time_elapsed / 3600);
+    $days       = round($time_elapsed / 86400 );
+    $weeks      = round($time_elapsed / 604800);
+    $months     = round($time_elapsed / 2600640 );
+    $years      = round($time_elapsed / 31207680 );
+    // Seconds
+    if($seconds <= 60){
+        return "0 min";
+    }
+    //Minutes
+    else if($minutes <=60){
+        if($minutes==1){
+            return "1 min";
+        }
+        else{
+            return "$minutes min";
+        }
+    }
+    //Hours
+    else if($hours <=24){
+        if($hours==1){
+            return "1 hr";
+        }else{
+            return "$hours hrs";
+        }
+    }
+    //Days
+    else if($days <= 7){
+        if($days==1){
+            return "1 day";
+        }else{
+            return "$days days";
+        }
+    }
+    //Weeks
+    else if($weeks <= 4.3){
+        if($weeks==1){
+            return "1 week";
+        }else{
+            return "$weeks weeks";
+        }
+    }
+    //Months
+    else if($months <=12){
+        if($months==1){
+            return "1 month";
+        }else{
+            return "$months months";
+        }
+    }
+    //Years
+    else{
+        if($years==1){
+            return "1 year";
+        }else{
+            return "$years years";
+        }
+    }
+}
+function wplc_list_chats_new() {
+
+    global $wpdb;
+    global $wplc_tblname_chats;
+    $status = 3;
+    $wplc_c = 0;    
+    $results = $wpdb->get_results("SELECT * FROM $wplc_tblname_chats WHERE `status` = 3 OR `status` = 2 OR `status` = 10 OR `status` = 5 or `status` = 8 or `status` = 9 ORDER BY `timestamp` ASC");
+    $data_array = array();
+    $id_list = array();
+    
+            
+    if (!$results) {
+        $data_array = false;
+    } else {
+        
+        
+        foreach ($results as $result) {
+            unset($trstyle);
+            unset($actions);
+            
+            
+            global $wplc_basic_plugin_url;
+            $user_data = maybe_unserialize($result->ip);
+            $user_ip = $user_data['ip'];
+            $browser = wplc_return_browser_string($user_data['user_agent']);
+            $browser_image = wplc_return_browser_image($browser,"16");
+            
+            if($user_ip == ""){
+                $user_ip = __('IP Address not recorded', 'wplivechat');
+            } else {
+                $user_ip = "<a href='http://www.ip-adress.com/ip_tracer/" . $user_ip . "' title='".__('Whois for' ,'wplivechat')." ".$user_ip."'>".$user_ip."</a>";
+            } 
+            
+            if (intval($result->status) == 2) {
+                $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat button button-primary\" window-title=\"WP_Live_Chat_".$result->id."\">".__("Accept Chat","wplivechat")."</a>";
+                $trstyle = "style='background-color:#FFFBE4; height:30px;'";
+                $icon = "<i class=\"fa fa-phone wplc_pending\" title='".__('Incoming Chat', 'wplivechat')."' alt='".__('Incoming Chat', 'wplivechat')."'></i><div class='wplc_icon_message'>".__('You have an incoming chat.', 'wplivechat')."</div>";
+                $wplc_c++;
+                
+            }
+            else if (intval($result->status) == 3) {
+                $wplc_c++;
+                $url = admin_url( 'admin.php?page=wplivechat-menu&action=ac&cid='.$result->id);
+                $actions = "<a href=\"".$url."\" class=\"wplc_open_chat button button-primary\" window-title=\"WP_Live_Chat_".$result->id."\">".__("Open Chat","wplivechat")."</a>";
+                $trstyle = "style='background-color:#F7FCFE; height:30px;'";
+                $icon = "<i class=\"fa fa-check-circle wplc_active\" title='".__('Chat Active', 'wplivechat')."' alt='".__('Chat Active', 'wplivechat')."'></i><div class='wplc_icon_message'>".__('This chat is active', 'wplivechat')."</div>";                        
+            }
+            else if(intval($result->status) == 5 ){
+                $actions = "<a href=\"javascript:void(0);\" id=\"wplc_initiate_chat\" class=\"wplc_initiate_chat button button-secondary\">".__("Initiate Chat","wplivechat")."</a>";
+            } 
+            else {
+                $actions = "";
+            }
+            if ($wplc_c>1) { $actions = wplc_get_msg(); }
+            
+            
+            
+           $trstyle = "";
+            
+           $id_list[intval($result->id)] = true;
+           
+           $data_array[$result->id]['name'] = $result->name;
+           $data_array[$result->id]['email'] = $result->email;
+           
+           $data_array[$result->id]['status'] = $result->status;
+           $data_array[$result->id]['action'] = $actions;
+           $data_array[$result->id]['timestamp'] = wplc_time_ago($result->timestamp);
+
+           if ((current_time('timestamp') - strtotime($result->timestamp)) < 3600) {
+               $data_array[$result->id]['type'] = __("New","wplivechat");
+           } else {
+               $data_array[$result->id]['type'] = __("Returning","wplivechat");
+           }
+           
+           $data_array[$result->id]['image'] = "<img src=\"//www.gravatar.com/avatar/".md5($result->email)."?s=20&d=mm\" />";
+           $data_array[$result->id]['data']['browsing'] = $result->url;
+           $path = parse_url($result->url, PHP_URL_PATH);
+           
+           if (strlen($path) > 20) {
+                $data_array[$result->id]['data']['browsing_nice_url'] = substr($path,0,20).'...';
+           } else { 
+               $data_array[$result->id]['data']['browsing_nice_url'] = $path;
+           }
+           
+           $data_array[$result->id]['data']['browser'] = "<img src='" . $wplc_basic_plugin_url . "/images/$browser_image' alt='$browser' title='$browser' /> ";
+           $data_array[$result->id]['data']['ip'] = $user_ip;
+        }
+        $data_array['ids'] = $id_list;
+    }
+    
+    return json_encode($data_array);
+}
 
 
 
@@ -843,7 +1016,7 @@ function wplc_user_initiate_chat($name,$email,$cid = null,$session) {
 
 
 function wplc_get_msg() {
-    return "<a href=\"http://www.wp-livechat.com/purchase-pro/?utm_source=plugin&utm_medium=link&utm_campaign=morechats\" title=\"".__("Get Pro Add-on to accept more chats","wplivechat")."\" target=\"_BLANK\">Get Pro Add-on to accept more chats</a>";
+    return "<a href=\"javascript:void(0);\" class=\"wplc_second_chat_request button button-primary\" style='cursor:not-allowed' title=\"".__("Get Pro Add-on to accept more chats","wplivechat")."\" target=\"_BLANK\">".__("Accept Chat","wplivechat")."</a>";
 }
 function wplc_update_chat_statuses() {
 
@@ -859,26 +1032,29 @@ function wplc_update_chat_statuses() {
     foreach ($results as $result) {
         $id = $result->id;
         $timestamp = strtotime($result->last_active_timestamp);
-        if ($result->status == 2) {
-            if ((time() -  $timestamp) >= 60) { // 1 minute max
+        $datenow = current_time('timestamp');
+        $difference = $datenow - $timestamp;
+        
+        if (intval($result->status) == 2) {
+            if ($difference >= 60) { // 1 minute max
                 wplc_change_chat_status($id,0);
             }
         }
-        else if ($result->status == 3) {
-            if ((time() -  $timestamp) >= 300) { // 30 seconds
+        else if (intval($result->status) == 3) {
+            if ($difference >= 300) { // 30 seconds
                 wplc_change_chat_status($id,1);
             }
         }
-        else if ($result->status == 5) {
-            if ((time() -  $timestamp) >= 120) { // 2 minute timeout
+        else if (intval($result->status) == 5) {
+            if ($difference >= 120) { // 2 minute timeout
                 wplc_change_chat_status($id,7); // 7 - timedout
             }
-        } else if($result->status == 8){ // chat is complete but user is still browsing
-            if ((time() -  $timestamp) >= 20) { // 20 seconds
+        } else if(intval($result->status) == 8){ // chat is complete but user is still browsing
+            if ($difference >= 45) { // 30 seconds
                 wplc_change_chat_status($id,1); // 1 - chat is now complete
             }
-        } else if($result->status == 9 || $result->status == 10){
-            if ((time() -  $timestamp) >= 20) { // 20 seconds
+        } else if(intval($result->status) == 9 || $result->status == 10){
+            if ($difference >= 120) { // 120 seconds
                 wplc_change_chat_status($id,7); // 7 - timedout
             }
         }

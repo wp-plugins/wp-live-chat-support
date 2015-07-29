@@ -45,8 +45,8 @@ function wplc_init_ajax_callback() {
             $i = 1;
             while($i <= $iterations){
                 
-                // update chats if they have timed out every 10 seconds
-                if($i %10 == 0) {
+                // update chats if they have timed out every 15 iterations
+                if($i %15 == 0) {
                     wplc_update_chat_statuses();
                 }
                 
@@ -55,19 +55,25 @@ function wplc_init_ajax_callback() {
      
                 
                 if($_POST['wplc_update_admin_chat_table'] == 'false'){
+                    /* this is a new load of the page, return false so we can force a send of the new visitor data */
                     $old_chat_data = false;
                 } else {
-                    $old_chat_data = sanitize_text_field($_POST['wplc_update_admin_chat_table']);
+                    $old_chat_data = stripslashes($_POST['wplc_update_admin_chat_table']);
                 }
                 
                 $pending = wplc_check_pending_chats();
-                $new_chat_data = wplc_list_chats();
+                $new_chat_data = wplc_list_chats_new();
                 
-                if(sanitize_text_field($new_chat_data) !== sanitize_text_field($old_chat_data)){
+
+                if ($new_chat_data == "false") { $new_chat_data = false; }
+                
+                
+                
+                if($new_chat_data !== $old_chat_data){
                     $array['old_chat_data'] = $old_chat_data;
                     $array['wplc_update_admin_chat_table'] = $new_chat_data;
                     $array['pending'] = $pending;
-                    $array['action'] = "wplc_update_admin_chat";
+                    $array['action'] = "wplc_update_chat_list";
                     
                 }
                 
@@ -141,7 +147,7 @@ function wplc_init_ajax_callback() {
             while($i <= $iterations){
                 if($_POST['cid'] == null || $_POST['cid'] == "" || $_POST['cid'] == "null" || $_POST['cid'] == 0){
     //                echo 1;
-                    $user = "user".time();
+                    $user = "Guest";
                     $email = "no email set";
                     $cid = wplc_log_user_on_page($user,$email,sanitize_text_field($_POST['wplcsession']));
                     $array['cid'] = $cid;
