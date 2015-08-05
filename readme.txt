@@ -194,6 +194,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 5.0.2 - 2015-08-05 - Medium Priority =
+* Fixed a bug that caused a fatal error with older versions of WP Live Chat Support Pro
+
 = 5.0.1 - 2015-08-05 - Medium Priority =
 * Refactored the code so that the live chat box will show up even if there is a JS error from another plugin or theme
 * Live chat box styling fixes: top image padding; centered the "conneting, please be patient" message and added padding
