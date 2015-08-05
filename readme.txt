@@ -194,6 +194,9 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 5.0.3 - 2015-08-05 - Medium Priority =
+* Small bug fix
+
 = 5.0.2 - 2015-08-05 - Medium Priority =
 * Fixed a bug that caused a fatal error with older versions of WP Live Chat Support Pro
 
