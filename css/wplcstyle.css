@@ -53,6 +53,10 @@
 
 #wp-live-chat-4 {
 }
+#wp-live-chat-3 {
+    padding: 10px;
+    text-align: center;
+}
 
 #wp-live-chat {
     position: fixed;
@@ -190,7 +194,7 @@
 }
 #wp-live-chat-inner-image-div{
     overflow: hidden;
-    height: 40px;
+    height: 32px;
 }
 
 .wplc_close.wplc_left #wp-live-chat-1{

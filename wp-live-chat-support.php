@@ -3,13 +3,19 @@
   Plugin Name: WP Live Chat Support
   Plugin URI: http://www.wp-livechat.com
   Description: The easiest to use website live chat plugin. Let your visitors chat with you and increase sales conversion rates with WP Live Chat Support. No third party connection required!
-  Version: 5.0.0
+  Version: 5.0.1
   Author: WP-LiveChat
   Author URI: http://www.wp-livechat.com
  */
 
 
-/* 5.0.0
+/* 
+ * 5.0.1 - 2015-08-05 - Medium Priority
+ * Refactored the code so that the live chat box will show up even if there is a JS error from another plugin or theme
+ * Live chat box styling fixes: top image padding; centered the "conneting, please be patient" message and added padding
+ * The live chat long poll connection will not automatically reinitialize if the connection times out or returns a 5xx error
+ * 
+ * 5.0.0 - 2015-07-29 - Doppio update - Medium Priority
  * New, modern chat dashboard
  * Better user handling (chat long polling)
  * Added a welcome page to the live chat dashboard
@@ -17,7 +23,6 @@
  * You are now able to see who is a new visitor and who is a returning visitor
  * Bug fixes in the javascript that handles the live chat controls
  * Fixed the bug that stopped the chats from timing out after a certain amount of time
- * 
  * 
  * 4.4.4 - 2015-07-20 - Low Priority
  * Bug Fix: Big fixed that would cause the live chat to timeout during a conversation
@@ -234,7 +239,7 @@ global $wplc_tblname_chats;
 global $wplc_tblname_msgs;
 $wplc_tblname_chats = $wpdb->prefix . "wplc_chat_sessions";
 $wplc_tblname_msgs = $wpdb->prefix . "wplc_chat_msgs";
-$wplc_version = "5.0.0";
+$wplc_version = "5.0.1";
 
 define('WPLC_BASIC_PLUGIN_DIR', dirname(__FILE__));
 define('WPLC_BASIC_PLUGIN_URL', plugins_url() . "/wp-live-chat-support/");
@@ -343,43 +348,71 @@ function wplc_admin_menu() {
     add_submenu_page('wplivechat-menu', __('Support', 'wplivechat'), __('Support', 'wplivechat'), 'manage_options', 'wplivechat-menu-support-page', 'wplc_support_menu');        
 }
 
-add_action('wp_head', 'wplc_user_top_js');
 
-function wplc_user_top_js() {
-    if(function_exists('wplc_display_chat_contents')){
-        $display_contents = wplc_display_chat_contents();
-    } else {
-        $display_contents = 1;
-    }
-    if($display_contents >= 1){
-        echo "<!-- DEFINING DO NOT CACHE -->";
-        if (!defined('DONOTCACHEPAGE')) {
-            define('DONOTCACHEPAGE', true);
-        }
-        if (!defined('DONOTCACHEDB')) {
-            define('DONOTCACHEDB', true);
-        }
-        $ajax_nonce = wp_create_nonce("wplc");
-        wp_register_script('wplc-user-jquery-cookie', plugins_url('/js/jquery-cookie.js', __FILE__), array('jquery-ui-draggable'));
-        wp_enqueue_script('wplc-user-jquery-cookie');
-        $wplc_settings = get_option("WPLC_SETTINGS");
-        ?>
 
-        <script type="text/javascript">
-        <?php if (!function_exists("wplc_register_pro_version")) { ?>
-                /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
-            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-            var wplc_ajaxurl = ajaxurl;
-        <?php } ?>
-            var wplc_nonce = '<?php echo $ajax_nonce; ?>';
-        </script>
-        <?php
+add_action("init","wplc_load_user_js",0);
+
+
+function wplc_load_user_js () {
+
+    if (!is_admin()) {
+        if(function_exists('wplc_display_chat_contents')){
+            $display_contents = wplc_display_chat_contents();
+        } else {
+            $display_contents = 1;
+        }
+
+        if(function_exists('wplc_is_user_banned')){
+            $user_banned = wplc_is_user_banned();
+        } else if (function_exists('wplc_is_user_banned')){
+            $user_banned = wplc_is_user_banned_basic();
+        } else {
+            $user_banned = 0;
+        }
+        if($display_contents && $user_banned == 0){  
+
+            /* do not show if pro is outdated */
+            global $wplc_pro_version;
+            if (isset($wplc_pro_version)) {
+                $float_version = floatval($wplc_pro_version);
+                if ($float_version < 4 || $wplc_pro_version == "4.1.0" || $wplc_pro_version == "4.1.1") {
+                    return;
+                }
+            }
+
+            if (function_exists("wplc_register_pro_version")) {
+                $wplc_settings = get_option("WPLC_SETTINGS");
+                if (!class_exists('Mobile_Detect')) {
+                    require_once (plugin_dir_path(__FILE__) . 'includes/Mobile_Detect.php');
+                }
+                $wplc_detect_device = new Mobile_Detect;
+                $wplc_is_mobile = $wplc_detect_device->isMobile();
+                if ($wplc_is_mobile && !isset($wplc_settings['wplc_enabled_on_mobile']) && $wplc_settings['wplc_enabled_on_mobile'] != 1) {
+                    return;
+                }
+                if (function_exists('wplc_hide_chat_when_offline')) {
+                    $wplc_hide_chat = wplc_hide_chat_when_offline();
+                    if (!$wplc_hide_chat) {
+                        wplc_push_js_to_front_pro();
+                    }
+                } else {
+                    wplc_push_js_to_front_pro();
+                }
+            } else {
+                wplc_push_js_to_front_basic();
+            }
+        }
     }
+
+
+
+    
+
 }
 
-function wplc_draw_user_box() {
-    
+function wplc_push_js_to_front_basic() {
     global $wplc_is_mobile;
+    wp_enqueue_script('jquery');
 
     $wplc_settings = get_option("WPLC_SETTINGS");
 
@@ -400,8 +433,11 @@ function wplc_draw_user_box() {
         $wplc_display = 'hide';
     }
 
-    wp_register_script('wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__));
+    wp_register_script('wplc-user-script', plugins_url('/js/wplc_u.js', __FILE__),array('jquery'));
     wp_enqueue_script('wplc-user-script');
+    wp_register_script('wplc-user-jquery-cookie', plugins_url('/js/jquery-cookie.js', __FILE__), array('wplc-user-script'),false, false);
+    wp_enqueue_script('wplc-user-jquery-cookie');
+
 
     wp_localize_script('wplc-user-script', 'wplc_hide_chat', null);
     wp_localize_script('wplc-user-script', 'wplc_plugin_url', plugins_url());
@@ -420,9 +456,51 @@ function wplc_draw_user_box() {
     }
     wp_localize_script('wplc-user-script', 'wplc_gravatar_image', $wplc_grav_image);
 
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('jquery-ui-core');
-    wp_enqueue_script('jquery-ui-draggable');
+    wp_enqueue_script('jquery-ui-core',false,array('wplc-user-script'),false,false);
+    wp_enqueue_script('jquery-ui-draggable',false,array('wplc-user-script'),false,false);
+
+}
+if (function_exists('wplc_pro_user_top_js')) { 
+    add_action('wp_head', 'wplc_pro_user_top_js');
+
+} else {
+    add_action('wp_head', 'wplc_user_top_js');
+
+}
+
+function wplc_user_top_js() {
+    if(function_exists('wplc_display_chat_contents')){
+        $display_contents = wplc_display_chat_contents();
+    } else {
+        $display_contents = 1;
+    }
+    if($display_contents >= 1){
+        echo "<!-- DEFINING DO NOT CACHE -->";
+        if (!defined('DONOTCACHEPAGE')) {
+            define('DONOTCACHEPAGE', true);
+        }
+        if (!defined('DONOTCACHEDB')) {
+            define('DONOTCACHEDB', true);
+        }
+        $ajax_nonce = wp_create_nonce("wplc");
+        $wplc_settings = get_option("WPLC_SETTINGS");
+        ?>
+
+        <script type="text/javascript">
+        <?php if (!function_exists("wplc_register_pro_version")) { ?>
+                /* var wplc_ajaxurl = '<?php echo plugins_url('/ajax.php', __FILE__); ?>'; */
+            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+            var wplc_ajaxurl = ajaxurl;
+        <?php } ?>
+            var wplc_nonce = '<?php echo $ajax_nonce; ?>';
+        </script>
+        <?php
+    }
+}
+
+function wplc_draw_user_box() {
+  
+
     if(function_exists('wplc_display_chat_contents')){
         if(wplc_display_chat_contents() >= 1){
             wplc_output_box();

@@ -140,7 +140,7 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     global $wplc_tblname_msgs;
 
     if ($from == "2") {
-        if (!current_user_can("manage_options")) { die(); }
+        if (!current_user_can("wplc_ma_agent")) { die(); }
     }
 
     if ($from == "1") {
@@ -726,7 +726,7 @@ function wplc_mark_as_read_user_chat_messages($cid) {
 //here
 function wplc_return_admin_chat_messages($cid) {
     
-    if (!current_user_can("manage_options")) { die(); }
+    if (!current_user_can("wplc_ma_agent")) { die(); }
     $wplc_settings = get_option("WPLC_SETTINGS");
 
 
@@ -793,7 +793,7 @@ function wplc_return_admin_chat_messages($cid) {
 
 }
 function wplc_mark_as_read_admin_chat_messages($mid) {
-    if (!current_user_can("manage_options")) { die(); }
+    if (!current_user_can("wplc_ma_agent")) { die(); }
 
     global $wpdb;
     global $wplc_tblname_msgs;

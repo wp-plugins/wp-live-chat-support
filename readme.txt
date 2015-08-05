@@ -194,6 +194,11 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
 
+= 5.0.1 - 2015-08-05 - Medium Priority =
+* Refactored the code so that the live chat box will show up even if there is a JS error from another plugin or theme
+* Live chat box styling fixes: top image padding; centered the "conneting, please be patient" message and added padding
+* The live chat long poll connection will not automatically reinitialize if the connection times out or returns a 5xx error
+
 = 5.0.0 - Doppio Update - 2015-07-29 - Medium Priority =
 * New, modern chat dashboard 
 * Better user handling (chat long polling)
