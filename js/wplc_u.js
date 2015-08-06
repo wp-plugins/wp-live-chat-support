@@ -45,22 +45,50 @@ jQuery(document).ready(function() {
 //    var wplc_details = 1;
 //    console.log(wplc_details);
 
-    var data = {
-        action: 'wplc_call_to_server_visitor',
-        security: wplc_nonce,
-        cid:wplc_cid,
-        wplc_name: wplc_cookie_name,
-        wplc_email: wplc_cookie_email,
-        status:wplc_chat_status,
-        wplcsession:wplc_session_variable,
-    };
-    // ajax long polling function
-    wplc_call_to_server_chat(data);
-    if(wplc_cid !== null   && wplc_init_chat_box_check == true){
-        wplc_init_chat_box(wplc_cid,wplc_chat_status);
-    }
- 
     var wplc_run = true;
+
+
+    var data = {
+        action: 'wplc_get_chat_box',
+        security: wplc_nonce
+    };
+    jQuery.ajax({
+        url: wplc_ajaxurl,
+        data:data,
+        type:"POST",
+        success: function(response) {
+            /* inject html */
+            if(response){
+                response = JSON.parse(response);
+                 
+                jQuery( "body" ).append( response);
+
+
+                /* start long polling */
+                var data = {
+                    action: 'wplc_call_to_server_visitor',
+                    security: wplc_nonce,
+                    cid:wplc_cid,
+                    wplc_name: wplc_cookie_name,
+                    wplc_email: wplc_cookie_email,
+                    status:wplc_chat_status,
+                    wplcsession:wplc_session_variable,
+                };
+                // ajax long polling function
+                wplc_call_to_server_chat(data);
+                if(wplc_cid !== null   && wplc_init_chat_box_check == true){
+                    wplc_init_chat_box(wplc_cid,wplc_chat_status);
+                }
+             
+                
+            }
+
+        }
+
+    });
+
+
+    
     function wplc_call_to_server_chat(data) {        
         jQuery.ajax({
             url: wplc_ajaxurl,
@@ -244,7 +272,7 @@ jQuery(document).ready(function() {
         
    
         /* minimize chat window */
-        jQuery("#wp-live-chat-minimize").on("click", function() {
+        jQuery("body").on("click", "#wp-live-chat-minimize", function() {
             jQuery('#wp-live-chat').height("");
             if(jQuery("#wp-live-chat").attr("original_pos") === "bottom_right"){
                 jQuery("#wp-live-chat").css("left", "");
@@ -289,7 +317,7 @@ jQuery(document).ready(function() {
             
         });
          /* close chat window */
-        jQuery("#wp-live-chat-close").on("click", function() {
+        jQuery("body").on("click", "#wp-live-chat-close", function() {
             
             jQuery("#wp-live-chat").hide();
             jQuery("#wp-live-chat-1").hide();
@@ -379,18 +407,18 @@ jQuery(document).ready(function() {
             
         }
         //opens chat when clicked on top bar
-        jQuery("#wp-live-chat-1").on("click", function() {
+        jQuery("body").on("click", "#wp-live-chat-1", function() {
             open_chat();
         });
         //allows for a class to open chat window now
-        jQuery(".wp-live-chat-now").on("click", function() {
+        jQuery("body").on("click", ".wp-live-chat-now", function() {
             open_chat();
         });
         
         
        
 
-        jQuery("#wplc_start_chat_btn").on("click", function() {
+        jQuery("body").on("click", "#wplc_start_chat_btn", function() {
             var wplc_name = jQuery("#wplc_name").val();
             var wplc_email = jQuery("#wplc_email").val(); 
 
@@ -458,12 +486,12 @@ jQuery(document).ready(function() {
         }
 
 
-        jQuery("#wplc_chatmsg").keyup(function(event){
+        jQuery("body").on("keyup","#wplc_chatmsg", function(event){
             if(event.keyCode === 13){
                 jQuery("#wplc_send_msg").trigger("click");
             }
         });
-        jQuery("#wplc_send_msg").on("click", function() {
+        jQuery("body").on("click", "#wplc_send_msg", function() {
             var wplc_cid = jQuery("#wplc_cid").val();
             var wplc_chat = wplc_strip(document.getElementById('wplc_chatmsg').value);
             

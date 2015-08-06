@@ -18,6 +18,11 @@ add_action('wp_ajax_nopriv_wplc_user_minimize_chat', 'wplc_init_ajax_callback');
 add_action('wp_ajax_nopriv_wplc_user_maximize_chat', 'wplc_init_ajax_callback');
 add_action('wp_ajax_nopriv_wplc_user_send_msg', 'wplc_init_ajax_callback');
 
+add_action('wp_ajax_wplc_get_chat_box', 'wplc_init_ajax_callback');
+add_action('wp_ajax_nopriv_wplc_get_chat_box', 'wplc_init_ajax_callback');
+
+
+
 function wplc_init_ajax_callback() {
     @ob_start();
     $check = check_ajax_referer( 'wplc', 'security' );
@@ -38,6 +43,10 @@ function wplc_init_ajax_callback() {
         global $wplc_tblname_msgs;
         /* we're using PHP 'sleep' which may lock other requests until our script wakes up. Call this function to ensure that other requests can run without waiting for us to finish */
         session_write_close();
+
+        if ($_POST['action'] == "wplc_get_chat_box") {
+            echo wplc_output_box_ajax();
+        }
 
         if($_POST['action'] == 'wplc_admin_long_poll'){
             if (defined('WPLC_TIMEOUT')) { @set_time_limit(WPLC_TIMEOUT); } else { @set_time_limit(120); }

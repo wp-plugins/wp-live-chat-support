@@ -34,7 +34,6 @@ The most cost effective Live Chat plugin. Chat with your visitors for free! WP L
 * Select whether Name and Email is required when users initiate a chat
 * Enable/Disable the chat box on mobile devices
 
-
 = Pro Version Features =
 
 * Unlimited live chat agents
@@ -193,6 +192,11 @@ It is highly recommended that you upgrade to WP Live Chat Support version 4.4.0 
 It is highly recommended that you upgrade to WP Live Chat Support version 4.1.4
 
 == Changelog ==
+
+= 5.0.4 - 2015-08-06 - Medium Priority =
+* WP Live Chat Support is now compatible with all caching plugins
+* Fixed a bug that set the wrong permissions for the default chat agent
+* Fixed the bug that shows the status of undefined if the user minimized the chat
 
 = 5.0.3 - 2015-08-05 - Medium Priority =
 * Small bug fix

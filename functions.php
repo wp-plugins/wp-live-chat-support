@@ -140,7 +140,7 @@ function wplc_record_chat_msg($from,$cid,$msg) {
     global $wplc_tblname_msgs;
 
     if ($from == "2") {
-        if (!current_user_can("wplc_ma_agent")) { die(); }
+        if (current_user_can("wplc_ma_agent") || current_user_can("manage_options")) {  } else { return "security issue"; }
     }
 
     if ($from == "1") {
@@ -726,97 +726,103 @@ function wplc_mark_as_read_user_chat_messages($cid) {
 //here
 function wplc_return_admin_chat_messages($cid) {
     
-    if (!current_user_can("wplc_ma_agent")) { die(); }
-    $wplc_settings = get_option("WPLC_SETTINGS");
+    if (current_user_can("wplc_ma_agent") || current_user_can("manage_options")) { 
+        $wplc_settings = get_option("WPLC_SETTINGS");
 
 
-    if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
+        if(isset($wplc_settings['wplc_display_name']) && $wplc_settings['wplc_display_name'] == 1){ $display_name = 1; } else { $display_name = 0; }
+                
+        global $wpdb;
+        global $wplc_tblname_msgs;
             
-    global $wpdb;
-    global $wplc_tblname_msgs;
-        
-    $results = $wpdb->get_results(
-        "
-            SELECT *
-            FROM $wplc_tblname_msgs
-            WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '2'
-            ORDER BY `timestamp` ASC
+        $results = $wpdb->get_results(
+            "
+                SELECT *
+                FROM $wplc_tblname_msgs
+                WHERE `chat_sess_id` = '$cid' AND `status` = '0' AND `originates` = '2'
+                ORDER BY `timestamp` ASC
 
-        "
-    );
+            "
+        );
 
-    $msg_hist = "";
-    foreach ($results as $result) {
+        $msg_hist = "";
+        foreach ($results as $result) {
 
-        $id = $result->id;
-        $from = $result->from;
-        wplc_mark_as_read_admin_chat_messages($id);    
-        $msg = $result->msg;
-        //$timestamp = strtotime($result->timestamp);
-        //$timeshow = date("H:i",$timestamp);
-        $image = "";        
-        if($result->originates == 1){
-            $class = "wplc-admin-message";
-            if(function_exists("wplc_pro_get_admin_picture")){
-                $src = wplc_pro_get_admin_picture();
-                if($src){
-                    $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+            $id = $result->id;
+            $from = $result->from;
+            wplc_mark_as_read_admin_chat_messages($id);    
+            $msg = $result->msg;
+            //$timestamp = strtotime($result->timestamp);
+            //$timeshow = date("H:i",$timestamp);
+            $image = "";        
+            if($result->originates == 1){
+                $class = "wplc-admin-message";
+                if(function_exists("wplc_pro_get_admin_picture")){
+                    $src = wplc_pro_get_admin_picture();
+                    if($src){
+                        $image = "<img src=".$src." width='20px' id='wp-live-chat-2-img'/>";
+                    }
+                }
+            } else {
+                $class = "wplc-user-message";
+
+                if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+
+                if($wplc_user_gravatar != ""){
+                    $image = "<img src='//www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
+                } else {
+                    $image = "";
                 }
             }
-        } else {
-            $class = "wplc-user-message";
 
-            if(isset($_COOKIE['wplc_email']) && $_COOKIE['wplc_email'] != ""){ $wplc_user_gravatar = md5(strtolower(trim($_COOKIE['wplc_email']))); } else { $wplc_user_gravatar = ""; }
+            if(function_exists('wplc_decrypt_msg')){
+                $msg = wplc_decrypt_msg($msg);
+            }
 
-            if($wplc_user_gravatar != ""){
-                $image = "<img src='//www.gravatar.com/avatar/$wplc_user_gravatar?s=20' />";
-            } else {
-                $image = "";
+            if($display_name){
+                $msg_hist .= "<span class='wplc-user-message'>".$image."<strong>$from</strong>: $msg</span><br /><div class='wplc-clear-float-message'></div>";            
+            } else {            
+                $msg_hist .= "<span class='wplc-user-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
             }
         }
 
-        if(function_exists('wplc_decrypt_msg')){
-            $msg = wplc_decrypt_msg($msg);
-        }
 
-        if($display_name){
-            $msg_hist .= "<span class='wplc-user-message'>".$image."<strong>$from</strong>: $msg</span><br /><div class='wplc-clear-float-message'></div>";            
-        } else {            
-            $msg_hist .= "<span class='wplc-user-message'>$msg</span><br /><div class='wplc-clear-float-message'></div>";
-        }
+
+        return $msg_hist;
+    } else {
+        return "security issue";
     }
-
-
-
-    return $msg_hist;
 
 
 }
 function wplc_mark_as_read_admin_chat_messages($mid) {
-    if (!current_user_can("wplc_ma_agent")) { die(); }
+    if (current_user_can("wplc_ma_agent") || current_user_can("manage_options")) {  
 
-    global $wpdb;
-    global $wplc_tblname_msgs;
+
+        global $wpdb;
+        global $wplc_tblname_msgs;
+            
+    //    $check = $wpdb->query(
+    //        "
+    //        UPDATE $wplc_tblname_msgs
+    //        SET `status` = 1
+    //        WHERE `id` = '$mid'
+    //        LIMIT 1
+    //
+    //    "
+    //    );
         
-//    $check = $wpdb->query(
-//        "
-//        UPDATE $wplc_tblname_msgs
-//        SET `status` = 1
-//        WHERE `id` = '$mid'
-//        LIMIT 1
-//
-//    "
-//    );
-    
-    $wpdb->update( 
-        $wplc_tblname_msgs, 
-        array( 
-            'status' => 1
-        ), 
-        array('id' => $mid), 
-        array('%d'), 
-        array('%d') 
-    );
+        $wpdb->update( 
+            $wplc_tblname_msgs, 
+            array( 
+                'status' => 1
+            ), 
+            array('id' => $mid), 
+            array('%d'), 
+            array('%d') 
+        );
+
+    } else { return "security issue"; }
 
 
 }
